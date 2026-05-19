@@ -166,6 +166,7 @@ body { background: #0a0a0f; overflow: hidden; }
   width: 1474px; height: 1474px;
   left: -220px; top: -400px;
   z-index: 1;
+  pointer-events: none;
 }
 
 .s0-content {
@@ -265,6 +266,7 @@ body { background: #0a0a0f; overflow: hidden; }
   width: 1243px;
   height: 1087px;
   z-index: 1;
+  pointer-events: none;
 }
 
 .s1-content {
@@ -289,6 +291,7 @@ body { background: #0a0a0f; overflow: hidden; }
   width: 1243px;
   height: 1087px;
   z-index: 1;
+  pointer-events: none;
 }
 
 .s2-content {
@@ -395,6 +398,7 @@ body { background: #0a0a0f; overflow: hidden; }
   transform: translate(-50%, -48%);
   width: 900px; height: 900px;
   z-index: 1;
+  pointer-events: none;
 }
 
 .s3-content {
@@ -435,21 +439,9 @@ body { background: #0a0a0f; overflow: hidden; }
 
 .s4-spotlight {
   position: absolute;
-  top: -100px; left: 50%;
-  transform: translateX(-50%);
-  width: 700px; height: 700px;
-  background: radial-gradient(ellipse 600px 600px at 50% 0%, rgba(240,139,49,0.55) 0%, transparent 70%);
-  z-index: 1;
-  pointer-events: none;
-}
-.s4-spotlight-cone {
-  position: absolute;
   top: 0; left: 50%;
   transform: translateX(-50%);
-  width: 0; height: 0;
-  border-left: 350px solid transparent;
-  border-right: 350px solid transparent;
-  border-top: 600px solid rgba(240,139,49,0.18);
+  width: 1030px; height: 834px;
   z-index: 1;
   pointer-events: none;
 }
@@ -646,9 +638,8 @@ body { background: #0a0a0f; overflow: hidden; }
   left: 50%; top: 50%;
   transform: translate(-50%, -44%);
   width: 1114px; height: 1114px;
-  background: #1f1f25;
-  border-radius: 50%;
   z-index: 1;
+  pointer-events: none;
 }
 
 .s6-content {
@@ -712,9 +703,8 @@ body { background: #0a0a0f; overflow: hidden; }
   left: 50%; top: 210px;
   transform: translateX(-50%);
   width: 1910px; height: 1910px;
-  background: #1f1f25;
-  border-radius: 50%;
   z-index: 1;
+  pointer-events: none;
 }
 
 .s7-content {
@@ -797,21 +787,14 @@ body { background: #0a0a0f; overflow: hidden; }
        ══════════════════════════════════════ -->
   <div class="screen active" id="s0">
     <!-- Background polygon shape -->
-    <svg class="s0-polygon" viewBox="0 0 1474 1474" fill="none">
-      <g transform="rotate(-70.64 737 737)">
-        <polygon points="737,60 1318,350 1414,990 1030,1440 444,1440 60,990 156,350" fill="#1f1f25"/>
-      </g>
-    </svg>
+    <img src="./foundations/assets/backgrounds/polygon.svg" class="s0-polygon" alt="">
 
     <!-- Floating card — Purple (top center) -->
     <div class="floatcard floatcard-purple">
       <div class="floatcard-inner">
         <div class="floatcard-art">
           <div class="card-fill-purple" style="position:absolute;inset:0"></div>
-          <img src="./foundations/shapes/card2-flower.svg" style="position:relative;z-index:2;width:120px;opacity:0.9" alt="">
-          <div class="card-eyes" style="bottom:16px">
-            <div class="eye"></div><div class="eye"></div>
-          </div>
+          <img src="./foundations/assets/monsters/challenge-card-1.svg" style="position:relative;z-index:2;width:100%;height:100%;object-fit:cover" alt="">
         </div>
         <div class="floatcard-label">Write it out</div>
       </div>
@@ -822,10 +805,7 @@ body { background: #0a0a0f; overflow: hidden; }
       <div class="floatcard-inner">
         <div class="floatcard-art">
           <div class="card-fill-blue" style="position:absolute;inset:0"></div>
-          <img src="./foundations/shapes/card3-polygon.svg" style="position:relative;z-index:2;width:120px;opacity:0.9" alt="">
-          <div class="card-eyes" style="bottom:16px">
-            <div class="eye"></div><div class="eye"></div>
-          </div>
+          <img src="./foundations/assets/monsters/challenge-card-2.svg" style="position:relative;z-index:2;width:100%;height:100%;object-fit:cover" alt="">
         </div>
         <div class="floatcard-label">Notice your wins</div>
       </div>
@@ -836,10 +816,7 @@ body { background: #0a0a0f; overflow: hidden; }
       <div class="floatcard-inner">
         <div class="floatcard-art">
           <div class="card-fill-green" style="position:absolute;inset:0"></div>
-          <img src="./foundations/shapes/card1-star.svg" style="position:relative;z-index:2;width:110px;opacity:0.9" alt="">
-          <div class="card-eyes" style="bottom:16px">
-            <div class="eye"></div><div class="eye"></div>
-          </div>
+          <img src="./foundations/assets/monsters/challenge-card.svg" style="position:relative;z-index:2;width:100%;height:100%;object-fit:cover" alt="">
         </div>
         <div class="floatcard-label">All about you</div>
       </div>
@@ -869,9 +846,7 @@ body { background: #0a0a0f; overflow: hidden; }
        ══════════════════════════════════════ -->
   <div class="screen" id="s1">
     <!-- Shell arch -->
-    <svg class="s1-arch" viewBox="0 0 1243 1087" fill="none">
-      <path d="M621.5 0 C200 0 0 250 0 543.5 C0 837 200 1087 621.5 1087 C1043 1087 1243 837 1243 543.5 C1243 250 1043 0 621.5 0Z" fill="#1f1f25"/>
-    </svg>
+    <img src="./foundations/assets/backgrounds/shell.svg" class="s1-arch" alt="">
 
     <div class="status-bar"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
 
@@ -895,9 +870,7 @@ body { background: #0a0a0f; overflow: hidden; }
        SCREEN 2 — Teacher sees the big picture
        ══════════════════════════════════════ -->
   <div class="screen" id="s2">
-    <svg class="s2-arch" viewBox="0 0 1243 1087" fill="none">
-      <path d="M621.5 0 C200 0 0 250 0 543.5 C0 837 200 1087 621.5 1087 C1043 1087 1243 837 1243 543.5 C1243 250 1043 0 621.5 0Z" fill="#1f1f25"/>
-    </svg>
+    <img src="./foundations/assets/backgrounds/shell.svg" class="s2-arch" alt="">
 
     <div class="status-bar"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
 
@@ -964,11 +937,8 @@ body { background: #0a0a0f; overflow: hidden; }
        SCREEN 3 — Select your avatar
        ══════════════════════════════════════ -->
   <div class="screen" id="s3">
-    <!-- Bowtie / frame bg -->
-    <svg class="s3-frame" viewBox="0 0 900 900" fill="none">
-      <path d="M450 450 C450 280 280 120 0 0 L0 900 C280 780 450 620 450 450Z" fill="#1f1f25"/>
-      <path d="M450 450 C450 280 620 120 900 0 L900 900 C620 780 450 620 450 450Z" fill="#1f1f25"/>
-    </svg>
+    <!-- Frame bg -->
+    <img src="./foundations/assets/backgrounds/frame.svg" class="s3-frame" alt="">
 
     <div class="status-bar"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
 
@@ -978,21 +948,17 @@ body { background: #0a0a0f; overflow: hidden; }
       <p class="title-lg">Select your<br>avatar</p>
 
       <div class="avatar-row">
-        <!-- Avatar 1 — Purple / butterfly -->
         <button class="avatar-btn" style="background:#b38aff" onclick="selectAvatar(this)">
-          <img src="./foundations/shapes/card2-flower.svg" alt="butterfly avatar">
+          <img src="./foundations/assets/avatars/avatar-1.svg" alt="avatar 1">
         </button>
-        <!-- Avatar 2 — Coral -->
         <button class="avatar-btn" style="background:#f3beaf" onclick="selectAvatar(this)">
-          <img src="./foundations/shapes/card5-shell.svg" alt="shell avatar">
+          <img src="./foundations/assets/avatars/avatar-2.svg" alt="avatar 2">
         </button>
-        <!-- Avatar 3 — Blue (default selected) -->
         <button class="avatar-btn selected" style="background:#cbd1f5" onclick="selectAvatar(this)">
-          <img src="./foundations/shapes/card3-polygon.svg" alt="polygon avatar">
+          <img src="./foundations/assets/avatars/avatar-3.svg" alt="avatar 3">
         </button>
-        <!-- Avatar 4 — Green -->
         <button class="avatar-btn" style="background:#58b880" onclick="selectAvatar(this)">
-          <img src="./foundations/shapes/card1-star.svg" alt="star avatar">
+          <img src="./foundations/assets/avatars/avatar-4.svg" alt="avatar 4">
         </button>
       </div>
     </div>
@@ -1010,7 +976,7 @@ body { background: #0a0a0f; overflow: hidden; }
        SCREEN 4 — Mood slider
        ══════════════════════════════════════ -->
   <div class="screen" id="s4">
-    <div class="s4-spotlight"></div>
+    <img src="./foundations/assets/backgrounds/union.svg" class="s4-spotlight" alt="">
 
     <div class="status-bar" style="color:rgba(255,255,255,0.7)"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
 
@@ -1063,8 +1029,7 @@ body { background: #0a0a0f; overflow: hidden; }
         <div class="feel-card" onclick="toggleCard(this)">
           <div class="feel-card-inner">
             <div class="feel-card-art">
-              <div class="feel-card-art-bg" style="background:#49aee1"></div>
-              <div class="feel-card-avatar" style="background:#cbd1f5">😴</div>
+              <img src="./foundations/assets/cards/good-sleep.svg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">
             </div>
             <div class="feel-card-bar">A good sleep</div>
           </div>
@@ -1076,8 +1041,7 @@ body { background: #0a0a0f; overflow: hidden; }
         <div class="feel-card" onclick="toggleCard(this)">
           <div class="feel-card-inner">
             <div class="feel-card-art">
-              <div class="feel-card-art-bg" style="background:#b38aff"></div>
-              <div class="feel-card-avatar" style="background:#e8d6ff">👯</div>
+              <img src="./foundations/assets/cards/friends.svg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">
             </div>
             <div class="feel-card-bar">Friends</div>
           </div>
@@ -1089,8 +1053,7 @@ body { background: #0a0a0f; overflow: hidden; }
         <div class="feel-card selected" onclick="toggleCard(this)">
           <div class="feel-card-inner">
             <div class="feel-card-art">
-              <div class="feel-card-art-bg" style="background:#f3beaf"></div>
-              <div class="feel-card-avatar" style="background:#fde8dc">🍜</div>
+              <img src="./foundations/assets/cards/card-0.svg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">
             </div>
             <div class="feel-card-bar">A good meal</div>
           </div>
@@ -1102,8 +1065,7 @@ body { background: #0a0a0f; overflow: hidden; }
         <div class="feel-card" onclick="toggleCard(this)">
           <div class="feel-card-inner">
             <div class="feel-card-art">
-              <div class="feel-card-art-bg" style="background:#58b880"></div>
-              <div class="feel-card-avatar" style="background:#c8f0d8">⚽</div>
+              <img src="./foundations/assets/cards/card-1.svg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">
             </div>
             <div class="feel-card-bar">Sport</div>
           </div>
@@ -1115,8 +1077,7 @@ body { background: #0a0a0f; overflow: hidden; }
         <div class="feel-card" onclick="toggleCard(this)">
           <div class="feel-card-inner">
             <div class="feel-card-art">
-              <div class="feel-card-art-bg" style="background:#f08b31"></div>
-              <div class="feel-card-avatar" style="background:#fde8c8">🎨</div>
+              <img src="./foundations/assets/cards/card-2.svg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">
             </div>
             <div class="feel-card-bar">Art / Music</div>
           </div>
@@ -1128,8 +1089,7 @@ body { background: #0a0a0f; overflow: hidden; }
         <div class="feel-card" onclick="toggleCard(this)">
           <div class="feel-card-inner">
             <div class="feel-card-art">
-              <div class="feel-card-art-bg" style="background:#fdda3c"></div>
-              <div class="feel-card-avatar" style="background:#fff8cc">💬</div>
+              <img src="./foundations/assets/cards/card-3.svg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">
             </div>
             <div class="feel-card-bar">A good talk</div>
           </div>
@@ -1154,7 +1114,7 @@ body { background: #0a0a0f; overflow: hidden; }
        SCREEN 6 — Trusted person
        ══════════════════════════════════════ -->
   <div class="screen" id="s6">
-    <div class="s6-circle"></div>
+    <img src="./foundations/assets/backgrounds/ellipse-17.svg" class="s6-circle" alt="" style="border-radius:0;background:none">
 
     <div class="status-bar"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
 
@@ -1208,19 +1168,23 @@ body { background: #0a0a0f; overflow: hidden; }
        SCREEN 7 — Setup completed
        ══════════════════════════════════════ -->
   <div class="screen" id="s7">
-    <div class="s7-circle"></div>
+    <img src="./foundations/assets/backgrounds/ellipse-42.svg" class="s7-circle" alt="" style="border-radius:0;background:none">
 
     <div class="status-bar"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
 
     <!-- Orange message bubble -->
     <div class="message-bubble bubble-orange">
-      <div class="bubble-avatar">⭐</div>
+      <div class="bubble-avatar">
+        <img src="./foundations/assets/monsters/monster.svg" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt="">
+      </div>
       <p class="bubble-text">You earned 1 Sparks! All your Sparks add up — your class is working together to help others.</p>
     </div>
 
     <!-- Green message bubble -->
     <div class="message-bubble bubble-green">
-      <div class="bubble-avatar">🐚</div>
+      <div class="bubble-avatar">
+        <img src="./foundations/assets/monsters/monster.svg" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt="">
+      </div>
       <p class="bubble-text">Remember! Nothing you do here affects your grades. It's just here to support you.</p>
     </div>
 
