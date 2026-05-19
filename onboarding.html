@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint — Onboarding</title>
+<link rel="stylesheet" href="./foundations/tokens.css">
+<style>
+
+/* ─── Stage & Device ────────────────────────────────────────── */
+body { background: #0a0a0f; overflow: hidden; }
+
+.bp-stage {
+  position: fixed; inset: 0;
+  display: grid; place-items: center;
+}
+
+.bp-device {
+  width: 1194px;
+  height: 834px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  transform-origin: center center;
+  transform: scale(var(--s, 1));
+}
+
+/* ─── Screen system ─────────────────────────────────────────── */
+.screen {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 320ms var(--ease-in-out);
+}
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ─── Status bar ────────────────────────────────────────────── */
+.status-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  font-family: -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.85);
+  z-index: 10;
+}
+
+/* ─── Progress bar ──────────────────────────────────────────── */
+.progress-wrap {
+  position: absolute;
+  top: 60px;
+  left: 219px;
+  width: 756px;
+  height: 4px;
+  background: #444450;
+  border-radius: 99px;
+  overflow: hidden;
+  z-index: 10;
+}
+.progress-fill {
+  height: 100%;
+  background: #f2f3e5;
+  border-radius: 99px;
+  transition: width 400ms var(--ease-out-soft);
+}
+
+/* ─── Button row ────────────────────────────────────────────── */
+.btn-row {
+  position: absolute;
+  bottom: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 20;
+}
+
+.btn-back {
+  width: 48px; height: 48px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.16);
+  display: grid; place-items: center;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+}
+.btn-back.dark { background: #0f0f0f; }
+
+.btn-back svg { width: 20px; height: 20px; }
+
+.btn-next {
+  width: 200px; height: 48px;
+  background: #f2f3e5;
+  color: #1f1f25;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.1px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 1px rgba(20,21,26,0.03);
+  transition: opacity 120ms;
+}
+.btn-next:active { opacity: 0.85; }
+
+.btn-single {
+  width: 270px; height: 48px;
+  background: #f2f3e5;
+  color: #1f1f25;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 1px rgba(20,21,26,0.03);
+}
+
+/* ─── Common text styles ────────────────────────────────────── */
+.title-xl {
+  font-family: var(--font-display);
+  font-size: 80px;
+  line-height: 1.06;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #f2f3e5;
+  text-align: center;
+}
+.title-lg {
+  font-family: var(--font-display);
+  font-size: 64px;
+  line-height: 1.06;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #f2f3e5;
+  text-align: center;
+}
+.body-copy {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.4px;
+  color: #f2f3e5;
+  text-align: center;
+}
+
+/* ════════════════════════════════════════════════════════════
+   SCREEN 0 — Welcome
+   ════════════════════════════════════════════════════════════ */
+#s0 { background: #3f50b8; }
+
+.s0-polygon {
+  position: absolute;
+  width: 1474px; height: 1474px;
+  left: -220px; top: -400px;
+  z-index: 1;
+}
+
+.s0-content {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -46%);
+  width: 500px;
+  text-align: center;
+  z-index: 5;
+}
+.s0-content .title-xl { margin-bottom: 24px; }
+
+/* Floating cards */
+.floatcard {
+  position: absolute;
+  width: 237px; height: 353px;
+  border-radius: 19px;
+  overflow: hidden;
+  z-index: 3;
+}
+.floatcard-inner {
+  width: 100%; height: 100%;
+  background: #36363f;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.floatcard-art {
+  flex: 1;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.floatcard-label {
+  height: 98px;
+  margin: 0 18px 18px;
+  background: #444450;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 24px;
+  text-transform: uppercase;
+  color: #f2f3e5;
+  letter-spacing: 0.5px;
+}
+
+/* Card positions & rotations */
+.floatcard-green  { right: -20px; bottom: -40px; transform: rotate(-60deg); }
+.floatcard-purple { left: 370px;  top: -80px;    transform: rotate(165deg); }
+.floatcard-blue   { left: -10px;  top: 180px;    transform: rotate(68.64deg); }
+
+.card-fill-green  { background: #58b880; width: 100%; height: 74%; border-radius: 0; }
+.card-fill-purple { background: #b38aff; width: 100%; height: 74%; }
+.card-fill-blue   { background: #49aee1; width: 100%; height: 74%; }
+
+.card-eyes {
+  position: absolute;
+  bottom: 28px;
+  display: flex;
+  gap: 8px;
+}
+.eye {
+  width: 28px; height: 28px;
+  background: #f2f3e5;
+  border-radius: 50%;
+  position: relative;
+}
+.eye::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 50%;
+  transform: translateX(-50%);
+  width: 14px; height: 14px;
+  background: #1f1f25;
+  border-radius: 50%;
+}
+
+.s0-cta {
+  position: absolute;
+  bottom: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+}
+
+/* ════════════════════════════════════════════════════════════
+   SCREEN 1 — Your space
+   ════════════════════════════════════════════════════════════ */
+#s1 { background: #b38aff; }
+
+.s1-arch {
+  position: absolute;
+  left: -31px; top: 50%;
+  transform: translateY(-50%);
+  width: 1243px;
+  height: 1087px;
+  z-index: 1;
+}
+
+.s1-content {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -46%);
+  width: 500px;
+  text-align: center;
+  z-index: 5;
+}
+.s1-content .title-xl { margin-bottom: 24px; }
+
+/* ════════════════════════════════════════════════════════════
+   SCREEN 2 — Teacher sees big picture
+   ════════════════════════════════════════════════════════════ */
+#s2 { background: #b38aff; }
+
+.s2-arch {
+  position: absolute;
+  left: -31px; top: 50%;
+  transform: translateY(-50%);
+  width: 1243px;
+  height: 1087px;
+  z-index: 1;
+}
+
+.s2-content {
+  position: absolute;
+  top: 88px; left: 219px;
+  width: 756px;
+  z-index: 5;
+}
+
+.s2-header {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.4px;
+  color: #f2f3e5;
+  text-align: center;
+  margin: 28px auto 24px;
+  max-width: 320px;
+}
+
+.privacy-cards { display: flex; flex-direction: column; gap: 16px; }
+
+.privacy-card {
+  background: #1f1f25;
+  border: 1px solid #444450;
+  border-radius: 20px;
+  padding: 20px 24px;
+}
+.privacy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #444450;
+}
+.privacy-card-label {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  color: #a4a59f;
+}
+.toggle-row { display: flex; align-items: center; gap: 8px; }
+.toggle-on-text {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: #58b880;
+}
+.toggle {
+  width: 32px; height: 20px;
+  background: #58b880;
+  border-radius: 99px;
+  position: relative;
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  right: 2px; top: 2px;
+  width: 16px; height: 16px;
+  background: #fff;
+  border-radius: 50%;
+}
+.lock-btn {
+  width: 32px; height: 32px;
+  background: #444450;
+  border-radius: 8px;
+  display: grid; place-items: center;
+}
+.privacy-card-body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  color: #f2f3e5;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+.privacy-card-caption {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: #a4a59f;
+  text-align: center;
+}
+
+.s2-footer {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: #a4a59f;
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   SCREEN 3 — Select your avatar
+   ════════════════════════════════════════════════════════════ */
+#s3 { background: #3f50b8; }
+
+.s3-frame {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -48%);
+  width: 900px; height: 900px;
+  z-index: 1;
+}
+
+.s3-content {
+  position: absolute;
+  left: 50%; top: 120px;
+  transform: translateX(-50%);
+  width: 600px;
+  text-align: center;
+  z-index: 5;
+}
+
+.avatar-row {
+  display: flex;
+  gap: 36px;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.avatar-btn {
+  width: 120px; height: 120px;
+  border-radius: 99px;
+  border: 10px solid #36363f;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  transition: border-color 160ms, transform 120ms var(--ease-spring);
+  background: #cbd1f5;
+  display: flex; align-items: center; justify-content: center;
+}
+.avatar-btn:hover { transform: scale(1.06); }
+.avatar-btn.selected { border-color: #f2f3e5; }
+.avatar-btn img { width: 70px; height: 70px; object-fit: contain; }
+
+/* ════════════════════════════════════════════════════════════
+   SCREEN 4 — Mood slider
+   ════════════════════════════════════════════════════════════ */
+#s4 { background: #1f1f25; }
+
+.s4-spotlight {
+  position: absolute;
+  top: -100px; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 700px;
+  background: radial-gradient(ellipse 600px 600px at 50% 0%, rgba(240,139,49,0.55) 0%, transparent 70%);
+  z-index: 1;
+  pointer-events: none;
+}
+.s4-spotlight-cone {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 350px solid transparent;
+  border-right: 350px solid transparent;
+  border-top: 600px solid rgba(240,139,49,0.18);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.s4-content {
+  position: absolute;
+  left: 50%; top: 90px;
+  transform: translateX(-50%);
+  width: 660px;
+  text-align: center;
+  z-index: 5;
+}
+
+/* Arc slider */
+.arc-slider-wrap {
+  position: relative;
+  width: 532px;
+  height: 280px;
+  margin: 48px auto 0;
+}
+
+.arc-track {
+  position: absolute;
+  bottom: 60px;
+  left: 0; right: 0;
+  width: 532px;
+  height: 266px;
+}
+
+.arc-emoji {
+  position: absolute;
+  bottom: 56px;
+  left: 50%;
+  transform: translateX(-50%) translateX(var(--arc-x, 0px));
+  width: 116px; height: 116px;
+  background: #f08b31;
+  border: 12px solid #2f2f37;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 52px;
+  cursor: grab;
+  z-index: 10;
+  user-select: none;
+  transition: transform 40ms linear;
+}
+
+.arc-label {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 0 24px;
+  height: 48px;
+  background: #2f2f37;
+  border-radius: 99px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: #f2f3e5;
+}
+
+/* ════════════════════════════════════════════════════════════
+   SCREEN 5 — What helps you feel good?
+   ════════════════════════════════════════════════════════════ */
+#s5 { background: #1f1f25; }
+
+.s5-content {
+  position: absolute;
+  top: 88px; left: 50%;
+  transform: translateX(-50%);
+  width: 1000px;
+  text-align: center;
+  z-index: 5;
+}
+
+.feel-cards {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.feel-card {
+  width: 148px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 120ms var(--ease-spring);
+}
+.feel-card:hover { transform: translateY(-4px); }
+
+.feel-card-inner {
+  width: 148px; height: 185px;
+  border-radius: 12px;
+  border: 12px solid #36363f;
+  overflow: hidden;
+  position: relative;
+  background: #2a2a34;
+  transition: border-color 160ms;
+}
+.feel-card.selected .feel-card-inner { border-color: #f2f3e5; }
+
+.feel-card-art {
+  width: 100%; height: 76%;
+  display: grid; place-items: center;
+  position: relative;
+}
+.feel-card-art-bg {
+  position: absolute;
+  inset: 0;
+  background: #49aee1;
+}
+.feel-card-avatar {
+  width: 80px; height: 80px;
+  background: #cbd1f5;
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+  display: grid; place-items: center;
+  font-size: 36px;
+}
+
+.feel-card-bar {
+  position: absolute;
+  bottom: 8px;
+  left: 50%; transform: translateX(-50%);
+  width: calc(100% - 24px);
+  height: 36px;
+  background: #36363f;
+  border-radius: 8px;
+  display: grid; place-items: center;
+  font-family: var(--font-display);
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #f2f3e5;
+  letter-spacing: 0.5px;
+  transition: background 160ms, color 160ms;
+  z-index: 3;
+}
+.feel-card.selected .feel-card-bar {
+  background: #f2f3e5;
+  color: #1f1f25;
+}
+
+.feel-card-check {
+  position: absolute;
+  top: -6px; right: -6px;
+  width: 28px; height: 28px;
+  background: #f2f3e5;
+  border-radius: 50%;
+  display: none;
+  place-items: center;
+  z-index: 10;
+}
+.feel-card.selected .feel-card-check { display: grid; }
+
+/* ════════════════════════════════════════════════════════════
+   SCREEN 6 — Trusted person
+   ════════════════════════════════════════════════════════════ */
+#s6 { background: #b38aff; }
+
+.s6-circle {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -44%);
+  width: 1114px; height: 1114px;
+  background: #1f1f25;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.s6-content {
+  position: absolute;
+  top: 88px; left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  text-align: center;
+  z-index: 5;
+}
+
+.person-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 44px;
+}
+
+.person-btn {
+  width: 179px; height: 94px;
+  background: #2f2f37;
+  border-radius: 8px;
+  border: 1px solid rgba(92,92,101,0.3);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: border 160ms, transform 120ms var(--ease-spring);
+}
+.person-btn:hover { transform: scale(1.03); }
+.person-btn.selected { border: 3px solid #f2f3e5; }
+
+.person-emoji-wrap {
+  width: 40px; height: 40px;
+  background: #1f1f25;
+  border: 1px solid rgba(92,92,101,0.3);
+  border-radius: 34px;
+  display: grid; place-items: center;
+  font-size: 22px;
+}
+
+.person-label {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  color: #f2f3e5;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* ════════════════════════════════════════════════════════════
+   SCREEN 7 — Setup completed
+   ════════════════════════════════════════════════════════════ */
+#s7 { background: #3f50b8; }
+
+.s7-circle {
+  position: absolute;
+  left: 50%; top: 210px;
+  transform: translateX(-50%);
+  width: 1910px; height: 1910px;
+  background: #1f1f25;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.s7-content {
+  position: absolute;
+  left: 50%; top: 200px;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 5;
+  width: 620px;
+}
+
+.reward-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.reward-plus {
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: -0.8px;
+  color: #f2f3e5;
+}
+.spark-icon {
+  width: 32px; height: 32px;
+  background: #f2f3e5;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 18px;
+}
+
+.message-bubble {
+  position: absolute;
+  z-index: 6;
+  width: 380px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: 12px;
+}
+.bubble-orange { background: #f08b31; top: 130px; right: 80px; }
+.bubble-green  { background: #58b880; top: 440px; left: 110px; }
+
+.bubble-avatar {
+  width: 48px; height: 48px;
+  background: #f2f3e5;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid; place-items: center;
+  font-size: 24px;
+}
+.bubble-text {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: #2f2f37;
+  line-height: 1.35;
+}
+
+.s7-cta {
+  position: absolute;
+  bottom: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+}
+
+</style>
+</head>
+<body>
+
+<div class="bp-stage">
+<div class="bp-device" id="device">
+
+  <!-- ══════════════════════════════════════
+       SCREEN 0 — Welcome
+       ══════════════════════════════════════ -->
+  <div class="screen active" id="s0">
+    <!-- Background polygon shape -->
+    <svg class="s0-polygon" viewBox="0 0 1474 1474" fill="none">
+      <g transform="rotate(-70.64 737 737)">
+        <polygon points="737,60 1318,350 1414,990 1030,1440 444,1440 60,990 156,350" fill="#1f1f25"/>
+      </g>
+    </svg>
+
+    <!-- Floating card — Purple (top center) -->
+    <div class="floatcard floatcard-purple">
+      <div class="floatcard-inner">
+        <div class="floatcard-art">
+          <div class="card-fill-purple" style="position:absolute;inset:0"></div>
+          <img src="./foundations/shapes/card2-flower.svg" style="position:relative;z-index:2;width:120px;opacity:0.9" alt="">
+          <div class="card-eyes" style="bottom:16px">
+            <div class="eye"></div><div class="eye"></div>
+          </div>
+        </div>
+        <div class="floatcard-label">Write it out</div>
+      </div>
+    </div>
+
+    <!-- Floating card — Blue (left) -->
+    <div class="floatcard floatcard-blue">
+      <div class="floatcard-inner">
+        <div class="floatcard-art">
+          <div class="card-fill-blue" style="position:absolute;inset:0"></div>
+          <img src="./foundations/shapes/card3-polygon.svg" style="position:relative;z-index:2;width:120px;opacity:0.9" alt="">
+          <div class="card-eyes" style="bottom:16px">
+            <div class="eye"></div><div class="eye"></div>
+          </div>
+        </div>
+        <div class="floatcard-label">Notice your wins</div>
+      </div>
+    </div>
+
+    <!-- Floating card — Green (right) -->
+    <div class="floatcard floatcard-green">
+      <div class="floatcard-inner">
+        <div class="floatcard-art">
+          <div class="card-fill-green" style="position:absolute;inset:0"></div>
+          <img src="./foundations/shapes/card1-star.svg" style="position:relative;z-index:2;width:110px;opacity:0.9" alt="">
+          <div class="card-eyes" style="bottom:16px">
+            <div class="eye"></div><div class="eye"></div>
+          </div>
+        </div>
+        <div class="floatcard-label">All about you</div>
+      </div>
+    </div>
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span>9:41 Mon Jun 6</span>
+      <span>🔋 100%</span>
+    </div>
+
+    <!-- Central content -->
+    <div class="s0-content">
+      <p class="title-xl">This space<br>is for you</p>
+      <p class="body-copy">School can feel like a lot sometimes. This is a place to check in with yourself and get a little support when you need it!</p>
+    </div>
+
+    <!-- CTA -->
+    <div class="s0-cta">
+      <button class="btn-single" onclick="goTo(1)">Get started</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       SCREEN 1 — Your space
+       ══════════════════════════════════════ -->
+  <div class="screen" id="s1">
+    <!-- Shell arch -->
+    <svg class="s1-arch" viewBox="0 0 1243 1087" fill="none">
+      <path d="M621.5 0 C200 0 0 250 0 543.5 C0 837 200 1087 621.5 1087 C1043 1087 1243 837 1243 543.5 C1243 250 1043 0 621.5 0Z" fill="#1f1f25"/>
+    </svg>
+
+    <div class="status-bar"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
+
+    <div class="progress-wrap"><div class="progress-fill" style="width:94px"></div></div>
+
+    <div class="s1-content">
+      <p class="title-xl">Your<br>space</p>
+      <p class="body-copy" style="margin-top:24px">Teachers don't see your notes or daily check-ins. If you ever choose to ask for help, a trusted adult at school can reach out to support you.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(0)">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn-next" onclick="goTo(2)">Next</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       SCREEN 2 — Teacher sees the big picture
+       ══════════════════════════════════════ -->
+  <div class="screen" id="s2">
+    <svg class="s2-arch" viewBox="0 0 1243 1087" fill="none">
+      <path d="M621.5 0 C200 0 0 250 0 543.5 C0 837 200 1087 621.5 1087 C1043 1087 1243 837 1243 543.5 C1243 250 1043 0 621.5 0Z" fill="#1f1f25"/>
+    </svg>
+
+    <div class="status-bar"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
+
+    <div class="progress-wrap"><div class="progress-fill" style="width:94px"></div></div>
+
+    <div class="s2-content">
+      <p class="s2-header">Your teacher sees the big picture, not the details</p>
+
+      <div class="privacy-cards">
+
+        <div class="privacy-card">
+          <div class="privacy-card-header">
+            <span class="privacy-card-label">Your weekly mood trend</span>
+            <div class="toggle-row">
+              <span class="toggle-on-text">ON</span>
+              <div class="toggle"></div>
+            </div>
+          </div>
+          <p class="privacy-card-body">Your teacher sees if you've had a tough week overall — not what you felt each specific day.</p>
+          <p class="privacy-card-caption">Weekly overview only · No daily details</p>
+        </div>
+
+        <div class="privacy-card">
+          <div class="privacy-card-header">
+            <span class="privacy-card-label">Class survey results</span>
+            <div class="toggle-row">
+              <span class="toggle-on-text">ON</span>
+              <div class="toggle"></div>
+            </div>
+          </div>
+          <p class="privacy-card-body">Your teacher sees how the whole class is doing on average. Your individual answers stay private.</p>
+          <p class="privacy-card-caption">Class average only · Your answers are anonymous</p>
+        </div>
+
+        <div class="privacy-card">
+          <div class="privacy-card-header">
+            <span class="privacy-card-label">Your journal notes</span>
+            <div class="lock-btn">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <rect x="3" y="7" width="10" height="8" rx="2" fill="#a4a59f"/>
+                <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="#a4a59f" stroke-width="1.5" fill="none"/>
+              </svg>
+            </div>
+          </div>
+          <p class="privacy-card-body">What you write here is for you only. Nobody else can read your notes — ever.</p>
+          <p class="privacy-card-caption">Always private · Only you can choose to share</p>
+        </div>
+
+      </div>
+
+      <p class="s2-footer">You can update these choices anytime in Settings → Privacy</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(1)">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn-next" onclick="goTo(3)">Next</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       SCREEN 3 — Select your avatar
+       ══════════════════════════════════════ -->
+  <div class="screen" id="s3">
+    <!-- Bowtie / frame bg -->
+    <svg class="s3-frame" viewBox="0 0 900 900" fill="none">
+      <path d="M450 450 C450 280 280 120 0 0 L0 900 C280 780 450 620 450 450Z" fill="#1f1f25"/>
+      <path d="M450 450 C450 280 620 120 900 0 L900 900 C620 780 450 620 450 450Z" fill="#1f1f25"/>
+    </svg>
+
+    <div class="status-bar"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
+
+    <div class="progress-wrap"><div class="progress-fill" style="width:188px"></div></div>
+
+    <div class="s3-content">
+      <p class="title-lg">Select your<br>avatar</p>
+
+      <div class="avatar-row">
+        <!-- Avatar 1 — Purple / butterfly -->
+        <button class="avatar-btn" style="background:#b38aff" onclick="selectAvatar(this)">
+          <img src="./foundations/shapes/card2-flower.svg" alt="butterfly avatar">
+        </button>
+        <!-- Avatar 2 — Coral -->
+        <button class="avatar-btn" style="background:#f3beaf" onclick="selectAvatar(this)">
+          <img src="./foundations/shapes/card5-shell.svg" alt="shell avatar">
+        </button>
+        <!-- Avatar 3 — Blue (default selected) -->
+        <button class="avatar-btn selected" style="background:#cbd1f5" onclick="selectAvatar(this)">
+          <img src="./foundations/shapes/card3-polygon.svg" alt="polygon avatar">
+        </button>
+        <!-- Avatar 4 — Green -->
+        <button class="avatar-btn" style="background:#58b880" onclick="selectAvatar(this)">
+          <img src="./foundations/shapes/card1-star.svg" alt="star avatar">
+        </button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(2)">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn-next" onclick="goTo(4)">Next</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       SCREEN 4 — Mood slider
+       ══════════════════════════════════════ -->
+  <div class="screen" id="s4">
+    <div class="s4-spotlight"></div>
+
+    <div class="status-bar" style="color:rgba(255,255,255,0.7)"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
+
+    <div class="progress-wrap"><div class="progress-fill" style="width:376px"></div></div>
+
+    <div class="s4-content">
+      <p class="title-lg" style="font-size:52px">How do you feel<br>the most of the time?</p>
+
+      <div class="arc-slider-wrap" id="arcWrap">
+        <!-- Arc track SVG -->
+        <svg class="arc-track" viewBox="0 0 532 266" fill="none" id="arcSvg">
+          <!-- Background arc -->
+          <path d="M16 266 A250 250 0 0 1 516 266" stroke="#2f2f37" stroke-width="32" stroke-linecap="round" fill="none"/>
+          <!-- Filled arc (orange) — dynamic via JS -->
+          <path id="arcFill" d="M16 266 A250 250 0 0 1 266 16" stroke="#f08b31" stroke-width="32" stroke-linecap="round" fill="none"/>
+          <!-- Dot markers -->
+          <circle cx="16"  cy="266" r="7" fill="#f08b31"/>
+          <circle cx="100" cy="86"  r="7" fill="#f08b31"/>
+          <circle cx="266" cy="16"  r="7" fill="#f2f3e5"/>
+          <circle cx="432" cy="86"  r="7" fill="#444450"/>
+          <circle cx="516" cy="266" r="7" fill="#444450"/>
+        </svg>
+
+        <!-- Emoji handle -->
+        <div class="arc-emoji" id="arcEmoji">🙂</div>
+
+        <!-- Label -->
+        <div class="arc-label" id="arcLabel">Some days are okay, some are harder</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back dark" onclick="goTo(3)">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn-next" onclick="goTo(5)">Next</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       SCREEN 5 — What helps you feel good?
+       ══════════════════════════════════════ -->
+  <div class="screen" id="s5">
+    <div class="status-bar" style="color:rgba(255,255,255,0.7)"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
+
+    <div class="progress-wrap"><div class="progress-fill" style="width:470px"></div></div>
+
+    <div class="s5-content">
+      <p class="title-lg" style="font-size:52px">What helps you<br>feel good?</p>
+
+      <div class="feel-cards">
+
+        <div class="feel-card" onclick="toggleCard(this)">
+          <div class="feel-card-inner">
+            <div class="feel-card-art">
+              <div class="feel-card-art-bg" style="background:#49aee1"></div>
+              <div class="feel-card-avatar" style="background:#cbd1f5">😴</div>
+            </div>
+            <div class="feel-card-bar">A good sleep</div>
+          </div>
+          <div class="feel-card-check">
+            <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+        <div class="feel-card" onclick="toggleCard(this)">
+          <div class="feel-card-inner">
+            <div class="feel-card-art">
+              <div class="feel-card-art-bg" style="background:#b38aff"></div>
+              <div class="feel-card-avatar" style="background:#e8d6ff">👯</div>
+            </div>
+            <div class="feel-card-bar">Friends</div>
+          </div>
+          <div class="feel-card-check">
+            <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+        <div class="feel-card selected" onclick="toggleCard(this)">
+          <div class="feel-card-inner">
+            <div class="feel-card-art">
+              <div class="feel-card-art-bg" style="background:#f3beaf"></div>
+              <div class="feel-card-avatar" style="background:#fde8dc">🍜</div>
+            </div>
+            <div class="feel-card-bar">A good meal</div>
+          </div>
+          <div class="feel-card-check">
+            <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+        <div class="feel-card" onclick="toggleCard(this)">
+          <div class="feel-card-inner">
+            <div class="feel-card-art">
+              <div class="feel-card-art-bg" style="background:#58b880"></div>
+              <div class="feel-card-avatar" style="background:#c8f0d8">⚽</div>
+            </div>
+            <div class="feel-card-bar">Sport</div>
+          </div>
+          <div class="feel-card-check">
+            <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+        <div class="feel-card" onclick="toggleCard(this)">
+          <div class="feel-card-inner">
+            <div class="feel-card-art">
+              <div class="feel-card-art-bg" style="background:#f08b31"></div>
+              <div class="feel-card-avatar" style="background:#fde8c8">🎨</div>
+            </div>
+            <div class="feel-card-bar">Art / Music</div>
+          </div>
+          <div class="feel-card-check">
+            <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+        <div class="feel-card" onclick="toggleCard(this)">
+          <div class="feel-card-inner">
+            <div class="feel-card-art">
+              <div class="feel-card-art-bg" style="background:#fdda3c"></div>
+              <div class="feel-card-avatar" style="background:#fff8cc">💬</div>
+            </div>
+            <div class="feel-card-bar">A good talk</div>
+          </div>
+          <div class="feel-card-check">
+            <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back dark" onclick="goTo(4)">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn-next" onclick="goTo(6)">Next</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       SCREEN 6 — Trusted person
+       ══════════════════════════════════════ -->
+  <div class="screen" id="s6">
+    <div class="s6-circle"></div>
+
+    <div class="status-bar"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
+
+    <div class="progress-wrap"><div class="progress-fill" style="width:658px"></div></div>
+
+    <div class="s6-content">
+      <p class="title-lg" style="font-size:48px">Is there someone that<br>makes things easier for you?</p>
+
+      <div class="person-grid">
+        <button class="person-btn selected" onclick="togglePerson(this)">
+          <div class="person-emoji-wrap">👫</div>
+          <span class="person-label">Friend</span>
+        </button>
+        <button class="person-btn selected" onclick="togglePerson(this)">
+          <div class="person-emoji-wrap">👩‍🦱</div>
+          <span class="person-label">Parent/<br>Guardian</span>
+        </button>
+        <button class="person-btn" onclick="togglePerson(this)">
+          <div class="person-emoji-wrap">🏠</div>
+          <span class="person-label">Other<br>family</span>
+        </button>
+        <button class="person-btn" onclick="togglePerson(this)">
+          <div class="person-emoji-wrap">🧑‍🏫</div>
+          <span class="person-label">Teacher</span>
+        </button>
+        <button class="person-btn" onclick="togglePerson(this)">
+          <div class="person-emoji-wrap">🤵</div>
+          <span class="person-label">Counsellor</span>
+        </button>
+        <button class="person-btn" onclick="togglePerson(this)">
+          <div class="person-emoji-wrap">😶</div>
+          <span class="person-label">No one</span>
+        </button>
+        <button class="person-btn" onclick="togglePerson(this)">
+          <div class="person-emoji-wrap">📱</div>
+          <span class="person-label">Prefer to<br>use AI</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(5)">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn-next" onclick="goTo(7)">Next</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       SCREEN 7 — Setup completed
+       ══════════════════════════════════════ -->
+  <div class="screen" id="s7">
+    <div class="s7-circle"></div>
+
+    <div class="status-bar"><span>9:41 Mon Jun 6</span><span>🔋 100%</span></div>
+
+    <!-- Orange message bubble -->
+    <div class="message-bubble bubble-orange">
+      <div class="bubble-avatar">⭐</div>
+      <p class="bubble-text">You earned 1 Sparks! All your Sparks add up — your class is working together to help others.</p>
+    </div>
+
+    <!-- Green message bubble -->
+    <div class="message-bubble bubble-green">
+      <div class="bubble-avatar">🐚</div>
+      <p class="bubble-text">Remember! Nothing you do here affects your grades. It's just here to support you.</p>
+    </div>
+
+    <div class="s7-content">
+      <div class="reward-row">
+        <span class="reward-plus">+1</span>
+        <div class="spark-icon">⚡</div>
+      </div>
+      <p class="title-xl">Setup<br>completed!</p>
+    </div>
+
+    <div class="s7-cta">
+      <button class="btn-single" onclick="goTo(0)">Start with how you feel</button>
+    </div>
+  </div>
+
+</div><!-- /bp-device -->
+</div><!-- /bp-stage -->
+
+<script>
+// ─── Scale to fit viewport ───────────────────────────────────
+function scale() {
+  const W = 1194, H = 834;
+  const s = Math.min(window.innerWidth / W, window.innerHeight / H) * 0.95;
+  document.getElementById('device').style.setProperty('--s', s);
+}
+scale();
+window.addEventListener('resize', scale);
+
+// ─── Screen navigation ───────────────────────────────────────
+let current = 0;
+function goTo(n) {
+  document.getElementById('s' + current).classList.remove('active');
+  document.getElementById('s' + n).classList.add('active');
+  current = n;
+}
+
+// ─── Avatar selection ────────────────────────────────────────
+function selectAvatar(el) {
+  el.closest('.avatar-row').querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ─── Card multi-select ───────────────────────────────────────
+function toggleCard(el) {
+  el.classList.toggle('selected');
+}
+
+// ─── Person multi-select ─────────────────────────────────────
+function togglePerson(el) {
+  el.classList.toggle('selected');
+}
+
+// ─── Arc slider drag ─────────────────────────────────────────
+const MOOD_LABELS = [
+  'Things have been really tough',
+  'It\'s been pretty hard lately',
+  'Some days are okay, some are harder',
+  'Mostly okay, with some ups and downs',
+  'Feeling pretty good most of the time'
+];
+const MOOD_EMOJIS = ['😞', '😕', '🙂', '😊', '😄'];
+
+let arcVal = 0.5; // 0..1, left to right
+const arcEmoji = document.getElementById('arcEmoji');
+const arcLabel = document.getElementById('arcLabel');
+const arcFill  = document.getElementById('arcFill');
+const arcWrap  = document.getElementById('arcWrap');
+
+function arcPoint(t) {
+  // Arc from left (16,266) to right (516,266) — semicircle, center (266,266), r=250
+  const angle = Math.PI + t * Math.PI; // π → 2π (left to right, going up)
+  return {
+    x: 266 + 250 * Math.cos(angle),
+    y: 266 + 250 * Math.sin(angle)
+  };
+}
+
+function updateArc(t) {
+  arcVal = Math.max(0, Math.min(1, t));
+  const pt = arcPoint(arcVal);
+
+  // Move emoji handle
+  const offsetX = pt.x - 266; // relative to center
+  arcEmoji.style.setProperty('--arc-x', offsetX + 'px');
+  // Vertical position: arc goes up, map to CSS bottom
+  // pt.y goes from 266 (at t=0 and t=1) to 16 (at t=0.5)
+  const bottomPx = (266 - pt.y) + 56;
+  arcEmoji.style.bottom = bottomPx + 'px';
+
+  // Update filled arc path
+  const endPt = arcPoint(arcVal);
+  const large = arcVal > 0.5 ? 1 : 0;
+  arcFill.setAttribute('d', `M16 266 A250 250 0 ${large} 1 ${endPt.x.toFixed(1)} ${endPt.y.toFixed(1)}`);
+
+  // Dot colors
+  const svg = document.getElementById('arcSvg');
+  const dots = svg.querySelectorAll('circle');
+  const thresholds = [0, 0.25, 0.5, 0.75, 1];
+  dots.forEach((dot, i) => {
+    dot.setAttribute('fill', arcVal >= thresholds[i] ? '#f08b31' : '#444450');
+  });
+
+  // Label
+  const idx = Math.min(4, Math.floor(arcVal * 4.99));
+  arcLabel.textContent = MOOD_LABELS[idx];
+  arcEmoji.textContent = MOOD_EMOJIS[idx];
+}
+
+updateArc(0.5);
+
+// Drag interaction
+let dragging = false;
+arcEmoji.addEventListener('mousedown', e => { dragging = true; e.preventDefault(); });
+arcEmoji.addEventListener('touchstart', e => { dragging = true; });
+
+document.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const rect = document.getElementById('arcSvg').getBoundingClientRect();
+  const scale = rect.width / 532;
+  const cx = 266 * scale + rect.left;
+  const dx = e.clientX - cx;
+  // Map dx from -250*scale to +250*scale → t 0..1
+  const t = (dx / (250 * scale) + 1) / 2;
+  updateArc(t);
+});
+document.addEventListener('touchmove', e => {
+  if (!dragging) return;
+  const touch = e.touches[0];
+  const rect = document.getElementById('arcSvg').getBoundingClientRect();
+  const scale = rect.width / 532;
+  const cx = 266 * scale + rect.left;
+  const dx = touch.clientX - cx;
+  const t = (dx / (250 * scale) + 1) / 2;
+  updateArc(t);
+});
+document.addEventListener('mouseup',  () => dragging = false);
+document.addEventListener('touchend', () => dragging = false);
+</script>
+</body>
+</html>
