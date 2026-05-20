@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint — Mood Check-in</title>
+<link rel="stylesheet" href="./foundations/tokens.css">
+<style>
+
+body { background: #0a0a0f; overflow: hidden; margin: 0; }
+.bp-stage { position: fixed; inset: 0; display: grid; place-items: center; }
+.bp-device {
+  width: 1194px; height: 834px;
+  position: relative; overflow: hidden;
+  border-radius: 20px;
+  transform-origin: center center;
+  transform: scale(var(--s, 1));
+  background: #1f1f25;
+}
+
+/* ─── Screen transitions ────────────────────────────────────── */
+.screen {
+  position: absolute; inset: 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity 260ms cubic-bezier(0.4,0,0.2,1);
+  overflow: hidden;
+}
+.screen.active { opacity: 1; pointer-events: all; }
+
+/* ─── Status bar ────────────────────────────────────────────── */
+.sb {
+  position: absolute; top: 0; left: 0; right: 0; height: 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.9); z-index: 20; pointer-events: none;
+}
+
+/* ─── Progress bar ──────────────────────────────────────────── */
+.prog {
+  position: absolute; top: 36px; left: 219px;
+  width: 756px; height: 4px;
+  background: #444450; border-radius: 99px;
+  overflow: hidden; z-index: 20; pointer-events: none;
+}
+.prog-fill {
+  height: 100%; background: #f2f3e5; border-radius: 99px;
+  transition: width 400ms cubic-bezier(0.22,1,0.36,1);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   S0 — Emotion picker
+   ══════════════════════════════════════════════════════════════ */
+#s0 { background: #1f1f25; }
+
+.mc-wrap {
+  position: absolute; top: 76px; left: 50%;
+  transform: translateX(-50%); width: 770px; text-align: center;
+}
+.mc-title {
+  font-family: var(--font-display);
+  font-size: 76px; line-height: 1.0; letter-spacing: 1px;
+  text-transform: uppercase; color: #f2f3e5; margin: 0 0 10px;
+}
+.mc-sub {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #a4a59f; margin: 0 0 24px;
+}
+
+.em-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+}
+.em-btn {
+  position: relative; border: none; background: none; padding: 0;
+  cursor: pointer; aspect-ratio: 1;
+}
+.em-btn img {
+  width: 100%; height: 100%; display: block; object-fit: contain;
+  transition: filter 180ms;
+}
+.em-btn span {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 13px; letter-spacing: 0.5px;
+  text-transform: uppercase; color: #1f1f25;
+  line-height: 1.2; text-align: center; padding: 0 8px; pointer-events: none;
+}
+.em-check {
+  position: absolute; top: 5px; right: 5px;
+  width: 26px; height: 26px; background: #f2f3e5; border-radius: 50%;
+  display: none; place-items: center; z-index: 5; pointer-events: none;
+}
+.em-btn.sel .em-check { display: grid; }
+
+.em-grid.maxed .em-btn:not(.sel) { pointer-events: none; cursor: default; }
+.em-grid.maxed .em-btn:not(.sel) img { filter: brightness(0.35) saturate(0.4); }
+.em-grid.maxed .em-btn:not(.sel) span { color: rgba(242,243,229,0.4); }
+
+.mc-cta {
+  position: absolute; bottom: 56px; left: 50%;
+  transform: translateX(-50%); z-index: 20;
+}
+.btn-continue {
+  width: 270px; height: 48px;
+  background: #f2f3e5; color: #1f1f25;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  border-radius: 8px; border: none; cursor: pointer; transition: opacity 120ms;
+}
+.btn-continue:active { opacity: 0.85; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   Detail screens
+   ══════════════════════════════════════════════════════════════ */
+.ed-screen { background: #1f1f25; }
+
+/* Background decoration — large emotion shapes at corners */
+.ed-bg {
+  position: absolute; pointer-events: none; z-index: 0;
+}
+.ed-bg-tl { top: -120px; left: -120px; width: 380px; opacity: 0.85; transform: rotate(180deg); }
+.ed-bg-br { bottom: -120px; right: -120px; width: 380px; opacity: 0.85; }
+.ed-bg img { width: 100%; height: 100%; display: block; object-fit: contain; }
+
+/* Title */
+.ed-title {
+  position: absolute; top: 60px; left: 0; right: 0;
+  font-family: var(--font-display);
+  font-size: 80px; line-height: 1.0; letter-spacing: 1px;
+  text-transform: uppercase; color: #f2f3e5;
+  text-align: center; margin: 0; z-index: 5;
+}
+
+/* Arc slider */
+.arc-slider {
+  position: relative; width: 532px; height: 248px;
+  overflow: visible; outline: none;
+  cursor: grab; -webkit-user-select: none; user-select: none;
+}
+.arc-slider.is-dragging { cursor: grabbing; }
+.arc-slider svg { position: absolute; top: 0; left: 0; overflow: visible; pointer-events: none; }
+.arc-slider__hit { position: absolute; inset: 0; }
+.arc-slider__thumb {
+  position: absolute; width: 104px; height: 104px; border-radius: 50%;
+  background: #2f2f37; border: 10px solid #2f2f37;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 56px; line-height: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: none; will-change: left, top, transform;
+  filter: drop-shadow(0 4px 20px rgba(0,0,0,.5));
+  transition: none;
+}
+.arc-slider__thumb.is-snapping {
+  transition: left .4s cubic-bezier(.34,1.56,.64,1), top .4s cubic-bezier(.34,1.56,.64,1);
+}
+.arc-slider.is-dragging .arc-slider__thumb {
+  transform: translate(-50%, -50%) scale(1.06);
+  transition: transform .12s ease;
+}
+.arc-slider__pill {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  background: #2f2f37; border-radius: 99px; padding: 0 24px;
+  min-width: 160px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.arc-slider__pill span {
+  color: #f2f3e5; font-family: var(--font-body);
+  font-size: 15px; font-weight: 700; line-height: 1.3; text-align: center;
+}
+
+.ed-slider-wrap {
+  position: absolute; top: 175px; left: 50%;
+  transform: translateX(-50%); z-index: 5;
+}
+
+/* More specifically + chips */
+.ed-chips-section {
+  position: absolute; top: 482px; left: 50%;
+  transform: translateX(-50%); text-align: center; z-index: 5;
+  width: 700px;
+}
+.ed-chips-label {
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
+  color: #a4a59f; margin: 0 0 12px;
+}
+.ed-chips-label span { color: #a4a59f; }
+.ed-chips {
+  display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+}
+.chip {
+  height: 36px; padding: 0 16px;
+  border: 1px solid #444450; border-radius: 99px;
+  background: #2f2f37; color: #f2f3e5;
+  font-family: var(--font-body); font-size: 14px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  transition: background 160ms, color 160ms, border-color 160ms;
+}
+.chip.sel { border-color: transparent; color: #1f1f25; }
+
+/* Navigation */
+.ed-nav {
+  position: absolute; bottom: 56px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px; z-index: 20;
+}
+.btn-back-dark {
+  width: 48px; height: 48px; border-radius: 8px;
+  background: rgba(255,255,255,0.12);
+  border: none; cursor: pointer; display: grid; place-items: center;
+  transition: opacity 120ms;
+}
+.btn-back-dark:active { opacity: 0.75; }
+.btn-next-em {
+  width: 200px; height: 48px;
+  background: #f2f3e5; color: #1f1f25;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  border-radius: 8px; border: none; cursor: pointer; transition: opacity 120ms;
+}
+.btn-next-em:active { opacity: 0.85; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   Why screen
+   ══════════════════════════════════════════════════════════════ */
+#s-why { background: #1f1f25; }
+
+.why-title {
+  position: absolute; top: 68px; left: 0; right: 0; padding: 0 200px;
+  font-family: var(--font-display); font-size: 66px; line-height: 1.0;
+  letter-spacing: 1px; text-transform: uppercase; color: #f2f3e5;
+  text-align: center; margin: 0; z-index: 5;
+}
+.why-grid {
+  position: absolute; top: 230px; left: 50%; transform: translateX(-50%);
+  width: 720px; z-index: 5;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+}
+.why-block {
+  background: #2f2f37; border: 1px solid #444450; border-radius: 14px;
+  padding: 18px 12px 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer; border: 1px solid transparent;
+  transition: background 160ms, border-color 160ms;
+}
+.why-block:hover { background: #3a3a44; }
+.why-block.sel { background: #3a3a44; border-color: #f2f3e5; }
+.why-emoji { font-size: 28px; line-height: 1; }
+.why-label {
+  font-family: var(--font-body); font-size: 13px; font-weight: 600;
+  color: #f2f3e5; text-align: center; line-height: 1.3;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   Sleep screen
+   ══════════════════════════════════════════════════════════════ */
+#s-sleep { background: #1f1f25; }
+
+.sleep-sub {
+  position: absolute; top: 60px; left: 0; right: 0;
+  font-family: var(--font-body); font-size: 15px; font-weight: 500;
+  color: #a4a59f; text-align: center; z-index: 5;
+}
+.sleep-title {
+  position: absolute; top: 82px; left: 0; right: 0;
+  font-family: var(--font-display); font-size: 72px; line-height: 1.0;
+  letter-spacing: 1px; text-transform: uppercase; color: #f2f3e5;
+  text-align: center; margin: 0; z-index: 5;
+}
+.sleep-slider-wrap {
+  position: absolute; top: 230px; left: 50%; transform: translateX(-50%); z-index: 5;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   Done screen
+   ══════════════════════════════════════════════════════════════ */
+#s-done { background: #1f1f25; }
+
+.done-center {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -52%);
+  display: flex; flex-direction: column; align-items: center; gap: 16px; z-index: 5;
+}
+.done-reward { display: flex; align-items: center; gap: 8px; }
+.done-plus { font-family: var(--font-display); font-size: 28px; color: #f2f3e5; letter-spacing: -0.5px; }
+.done-spark {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg,#f08b31,#ffbb25);
+  display: grid; place-items: center; font-size: 14px;
+}
+.done-card {
+  width: 200px; height: 298px; border-radius: 19px;
+  overflow: hidden; position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5); flex-shrink: 0;
+}
+.done-card-art {
+  width: 100%; height: 196px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 80px;
+}
+.done-card-footer {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: #2f2f37; padding: 10px 16px 14px;
+  display: flex; flex-direction: column; gap: 2px; align-items: flex-start;
+}
+.done-card-num {
+  font-family: var(--font-body); font-size: 10px; font-weight: 700;
+  color: #a4a59f; display: flex; align-items: center; gap: 4px;
+}
+.done-card-name {
+  font-family: var(--font-display); font-size: 15px; letter-spacing: 0.5px;
+  text-transform: uppercase; color: #f2f3e5;
+}
+.done-title {
+  font-family: var(--font-display); font-size: 72px; line-height: 1.0;
+  letter-spacing: 1px; text-transform: uppercase; color: #f2f3e5; text-align: center;
+}
+.done-cta {
+  position: absolute; bottom: 56px; left: 50%; transform: translateX(-50%); z-index: 20;
+}
+
+</style>
+</head>
+<body>
+
+<div class="bp-stage">
+<div class="bp-device" id="device">
+
+<!-- ════════════════════════════════════════════════════════════
+     S0 — Emotion picker
+     ════════════════════════════════════════════════════════════ -->
+<div class="screen active" id="s0">
+  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+  <div class="prog"><div class="prog-fill" style="width:120px"></div></div>
+
+  <div class="mc-wrap">
+    <h1 class="mc-title">How do you feel?</h1>
+    <p class="mc-sub">Pick maximum 3 emotions</p>
+    <div class="em-grid" id="emGrid">
+
+      <button class="em-btn" data-key="curious" onclick="toggleEm(this)">
+        <img src="./components/emotion-curious.svg" alt=""><span>Curious</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+      <button class="em-btn" data-key="okay" onclick="toggleEm(this)">
+        <img src="./components/emotion-okay.svg" alt=""><span>Okay</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+      <button class="em-btn" data-key="meh" onclick="toggleEm(this)">
+        <img src="./components/emotion-meh.svg" alt=""><span>Meh</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+      <button class="em-btn" data-key="sad" onclick="toggleEm(this)">
+        <img src="./components/emotion-sad.svg" alt=""><span>Sad</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+      <button class="em-btn" data-key="angry" onclick="toggleEm(this)">
+        <img src="./components/emotion-angry.svg" alt=""><span>Angry</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+
+      <button class="em-btn" data-key="happy" onclick="toggleEm(this)">
+        <img src="./components/emotion-happy.svg" alt=""><span>Happy</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+      <button class="em-btn" data-key="grateful" onclick="toggleEm(this)">
+        <img src="./components/emotion-grateful.svg" alt=""><span>Grateful</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+      <button class="em-btn" data-key="neutral" onclick="toggleEm(this)">
+        <img src="./components/emotion-neutral.svg" alt=""><span>Neutral</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+      <button class="em-btn" data-key="tired" onclick="toggleEm(this)">
+        <img src="./components/emotion-tired.svg" alt=""><span>Tired</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+      <button class="em-btn" data-key="stressed" onclick="toggleEm(this)">
+        <img src="./components/emotion-stressed.svg" alt=""><span>Stressed</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+
+      <button class="em-btn" data-key="excited" onclick="toggleEm(this)">
+        <img src="./components/emotion-excited.svg" alt=""><span>Excited</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+      <button class="em-btn" data-key="hopeful" onclick="toggleEm(this)">
+        <img src="./components/emotion-hopeful.svg" alt=""><span>Hopeful</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+      <button class="em-btn" data-key="idontknow" onclick="toggleEm(this)">
+        <img src="./components/emotion-idontknow.svg" alt=""><span>I don't<br>know</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+      <button class="em-btn" data-key="lonely" onclick="toggleEm(this)">
+        <img src="./components/emotion-lonely.svg" alt=""><span>Lonely</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+      <button class="em-btn" data-key="anxious" onclick="toggleEm(this)">
+        <img src="./components/emotion-anxious.svg" alt=""><span>Anxious</span>
+        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </button>
+
+    </div>
+  </div>
+
+  <div class="mc-cta">
+    <button class="btn-continue" onclick="startDetailFlow()">Continue</button>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     S-WHY — What makes you feel this way?
+     ════════════════════════════════════════════════════════════ -->
+<div class="screen" id="s-why">
+  <div class="ed-bg ed-bg-tl"><img src="./components/emotion-hopeful.svg" alt=""></div>
+  <div class="ed-bg ed-bg-br" style="transform:rotate(15deg)"><img src="./components/emotion-okay.svg" alt=""></div>
+
+  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+  <div class="prog"><div class="prog-fill" style="width:680px"></div></div>
+
+  <h2 class="why-title">What makes you feel this way?</h2>
+
+  <div class="why-grid">
+    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">📚</span><span class="why-label">School life</span></button>
+    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">✍️</span><span class="why-label">Exams</span></button>
+    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">🏠</span><span class="why-label">Home life</span></button>
+    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">🤸</span><span class="why-label">Activities</span></button>
+    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">📱</span><span class="why-label">Saw something online</span></button>
+    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">👫</span><span class="why-label">Friends</span></button>
+    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">🚶</span><span class="why-label">No friends</span></button>
+    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">😩</span><span class="why-label">Hungry</span></button>
+  </div>
+
+  <div class="ed-nav">
+    <button class="btn-back-dark" onclick="goBackFromWhy()">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="btn-next-em" onclick="goTo('s-sleep')">Next</button>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     S-SLEEP — How was your sleep?
+     ════════════════════════════════════════════════════════════ -->
+<div class="screen" id="s-sleep">
+  <div class="ed-bg ed-bg-tl" style="opacity:0.5"><img src="./components/emotion-tired.svg" alt=""></div>
+  <div class="ed-bg ed-bg-br" style="opacity:0.5"><img src="./components/emotion-neutral.svg" alt=""></div>
+
+  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+  <div class="prog"><div class="prog-fill" style="width:726px"></div></div>
+
+  <p class="sleep-sub">Almost done! The last question for today.</p>
+  <h2 class="sleep-title">How was<br>your sleep?</h2>
+
+  <div class="sleep-slider-wrap">
+    <div class="arc-slider" id="arc-sleep" tabindex="0">
+      <svg viewBox="0 0 532 248" width="532" height="248">
+        <defs>
+          <linearGradient id="grad-sleep" gradientUnits="userSpaceOnUse" x1="48" y1="247" x2="480" y2="247">
+            <stop offset="0%" stop-color="#1a3a9f"/>
+            <stop offset="100%" stop-color="#5abfea"/>
+          </linearGradient>
+        </defs>
+        <path id="arcTrack-sleep" fill="none" stroke="#2f2f37" stroke-width="49" stroke-linecap="round"/>
+        <path id="arcFill-sleep"  fill="none" stroke="url(#grad-sleep)" stroke-width="49" stroke-linecap="round"/>
+        <g id="arcDots-sleep"></g>
+      </svg>
+      <div class="arc-slider__hit" id="arcHit-sleep"></div>
+      <div class="arc-slider__thumb" id="arcThumb-sleep"><span id="arcEmoji-sleep">😩</span></div>
+      <div class="arc-slider__pill"><span id="arcLabel-sleep"></span></div>
+    </div>
+  </div>
+
+  <div class="ed-nav">
+    <button class="btn-back-dark" onclick="goTo('s-why')">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="btn-next-em" onclick="goTo('s-done')">Next</button>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     S-DONE — Check-in complete!
+     ════════════════════════════════════════════════════════════ -->
+<div class="screen" id="s-done">
+  <div class="ed-bg ed-bg-tl"><img src="./components/emotion-happy.svg" alt=""></div>
+  <div class="ed-bg ed-bg-br" style="transform:rotate(15deg)"><img src="./components/emotion-excited.svg" alt=""></div>
+
+  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+
+  <div class="done-center">
+    <div class="done-reward">
+      <span class="done-plus">+1</span>
+      <div class="done-spark">⚡</div>
+    </div>
+
+    <div class="done-card">
+      <img src="./components/card-2.svg" alt="Mood check-in" style="width:100%;height:100%;display:block;border-radius:19px;">
+    </div>
+
+    <p class="done-title">Setup<br>completed!</p>
+  </div>
+
+  <div class="done-cta">
+    <button class="btn-next-em" style="width:270px" onclick="finishMoodCheckin()">Start your day</button>
+  </div>
+</div>
+
+
+</div><!-- /bp-device -->
+</div><!-- /bp-stage -->
+
+<script>
+// ─── Scale ────────────────────────────────────────────────────
+function scale() {
+  const s = Math.min(innerWidth / 1194, innerHeight / 834) * 0.96;
+  document.getElementById('device').style.setProperty('--s', s);
+}
+scale(); addEventListener('resize', scale);
+
+// ─── Emotion data ─────────────────────────────────────────────
+const EMOTIONS = {
+  curious:   { name:'Curious',      color:'#f4c430', emoji:'🤔', levels:['Curious','Quite curious','Very curious'],         chips:['Interested','Intrigued','Fascinated','Nosy','Wonder-Filled'] },
+  happy:     { name:'Happy',        color:'#f4a021', emoji:'😊', levels:['Happy','Quite happy','Very happy'],               chips:['Joyful','Content','Pleased','Cheerful','Elated'] },
+  excited:   { name:'Excited',      color:'#e84326', emoji:'🤩', levels:['Excited','Quite excited','Super excited'],        chips:['Enthusiastic','Eager','Thrilled','Energised','Pumped'] },
+  okay:      { name:'Okay',         color:'#4ecb9e', emoji:'🙂', levels:['Okay','Pretty okay','Very okay'],                 chips:['Fine','Comfortable','Satisfied','Steady','Relieved'] },
+  grateful:  { name:'Grateful',     color:'#4ecb71', emoji:'🙏', levels:['Grateful','Quite grateful','Very grateful'],      chips:['Appreciative','Thankful','Touched','Lucky','Warm Inside'] },
+  hopeful:   { name:'Hopeful',      color:'#c5e000', emoji:'😇', levels:['Hopeful','Quite hopeful','Super hopeful'],        chips:['Optimistic','Encouraged','Wishing','Inspired','Looking forward'] },
+  meh:       { name:'Meh',          color:'#b8b8a8', emoji:'😑', levels:['A bit meh','Meh','Very meh'],                     chips:['Unimpressed','Bored','Flat','Disengaged','Apathetic'] },
+  neutral:   { name:'Neutral',      color:'#a0a09a', emoji:'😐', levels:['Neutral','Quite neutral','Very neutral'],         chips:['Indifferent','Detached','Composed','Shoulder Shrug','Neither'] },
+  idontknow: { name:"I Don't Know", color:'#888880', emoji:'🤷', levels:['Unsure','Quite unsure','Very unsure'],            chips:['Confused','Uncertain','Overwhelmed','Numb','Conflicted'] },
+  sad:       { name:'Sad',          color:'#5abfea', emoji:'😢', levels:['A bit sad','Sad','Very sad'],                     chips:['Sorrowful','Left Out','Let Down','Disappointed','Heartbroken'] },
+  tired:     { name:'Tired',        color:'#4a67f5', emoji:'😴', levels:['Tired','Quite tired','Very tired'],               chips:['Exhausted','Drained','Fatigued','Sleepy','Checked Out'] },
+  lonely:    { name:'Lonely',       color:'#a070d4', emoji:'😔', levels:['Lonely','Quite lonely','Super lonely'],           chips:['Isolated','Disconnected','Left Out','Longing','Forgotten'] },
+  angry:     { name:'Angry',        color:'#e84326', emoji:'😠', levels:['A bit angry','Angry','Very angry'],               chips:['Frustrated','Irritated','Furious','Annoyed','Jealous'] },
+  stressed:  { name:'Stressed',     color:'#be2f6e', emoji:'😤', levels:['Stressed','Quite stressed','Very stressed'],      chips:['Overwhelmed','Pressured','Tense','Rushed','Snappy'] },
+  anxious:   { name:'Anxious',      color:'#b38aff', emoji:'😰', levels:['Anxious','Quite anxious','Super anxious'],        chips:['Worried','Nervous','Scared','Fearful','Panicked'] },
+};
+
+// ─── Screen nav ───────────────────────────────────────────────
+let cur = 's0';
+let detailOrder = [];
+
+function finishMoodCheckin() {
+  localStorage.setItem('bp_mood_done', '1');
+  window.location.href = 'today.html';
+}
+
+function goTo(id) {
+  document.getElementById(cur).classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  cur = id;
+}
+
+// ─── Emotion picker ───────────────────────────────────────────
+const MAX = 3;
+const grid = document.getElementById('emGrid');
+
+function toggleEm(el) {
+  if (el.classList.contains('sel')) {
+    el.classList.remove('sel');
+  } else {
+    if (document.querySelectorAll('.em-btn.sel').length >= MAX) return;
+    el.classList.add('sel');
+  }
+  grid.classList.toggle('maxed', document.querySelectorAll('.em-btn.sel').length >= MAX);
+}
+
+// ─── Build & start detail flow ────────────────────────────────
+function startDetailFlow() {
+  const selected = [...document.querySelectorAll('.em-btn.sel')].map(el => el.dataset.key);
+  if (!selected.length) return;
+  detailOrder = selected;
+  const device = document.getElementById('device');
+  // Remove any previously built detail screens
+  document.querySelectorAll('.ed-screen').forEach(s => s.remove());
+  // Build one screen per selected emotion
+  selected.forEach((key, idx) => {
+    const screen = buildDetailScreen(key, idx, selected.length);
+    device.appendChild(screen);
+    initArc(key);
+  });
+  goTo('ed-0');
+}
+
+// ─── Detail screen builder ────────────────────────────────────
+function buildDetailScreen(key, idx, total) {
+  const em = EMOTIONS[key];
+  const progWidth = 120 + ((idx + 1) / (total + 1)) * 600;
+  const chk = `<svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const chipsHtml = em.chips.map(c =>
+    `<button class="chip" onclick="toggleChip(this,'${em.color}')">${c}</button>`
+  ).join('');
+  const gradId = `grad-${key}`;
+
+  const div = document.createElement('div');
+  div.className = 'screen ed-screen';
+  div.id = `ed-${idx}`;
+  div.innerHTML = `
+    <div class="ed-bg ed-bg-tl"><img src="./components/emotion-${key}.svg" alt=""></div>
+    <div class="ed-bg ed-bg-br"><img src="./components/emotion-${key}.svg" alt=""></div>
+
+    <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+    <div class="prog"><div class="prog-fill" style="width:${Math.round(progWidth)}px"></div></div>
+
+    <h2 class="ed-title">${em.name}</h2>
+
+    <div class="ed-slider-wrap">
+      <div class="arc-slider" id="arc-${key}" tabindex="0">
+        <svg viewBox="0 0 532 248" width="532" height="248">
+          <defs>
+            <linearGradient id="${gradId}" gradientUnits="userSpaceOnUse" x1="48" y1="247" x2="480" y2="247">
+              <stop offset="0%" stop-color="${em.color}" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="${em.color}"/>
+            </linearGradient>
+          </defs>
+          <path id="arcTrack-${key}" fill="none" stroke="#2f2f37" stroke-width="49" stroke-linecap="round"/>
+          <path id="arcFill-${key}"  fill="none" stroke="url(#${gradId})" stroke-width="49" stroke-linecap="round"/>
+          <g id="arcDots-${key}"></g>
+        </svg>
+        <div class="arc-slider__hit" id="arcHit-${key}"></div>
+        <div class="arc-slider__thumb" id="arcThumb-${key}"><span id="arcEmoji-${key}">${em.emoji}</span></div>
+        <div class="arc-slider__pill"><span id="arcLabel-${key}"></span></div>
+      </div>
+    </div>
+
+    <div class="ed-chips-section">
+      <p class="ed-chips-label">More specifically <span>(optional)</span></p>
+      <div class="ed-chips">${chipsHtml}</div>
+    </div>
+
+    <div class="ed-nav">
+      <button class="btn-back-dark" onclick="edBack(${idx})">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn-next-em" onclick="edNext(${idx}, ${total})">
+        ${idx < total - 1 ? 'Next' : 'Done'}
+      </button>
+    </div>
+  `;
+  return div;
+}
+
+function edBack(idx) {
+  if (idx === 0) { goTo('s0'); } else { goTo(`ed-${idx - 1}`); }
+}
+function edNext(idx, total) {
+  if (idx < total - 1) { goTo(`ed-${idx + 1}`); } else { goTo('s-why'); }
+}
+function goBackFromWhy() {
+  const last = detailOrder.length ? `ed-${detailOrder.length - 1}` : 's0';
+  goTo(last);
+}
+
+// ─── Chip toggle ──────────────────────────────────────────────
+function toggleChip(el, color) {
+  el.classList.toggle('sel');
+  el.style.background = el.classList.contains('sel') ? color : '';
+}
+
+// ─── Arc slider (3 stops) ─────────────────────────────────────
+const ARC_CX = 263, ARC_CY = 247, ARC_RM = 190.5;
+const ARC_FILL_START = 175, ARC_TRACK_END = 5;
+const ARC_A_MAX = 170, ARC_A_MIN = 10;
+const DEG = Math.PI / 180;
+const rnd = n => Math.round(n * 10) / 10;
+
+function arcPt(r, deg) {
+  return [ARC_CX + r * Math.cos(deg * DEG), ARC_CY - r * Math.sin(deg * DEG)];
+}
+function arcAng(x, y) {
+  return Math.atan2(ARC_CY - y, x - ARC_CX) / DEG;
+}
+function arcPath(from, to) {
+  if (from - to < 0.4) to = from - 0.4;
+  const [x1,y1] = arcPt(ARC_RM, from), [x2,y2] = arcPt(ARC_RM, to);
+  return `M${rnd(x1)},${rnd(y1)} A${ARC_RM},${ARC_RM} 0 ${(from-to)>=180?1:0},1 ${rnd(x2)},${rnd(y2)}`;
+}
+
+function initArc(key) {
+  const em = EMOTIONS[key];
+  const NS = 'http://www.w3.org/2000/svg';
+  const stops3 = [ARC_A_MAX, (ARC_A_MAX + ARC_A_MIN) / 2, ARC_A_MIN]; // left, mid, right
+
+  document.getElementById(`arcTrack-${key}`).setAttribute('d', arcPath(ARC_FILL_START, ARC_TRACK_END));
+
+  const dotsG = document.getElementById(`arcDots-${key}`);
+  const dotEls = stops3.map(a => {
+    const [dx, dy] = arcPt(ARC_RM, a);
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', rnd(dx)); c.setAttribute('cy', rnd(dy));
+    c.setAttribute('r', '7'); c.setAttribute('fill', '#18181f');
+    dotsG.appendChild(c);
+    return c;
+  });
+
+  let arcAngle = stops3[0];
+
+  function arcMove(a) {
+    a = Math.max(ARC_A_MIN, Math.min(ARC_A_MAX, a));
+    arcAngle = a;
+    document.getElementById(`arcFill-${key}`).setAttribute('d', arcPath(ARC_FILL_START, a));
+    const [tx, ty] = arcPt(ARC_RM, a);
+    const thumb = document.getElementById(`arcThumb-${key}`);
+    thumb.style.left = tx + 'px'; thumb.style.top = ty + 'px';
+    const nearIdx = stops3.reduce((b, sa, i) => Math.abs(a-sa) < Math.abs(a-stops3[b]) ? i : b, 0);
+    document.getElementById(`arcLabel-${key}`).textContent = em.levels[nearIdx];
+    dotEls.forEach((c, i) => c.setAttribute('fill', i === nearIdx ? 'transparent' : '#18181f'));
+  }
+
+  function arcSnap(v, noAnim) {
+    const thumb = document.getElementById(`arcThumb-${key}`);
+    if (!noAnim) {
+      thumb.classList.add('is-snapping');
+      thumb.addEventListener('transitionend', () => thumb.classList.remove('is-snapping'), { once: true });
+    }
+    arcMove(stops3[v]);
+  }
+
+  function nearestStop(a) {
+    return stops3.reduce((b, sa, i) => Math.abs(a-sa) < Math.abs(a-stops3[b]) ? i : b, 0);
+  }
+
+  const sliderEl = document.getElementById(`arc-${key}`);
+  const hitEl = document.getElementById(`arcHit-${key}`);
+  const thumbEl = document.getElementById(`arcThumb-${key}`);
+  let dragging = false;
+
+  function clientToAngle(e) {
+    const t = e.touches ? e.touches[0] : e;
+    const r = sliderEl.getBoundingClientRect();
+    return arcAng(t.clientX - r.left, t.clientY - r.top);
+  }
+  function onStart(e) { dragging=true; sliderEl.classList.add('is-dragging'); thumbEl.classList.remove('is-snapping'); e.preventDefault(); arcMove(clientToAngle(e)); }
+  function onMove(e) { if (!dragging) return; e.preventDefault(); arcMove(clientToAngle(e)); }
+  function onEnd()   { if (!dragging) return; dragging=false; sliderEl.classList.remove('is-dragging'); arcSnap(nearestStop(arcAngle)); }
+
+  hitEl.addEventListener('mousedown', onStart);
+  thumbEl.addEventListener('mousedown', onStart);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onEnd);
+  hitEl.addEventListener('touchstart', onStart, { passive: false });
+  thumbEl.addEventListener('touchstart', onStart, { passive: false });
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onEnd);
+  sliderEl.addEventListener('keydown', e => {
+    const n = nearestStop(arcAngle);
+    if (e.key === 'ArrowRight') arcSnap(Math.min(n+1, 2));
+    if (e.key === 'ArrowLeft')  arcSnap(Math.max(n-1, 0));
+  });
+
+  arcSnap(0, true);
+}
+
+// ─── Sleep slider (7 stops) ───────────────────────────────────
+const SLEEP_LEVELS = [
+  { e:'😩', t:'Trouble\nfalling asleep' },
+  { e:'😔', t:'Restless\nsleep' },
+  { e:'😕', t:'Light\nsleep' },
+  { e:'😐', t:'Okay' },
+  { e:'🙂', t:'Pretty\ngood' },
+  { e:'😊', t:'Well\nrested' },
+  { e:'🌟', t:'Amazing\nsleep' },
+];
+
+function initSleepSlider() {
+  const NS = 'http://www.w3.org/2000/svg';
+  const n = SLEEP_LEVELS.length;
+  const stops = SLEEP_LEVELS.map((_, i) => ARC_A_MAX - (i / (n-1)) * (ARC_A_MAX - ARC_A_MIN));
+
+  document.getElementById('arcTrack-sleep').setAttribute('d', arcPath(ARC_FILL_START, ARC_TRACK_END));
+
+  const dotsG = document.getElementById('arcDots-sleep');
+  const dotEls = stops.map(a => {
+    const [dx, dy] = arcPt(ARC_RM, a);
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', rnd(dx)); c.setAttribute('cy', rnd(dy));
+    c.setAttribute('r', '6'); c.setAttribute('fill', '#18181f');
+    dotsG.appendChild(c); return c;
+  });
+
+  let arcAngle = stops[0];
+  function arcMove(a) {
+    a = Math.max(ARC_A_MIN, Math.min(ARC_A_MAX, a)); arcAngle = a;
+    document.getElementById('arcFill-sleep').setAttribute('d', arcPath(ARC_FILL_START, a));
+    const [tx, ty] = arcPt(ARC_RM, a);
+    const thumb = document.getElementById('arcThumb-sleep');
+    thumb.style.left = tx+'px'; thumb.style.top = ty+'px';
+    const ni = stops.reduce((b,sa,i) => Math.abs(a-sa)<Math.abs(a-stops[b])?i:b, 0);
+    document.getElementById('arcEmoji-sleep').textContent = SLEEP_LEVELS[ni].e;
+    document.getElementById('arcLabel-sleep').innerHTML = SLEEP_LEVELS[ni].t.replace('\n','<br>');
+    dotEls.forEach((c,i) => c.setAttribute('fill', i===ni?'transparent':'#18181f'));
+  }
+  function arcSnap(v, noAnim) {
+    const thumb = document.getElementById('arcThumb-sleep');
+    if (!noAnim) { thumb.classList.add('is-snapping'); thumb.addEventListener('transitionend', ()=>thumb.classList.remove('is-snapping'),{once:true}); }
+    arcMove(stops[v]);
+  }
+  function nearest(a) { return stops.reduce((b,sa,i)=>Math.abs(a-sa)<Math.abs(a-stops[b])?i:b,0); }
+
+  const sliderEl = document.getElementById('arc-sleep');
+  const hitEl = document.getElementById('arcHit-sleep');
+  const thumbEl = document.getElementById('arcThumb-sleep');
+  let dragging = false;
+  function cta(e) { const t=e.touches?e.touches[0]:e; const r=sliderEl.getBoundingClientRect(); return arcAng(t.clientX-r.left,t.clientY-r.top); }
+  function onStart(e){dragging=true;sliderEl.classList.add('is-dragging');thumbEl.classList.remove('is-snapping');e.preventDefault();arcMove(cta(e));}
+  function onMove(e){if(!dragging)return;e.preventDefault();arcMove(cta(e));}
+  function onEnd(){if(!dragging)return;dragging=false;sliderEl.classList.remove('is-dragging');arcSnap(nearest(arcAngle));}
+  hitEl.addEventListener('mousedown',onStart); thumbEl.addEventListener('mousedown',onStart);
+  window.addEventListener('mousemove',onMove); window.addEventListener('mouseup',onEnd);
+  hitEl.addEventListener('touchstart',onStart,{passive:false}); thumbEl.addEventListener('touchstart',onStart,{passive:false});
+  window.addEventListener('touchmove',onMove,{passive:false}); window.addEventListener('touchend',onEnd);
+  sliderEl.addEventListener('keydown',e=>{ const ni=nearest(arcAngle); if(e.key==='ArrowRight')arcSnap(Math.min(ni+1,n-1)); if(e.key==='ArrowLeft')arcSnap(Math.max(ni-1,0)); });
+  arcSnap(0, true);
+}
+
+initSleepSlider();
+</script>
+</body>
+</html>

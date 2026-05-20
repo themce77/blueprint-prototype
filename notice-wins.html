@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint — Notice your wins</title>
+<link rel="stylesheet" href="./foundations/tokens.css">
+<style>
+
+body { background: #0a0a0f; overflow: hidden; margin: 0; }
+.bp-stage { position: fixed; inset: 0; display: grid; place-items: center; }
+.bp-device {
+  width: 1194px; height: 834px; position: relative; overflow: hidden;
+  border-radius: 20px; transform-origin: center center;
+  transform: scale(var(--s,1));
+}
+
+/* ─── Screen transitions ────────────────────────────────────── */
+.screen {
+  position: absolute; inset: 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity 280ms cubic-bezier(0.4,0,0.2,1);
+}
+.screen.active { opacity: 1; pointer-events: all; }
+
+/* ─── Status bar ────────────────────────────────────────────── */
+.sb {
+  position: absolute; top: 0; left: 0; right: 0; height: 24px; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 500;
+  color: #fff; pointer-events: none;
+}
+
+/* ════════════════════════════════════════════════════════════
+   SCREEN 1 — Write
+   ════════════════════════════════════════════════════════════ */
+#s-write {
+  background: #3e4fb8;
+}
+
+/* dark decorative blobs */
+.write-blob {
+  position: absolute; border-radius: 50%; background: #1f1f25; pointer-events: none;
+}
+.write-blob-l { width: 680px; height: 680px; left: -310px; top: 50%; transform: translateY(-50%); }
+.write-blob-r { width: 680px; height: 680px; right: -310px; top: 50%; transform: translateY(-50%); }
+
+/* back button */
+.btn-back {
+  position: absolute; top: 36px; left: 24px; z-index: 10;
+  width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.15);
+  border: none; cursor: pointer; display: grid; place-items: center;
+  transition: background 120ms;
+}
+.btn-back:hover { background: rgba(255,255,255,0.22); }
+.btn-back svg { width: 18px; height: 18px; }
+
+/* header */
+.write-header {
+  position: absolute; top: 52px; left: 0; right: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.write-spark-badge {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-display); font-size: 20px; color: #f2f3e5;
+}
+.spark-sm {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: linear-gradient(135deg,#f08b31,#ffbb25);
+  display: grid; place-items: center; font-size: 10px;
+}
+.write-title {
+  font-family: var(--font-display); font-size: 32px; letter-spacing: 0.5px;
+  text-transform: uppercase; color: #f2f3e5; margin: 0; line-height: 1;
+}
+
+/* content card (message + textarea) */
+.write-content {
+  position: absolute; top: 155px; left: 50%; transform: translateX(-50%);
+  width: 500px; display: flex; flex-direction: column; gap: 0;
+}
+
+/* monster message bubble */
+.msg-bubble {
+  background: #49aee1; border-radius: 14px 14px 0 0;
+  padding: 12px 16px; display: flex; align-items: flex-start; gap: 12px;
+}
+.msg-avatar {
+  width: 48px; height: 48px; border-radius: 50%; background: #f2f3e5;
+  flex-shrink: 0; overflow: hidden; display: grid; place-items: center;
+}
+.msg-avatar img { width: 36px; height: 36px; object-fit: contain; }
+.msg-text {
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #2f2f37; line-height: 1.4; padding-top: 4px;
+}
+
+/* text area */
+.write-area {
+  background: #fff; border-radius: 0 0 14px 14px;
+  display: flex; flex-direction: column;
+}
+.fmt-bar {
+  padding: 8px 12px; display: flex; align-items: center; gap: 2px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.fmt-btn {
+  width: 30px; height: 30px; border-radius: 6px; border: none; background: transparent;
+  cursor: pointer; display: grid; place-items: center; color: #888;
+  font-family: var(--font-body); font-size: 13px; font-weight: 600;
+  transition: background 120ms;
+}
+.fmt-btn:hover { background: rgba(0,0,0,0.07); }
+.fmt-sep { width: 1px; height: 18px; background: #ddd; margin: 0 4px; }
+.write-textarea {
+  flex: 1; border: none; outline: none; resize: none;
+  font-family: var(--font-body); font-size: 16px; font-weight: 600;
+  color: #2f2f37; padding: 16px;
+  background: transparent; min-height: 170px;
+}
+.write-textarea::placeholder { color: #aaa; }
+
+/* save button */
+.btn-save-wrap {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+}
+.btn-save {
+  width: 270px; height: 48px; border-radius: 10px;
+  background: #f1f2e4; color: #1f1f24;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  border: none; cursor: pointer; transition: opacity 150ms, transform 120ms;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-save:active { transform: scale(0.97); }
+.btn-save:disabled { opacity: 0.4; cursor: default; }
+
+/* ════════════════════════════════════════════════════════════
+   SCREEN 2 — Completed
+   ════════════════════════════════════════════════════════════ */
+#s-done {
+  background: #1f1f25;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0;
+}
+.done-spark-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+}
+.done-plus {
+  font-family: var(--font-display); font-size: 32px; color: #f2f3e5; line-height: 1;
+}
+.done-spark-lg {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg,#f08b31,#ffbb25);
+  display: grid; place-items: center; font-size: 15px;
+}
+.done-card-wrap {
+  width: 237px; height: 353px; position: relative;
+  animation: float 3s ease-in-out infinite;
+  margin-bottom: 28px;
+}
+.done-card-wrap img { width: 100%; height: 100%; border-radius: 19px; display: block; }
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+.done-title {
+  font-family: var(--font-display); font-size: 80px; line-height: 1;
+  text-transform: uppercase; color: #f2f3e5; letter-spacing: 1px;
+  text-align: center; margin: 0;
+}
+
+</style>
+</head>
+<body>
+
+<div class="bp-stage">
+<div class="bp-device" id="device">
+
+  <!-- ══════════════════════════════════════════════════════════
+       SCREEN 1 — Write your win
+       ══════════════════════════════════════════════════════════ -->
+  <div class="screen active" id="s-write">
+    <div class="write-blob write-blob-l"></div>
+    <div class="write-blob write-blob-r"></div>
+
+    <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+
+    <button class="btn-back" onclick="history.back()">
+      <svg viewBox="0 0 18 18" fill="none">
+        <path d="M11 4L6 9L11 14" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="write-header">
+      <div class="write-spark-badge">
+        1 <div class="spark-sm">⚡</div>
+      </div>
+      <h1 class="write-title">Notice your wins</h1>
+    </div>
+
+    <div class="write-content">
+      <div class="msg-bubble">
+        <div class="msg-avatar">
+          <img src="./components/card-1.svg" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:50%;">
+        </div>
+        <p class="msg-text">What's one small thing that happened this week that made you smile — even briefly?</p>
+      </div>
+
+      <div class="write-area">
+        <div class="fmt-bar">
+          <button class="fmt-btn" title="Bold"><b>B</b></button>
+          <button class="fmt-btn" title="Italic"><i>I</i></button>
+          <button class="fmt-btn" title="Underline"><u>U</u></button>
+          <div class="fmt-sep"></div>
+          <button class="fmt-btn" title="List">≡</button>
+          <button class="fmt-btn" title="Ordered list">1.</button>
+          <div class="fmt-sep"></div>
+          <button class="fmt-btn" title="Link">🔗</button>
+        </div>
+        <textarea
+          class="write-textarea"
+          id="noteInput"
+          placeholder="Start writing here"
+          oninput="onInput()"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="btn-save-wrap">
+      <button class="btn-save" id="btnSave" disabled onclick="saveNote()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M13 2H4L2 4v9a1 1 0 001 1h10a1 1 0 001-1V3a1 1 0 00-1-1z" stroke="#1f1f24" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M5 2v4h6V2M6 9l2 2 3-3" stroke="#1f1f24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Save
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SCREEN 2 — Completed!
+       ══════════════════════════════════════════════════════════ -->
+  <div class="screen" id="s-done">
+    <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+      <div class="done-spark-row">
+        <span class="done-plus">+1</span>
+        <div class="done-spark-lg">⚡</div>
+      </div>
+
+      <div class="done-card-wrap">
+        <img src="./components/card-1.svg" alt="Notice your wins">
+      </div>
+
+      <p class="done-title">Completed!</p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+function scale() {
+  const s = Math.min(innerWidth / 1194, innerHeight / 834) * 0.96;
+  document.getElementById('device').style.setProperty('--s', s);
+}
+scale(); addEventListener('resize', scale);
+
+let cur = 's-write';
+function goTo(id) {
+  document.getElementById(cur).classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  cur = id;
+}
+
+function onInput() {
+  const val = document.getElementById('noteInput').value.trim();
+  document.getElementById('btnSave').disabled = val.length === 0;
+}
+
+function saveNote() {
+  goTo('s-done');
+  // Mark this card as done when returning to today
+  localStorage.setItem('bp_wins_done', '1');
+  // Auto-return to today after 2.5s
+  setTimeout(() => {
+    window.location.href = 'today.html';
+  }, 2500);
+}
+</script>
+</body>
+</html>
