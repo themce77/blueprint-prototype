@@ -55,7 +55,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .prog-fill {
   height: 100%; background: #f2f3e5; border-radius: 99px;
-  transition: width 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+#prog {
+  transition: opacity 300ms;
 }
 
 /* ─── Navigation buttons ────────────────────────────────────── */
@@ -101,17 +104,20 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 /* ─── Text styles ───────────────────────────────────────────── */
 .t-xl {
   font-family: var(--font-display);
-  font-size: 80px; line-height: 1.06; letter-spacing: 1.5px;
-  text-transform: uppercase; color: #f2f3e5; text-align: center;
+  font-size: var(--title-large-size); line-height: var(--title-large-lh);
+  letter-spacing: 1.5px;
+  color: #f2f3e5; text-align: center;
 }
 .t-lg {
   font-family: var(--font-display);
-  font-size: 64px; line-height: 1.06; letter-spacing: 1.5px;
-  text-transform: uppercase; color: #f2f3e5; text-align: center;
+  font-size: var(--title-medium-size); line-height: var(--title-medium-lh);
+  letter-spacing: 1.5px;
+  color: #f2f3e5; text-align: center;
 }
 .t-body {
   font-family: var(--font-body);
-  font-size: 20px; font-weight: 700; line-height: 1.1;
+  font-size: var(--subtitle-small-size); font-weight: 700;
+  line-height: var(--subtitle-small-lh);
   letter-spacing: -0.4px; color: #f2f3e5; text-align: center;
 }
 
@@ -147,17 +153,88 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .ccard {
   position: absolute;
   width: 237px; height: 353px;
-  border-radius: 19px; overflow: hidden;
   z-index: 3; pointer-events: none;
 }
-.ccard img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.ccard img {
+  width: 100%; height: 100%; display: block; object-fit: cover;
+  animation: card-rock 2.6s cubic-bezier(0.56, -0.01, 0.38, 1.01) infinite;
+  transform-origin: center center;
+}
 
+@keyframes card-rock {
+  /* 0–800ms: idle */
+  0%   { transform: rotate(0deg); }
+  30%  { transform: rotate(0deg); animation-timing-function: cubic-bezier(0.56, -0.01, 0.38, 1.01); }
+  /* 800ms–1600ms: rotate to +15° */
+  61%  { transform: rotate(15deg); animation-timing-function: cubic-bezier(0.56, -0.01, 0.38, 1.01); }
+  /* 1600ms–2400ms: return to 0° */
+  100% { transform: rotate(0deg); }
+}
+
+/* staggered delays so cards don't move in sync */
+.cc-purple img { animation-delay: 0ms; }
+.cc-green  img { animation-delay: 400ms; }
+.cc-blue   img { animation-delay: 900ms; }
 
 /* Cards positioned by center point */
 .cc-purple { left: 400px; top: 50px;  transform: translate(-50%, -50%) rotate(165deg); }
 .cc-green  { left: 1110px; top: 567px; transform: translate(-50%, -50%) rotate(-60deg); }
 .cc-blue   { left: 80px;  top: 530px; transform: translate(-50%, -50%) rotate(68.64deg); }
 
+/* ── S0→S1 arch transition element (device-level, not inside any screen) */
+#arch-intro {
+  position: absolute;
+  width: 1243px; height: 1087px;
+  left: 0; top: 0;
+  /* Figma start: bounding-box TL at (1383,882) when rotated -90°
+     → element center = (1383+543.5, 882+621.5) = (1926.5, 1503.5)
+     → translate = center − half-size = (1926.5−621.5, 1503.5−543.5) = (1305, 960) */
+  transform: translate(1305px, 960px) rotate(-90deg);
+  transform-origin: 50% 50%;
+  pointer-events: none;
+  z-index: 15;
+  opacity: 0;
+}
+#arch-intro.entering {
+  transform: translate(-24.5px, -126.5px) rotate(0deg);
+  opacity: 1;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99) 1ms;
+}
+#arch-intro.done {
+  transform: translate(1305px, 960px) rotate(-90deg);
+  opacity: 0;
+  transition: none;
+}
+
+/* ── S0 → S1 exit animation ────────────────────────────────── */
+#s0.exiting .s0-poly {
+  transform: rotate(-70.64deg) scale(1.5);
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99);
+}
+#s0.exiting .cc-purple {
+  transform: translate(-50%, calc(-50% - 500px)) rotate(165deg);
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99);
+}
+#s0.exiting .cc-green {
+  transform: translate(calc(-50% + 600px), -50%) rotate(-60deg);
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99);
+}
+#s0.exiting .cc-blue {
+  transform: translate(calc(-50% - 500px), -50%) rotate(68.64deg);
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99);
+}
+#s0.exiting .s0-content {
+  transform: translateY(160px);
+  opacity: 0;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99),
+              opacity 500ms cubic-bezier(0.75, 0, 0.3, 0.99);
+}
+#s0.exiting .s0-cta-wrap {
+  transform: translateX(-50%) translateY(160px);
+  opacity: 0;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99) 60ms,
+              opacity 500ms cubic-bezier(0.75, 0, 0.3, 0.99) 60ms;
+}
 
 /* ══════════════════════════════════════════════════════════════
    S1 — Your space
@@ -166,8 +243,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 .arch-bg {
   position: absolute;
-  left: -31px; top: 50%;
-  transform: translateY(-50%);
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%) scale(1.08);
   width: 1243px; height: 1087px;
   pointer-events: none; z-index: 0;
 }
@@ -229,13 +306,18 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .toggle {
   width: 32px; height: 20px; background: #58b880;
   border-radius: 99px; position: relative; flex-shrink: 0;
+  cursor: pointer;
+  transition: background 220ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .toggle::after {
   content: ''; position: absolute;
   right: 2px; top: 2px;
   width: 16px; height: 16px;
   background: #fff; border-radius: 50%;
+  transition: right 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+.toggle.off { background: #444450; }
+.toggle.off::after { right: calc(100% - 18px); }
 
 .lock-btn {
   width: 32px; height: 32px;
@@ -283,20 +365,26 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .s3-content .t-lg { width: 412px; margin: 0 auto; }
 
 .avatar-row {
-  display: flex; gap: 36px;
+  display: flex; gap: 24px;
   justify-content: center;
   margin-top: 64px;
 }
 
 .av-btn {
-  width: 120px; height: 120px; border-radius: 99px;
-  border: 10px solid #444450;
-  overflow: hidden; cursor: pointer;
-  transition: border-color 160ms, transform 120ms cubic-bezier(0.34,1.56,0.64,1);
+  width: 140px; height: 140px; border-radius: 99px;
+  border: none; overflow: hidden; cursor: pointer; position: relative;
+  transition: transform 120ms cubic-bezier(0.34,1.56,0.64,1);
   flex-shrink: 0;
 }
+.av-btn::after {
+  content: ''; position: absolute; inset: 0;
+  border-radius: 99px;
+  border: 10px solid #444450;
+  pointer-events: none;
+  transition: border-color 160ms;
+}
 .av-btn:hover { transform: scale(1.06); }
-.av-btn.sel  { border-color: #f2f3e5; }
+.av-btn.sel::after { border-color: #f2f3e5; }
 .av-btn img  { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 
@@ -323,7 +411,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 /* Arc slider styles (blueprint component) */
 .arc-slider {
   position: relative;
-  width: 532px; height: 248px;
+  width: 532px; height: 310px;
   overflow: visible; outline: none;
   cursor: grab;
   -webkit-user-select: none; user-select: none;
@@ -389,51 +477,65 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 .fc-row {
   display: flex; gap: 12px;
-  margin-top: 40px;
-  /* overflow intentional — matches Figma (6th card clips off screen) */
+  margin-top: 100px;
+  overflow-x: auto; overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  padding-bottom: 4px;
 }
+.fc-row::-webkit-scrollbar { display: none; }
+.fc-row.is-dragging { cursor: grabbing; }
+.fc { scroll-snap-align: start; }
 
 .fc {
   width: 195px; height: 245px; flex-shrink: 0;
-  background: #36363f; border-radius: 14px;
-  padding: 16px 16px 0; position: relative;
-  cursor: pointer;
-  transition: background 160ms;
+  background: #36363f; border-radius: 28px;
+  position: relative; cursor: pointer;
+  overflow: hidden;
 }
-.fc:hover { opacity: 0.9; }
-.fc.sel { background: #f2f3e5; }
+.fc::after {
+  content: ''; position: absolute; inset: 0;
+  border: 16px solid #36363f;
+  border-radius: 28px;
+  pointer-events: none; z-index: 3;
+  transition: border-color 200ms;
+}
+.fc:hover { opacity: 0.88; }
+.fc.sel::after { border-color: #f2f3e5; }
 
 .fc-art {
-  width: 163px; height: 180px;
-  border-radius: 10px; overflow: hidden;
-  position: relative;
+  position: absolute; inset: 0;
 }
 .fc-art img {
   width: 100%; height: 100%; display: block;
-  object-fit: cover;
+  object-fit: fill;
 }
 
 .fc-bar {
-  position: absolute; bottom: 10px; left: 50%;
+  position: absolute; bottom: 0; left: 50%;
   transform: translateX(-50%);
-  width: 124px; height: 47px;
-  background: #444450; border-radius: 10px;
+  width: 124px; height: 53px;
+  background: #36363f; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 13px;
-  text-transform: uppercase; color: #f2f3e5;
-  letter-spacing: 0.5px; text-align: center;
-  line-height: 1.15; padding: 0 8px;
-  transition: background 160ms, color 160ms;
+  font-family: var(--font-display); font-size: 16px;
+  color: #f2f3e5;
+  text-transform: uppercase;
+  letter-spacing: 0.02em; text-align: center;
+  line-height: 1.05; padding: 0 10px;
+  white-space: nowrap;
+  transition: background 200ms, color 200ms;
+  z-index: 4;
 }
 .fc.sel .fc-bar { background: #f2f3e5; color: #1f1f25; }
 
 .fc-check {
-  position: absolute; top: 8px; right: 8px;
-  width: 28px; height: 28px;
-  background: #f2f3e5; border-radius: 50%;
-  display: none; place-items: center; z-index: 5;
+  position: absolute; top: 12px; right: 12px;
+  width: 36px; height: 36px;
+  display: none; z-index: 5;
 }
-.fc.sel .fc-check { display: grid; }
+.fc-check img { width: 100%; height: 100%; display: block; }
+.fc.sel .fc-check { display: block; }
 
 
 /* ══════════════════════════════════════════════════════════════
@@ -455,11 +557,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   transform: translateX(-50%);
   width: 790px; z-index: 5; text-align: center;
 }
-.s6-content .t-lg { font-size: 52px; }
 
 .pgrid {
   display: flex; flex-wrap: wrap; gap: 14px;
-  justify-content: center; margin-top: 44px;
+  justify-content: center; margin-top: 80px;
 }
 
 .pb {
@@ -492,9 +593,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 .s7-ellipse {
   position: absolute;
-  left: 50%; top: 150px;
-  transform: translateX(-50%);
-  width: 1910px; height: 1910px;
+  left: 0; top: 150px;
+  width: 1194px; height: auto;
   pointer-events: none; z-index: 0;
 }
 
@@ -524,13 +624,13 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   position: absolute; z-index: 6;
   width: 395px; padding: 10px;
   display: flex; align-items: flex-start; gap: 12px;
-  border-radius: 12px;
+  border-radius: 0;
 }
 .msg-orange { background: #f08b31; left: 680px; top: 179px; }
 .msg-green  { background: #58b880; left: 400px; top: 511px; }
 
 .msg-avatar {
-  width: 48px; height: 48px; border-radius: 50%;
+  width: 48px; height: 48px; border-radius: 0;
   overflow: hidden; flex-shrink: 0; background: #f2f3e5;
 }
 .msg-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -551,6 +651,12 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 <div class="bp-stage">
 <div class="bp-device" id="device">
+
+<!-- arch for S0→S1 transition, animated independently -->
+<img id="arch-intro" src="./foundations/assets/backgrounds/shell.svg" alt="">
+
+<!-- single shared progress bar -->
+<div class="prog" id="prog" style="opacity:0"><div class="prog-fill" id="prog-fill" style="width:100px"></div></div>
 
 
 <!-- ════════════════════════════════════════════════════════════
@@ -585,10 +691,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <div class="prog"><div class="prog-fill" style="width:100px"></div></div>
+
 
   <div class="s1-content">
-    <p class="t-xl">Your<br>space</p>
+    <p class="t-xl" style="white-space:nowrap">Your space</p>
     <p class="t-body">Teachers don't see your notes or daily check-ins. If you ever choose to ask for help, a trusted adult at school can reach out to support you.</p>
   </div>
 
@@ -607,8 +713,6 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <div class="prog"><div class="prog-fill" style="width:100px"></div></div>
-
   <div class="s2-content">
     <p class="s2-sub">Your teacher sees the big picture, not the details</p>
 
@@ -617,9 +721,9 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <div class="pcard">
         <div class="pcard-hdr">
           <span class="pcard-lbl">Your weekly mood trend</span>
-          <div class="toggle-row">
-            <span class="toggle-on-lbl">ON</span>
-            <div class="toggle"></div>
+          <div class="toggle-row" onclick="flipToggle(this)" style="cursor:pointer">
+            <span class="toggle-on-lbl">OFF</span>
+            <div class="toggle off"></div>
           </div>
         </div>
         <p class="pcard-body">Your teacher sees if you've had a tough week overall — not what you felt each specific day.</p>
@@ -629,9 +733,9 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <div class="pcard">
         <div class="pcard-hdr">
           <span class="pcard-lbl">Class survey results</span>
-          <div class="toggle-row">
-            <span class="toggle-on-lbl">ON</span>
-            <div class="toggle"></div>
+          <div class="toggle-row" onclick="flipToggle(this)" style="cursor:pointer">
+            <span class="toggle-on-lbl">OFF</span>
+            <div class="toggle off"></div>
           </div>
         </div>
         <p class="pcard-body">Your teacher sees how the whole class is doing on average. Your individual answers stay private.</p>
@@ -671,8 +775,6 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <div class="prog"><div class="prog-fill" style="width:200px"></div></div>
-
   <div class="s3-content">
     <p class="t-lg">Select your<br>avatar</p>
 
@@ -683,7 +785,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <button class="av-btn" style="background:#f3beaf" onclick="pickAvatar(this)">
         <img src="./foundations/assets/avatars/avatar-2.svg" alt="avatar 2">
       </button>
-      <button class="av-btn sel" style="background:#b8c0ed" onclick="pickAvatar(this)">
+      <button class="av-btn" style="background:#b8c0ed" onclick="pickAvatar(this)">
         <img src="./foundations/assets/avatars/avatar-3.svg" alt="avatar 3">
       </button>
       <button class="av-btn" style="background:#58b880" onclick="pickAvatar(this)">
@@ -707,22 +809,26 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <div class="sb" style="color:rgba(255,255,255,0.7)"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <div class="prog"><div class="prog-fill" style="width:400px"></div></div>
-
   <div class="s4-content">
-    <p class="t-lg">How do you feel<br>the most of the time?</p>
+    <p class="t-lg">How do you feel<br>the most of<br>the time?</p>
 
     <div class="arc-slider" id="arcSlider" tabindex="0">
-      <svg viewBox="0 0 532 248" width="532" height="248">
+      <svg viewBox="0 0 532 310" width="532" height="310">
         <defs>
           <linearGradient id="gradMood" gradientUnits="userSpaceOnUse" x1="48" y1="247" x2="480" y2="247">
-            <stop offset="0%"   stop-color="#945218"/>
+            <stop offset="0%"   stop-color="#c45a10"/>
             <stop offset="55%"  stop-color="#e65800"/>
             <stop offset="100%" stop-color="#ffbb25"/>
           </linearGradient>
         </defs>
-        <path id="arcTrack" fill="none" stroke="#2f2f37"          stroke-width="49" stroke-linecap="round"/>
-        <path id="arcFill"  fill="none" stroke="url(#gradMood)"  stroke-width="49" stroke-linecap="round"/>
+        <!-- Gray end-cap circles (behind paths) -->
+        <circle id="arcCapGrayL" r="40" fill="#2f2f37"/>
+        <circle id="arcCapGrayR" r="40" fill="#2f2f37"/>
+        <path id="arcTrack" fill="none" stroke="#2f2f37"          stroke-width="80" stroke-linecap="round"/>
+        <path id="arcFill"  fill="none" stroke="url(#gradMood)"  stroke-width="56" stroke-linecap="round"/>
+        <!-- Fill end-cap circles (on top of fill) -->
+        <circle id="arcCapFillL" r="28" fill="url(#gradMood)"/>
+        <circle id="arcCapFillE" r="28" fill="url(#gradMood)"/>
         <g id="arcDots"></g>
       </svg>
       <div class="arc-slider__hit" id="arcHit"></div>
@@ -744,47 +850,45 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 <div class="screen" id="s5">
   <div class="sb" style="color:rgba(255,255,255,0.7)"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <div class="prog"><div class="prog-fill" style="width:550px"></div></div>
-
   <div class="s5-content">
     <p class="t-lg">What helps you<br>feel good?</p>
 
     <div class="fc-row">
 
       <div class="fc" onclick="toggleFc(this)">
-        <div class="fc-art"><img src="./foundations/assets/cards/good-sleep.svg" alt=""></div>
+        <div class="fc-art"><img src="./components/card-ilu-01.svg" alt=""></div>
         <div class="fc-bar">A good sleep</div>
-        <div class="fc-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fc-check"><img src="./components/checkbox.svg" alt=""></div>
       </div>
 
       <div class="fc" onclick="toggleFc(this)">
-        <div class="fc-art"><img src="./foundations/assets/cards/friends.svg" alt=""></div>
+        <div class="fc-art"><img src="./components/card-ilu-02.svg" alt=""></div>
         <div class="fc-bar">Friends</div>
-        <div class="fc-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fc-check"><img src="./components/checkbox.svg" alt=""></div>
       </div>
 
-      <div class="fc sel" onclick="toggleFc(this)">
-        <div class="fc-art"><img src="./foundations/assets/cards/card-0.svg" alt=""></div>
+      <div class="fc" onclick="toggleFc(this)">
+        <div class="fc-art"><img src="./components/card-ilu-03.svg" alt=""></div>
         <div class="fc-bar">A good meal</div>
-        <div class="fc-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fc-check"><img src="./components/checkbox.svg" alt=""></div>
       </div>
 
       <div class="fc" onclick="toggleFc(this)">
-        <div class="fc-art"><img src="./foundations/assets/cards/card-1.svg" alt=""></div>
+        <div class="fc-art"><img src="./components/card-ilu-04.svg" alt=""></div>
         <div class="fc-bar">Sport</div>
-        <div class="fc-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fc-check"><img src="./components/checkbox.svg" alt=""></div>
       </div>
 
       <div class="fc" onclick="toggleFc(this)">
-        <div class="fc-art"><img src="./foundations/assets/cards/card-2.svg" alt=""></div>
+        <div class="fc-art"><img src="./components/card-ilu-05.svg" alt=""></div>
         <div class="fc-bar">Art / Music</div>
-        <div class="fc-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fc-check"><img src="./components/checkbox.svg" alt=""></div>
       </div>
 
       <div class="fc" onclick="toggleFc(this)">
-        <div class="fc-art"><img src="./foundations/assets/cards/card-3.svg" alt=""></div>
+        <div class="fc-art"><img src="./components/card-ilu-06.svg" alt=""></div>
         <div class="fc-bar">A good talk</div>
-        <div class="fc-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fc-check"><img src="./components/checkbox.svg" alt=""></div>
       </div>
 
     </div>
@@ -805,14 +909,12 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <div class="prog"><div class="prog-fill" style="width:700px"></div></div>
-
   <div class="s6-content">
-    <p class="t-lg" style="font-size:52px">Is there someone that<br>makes things easier for you?</p>
+    <p class="t-lg">Is there someone that<br>makes things easier<br>for you?</p>
 
     <div class="pgrid">
-      <button class="pb sel" onclick="togglePb(this)"><div class="pb-emoji">👫</div><span class="pb-lbl">Friend</span></button>
-      <button class="pb sel" onclick="togglePb(this)"><div class="pb-emoji">👩‍🦱</div><span class="pb-lbl">Parent/Guardian</span></button>
+      <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">👫</div><span class="pb-lbl">Friend</span></button>
+      <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">👩‍🦱</div><span class="pb-lbl">Parent/Guardian</span></button>
       <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">🏠</div><span class="pb-lbl">Other family</span></button>
       <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">🧑‍🏫</div><span class="pb-lbl">Teacher</span></button>
       <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">🤵</div><span class="pb-lbl">Counsellor</span></button>
@@ -838,20 +940,20 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <!-- Orange bubble — top right -->
   <div class="msg-bubble msg-orange">
-    <div class="msg-avatar"><img src="./foundations/assets/monsters/monster.svg" alt=""></div>
+    <div class="msg-avatar"><img src="./components/monster-02.svg" alt=""></div>
     <p class="msg-text">You earned 1 Sparks! All your Sparks add up — your class is working together to help others.</p>
   </div>
 
   <!-- Green bubble — lower left -->
   <div class="msg-bubble msg-green">
-    <div class="msg-avatar"><img src="./foundations/assets/monsters/monster.svg" alt=""></div>
+    <div class="msg-avatar"><img src="./components/monster-01.svg" alt=""></div>
     <p class="msg-text">Remember! Nothing you do here affects your grades. It's just here to support you.</p>
   </div>
 
   <div class="s7-content">
     <div class="reward-row">
       <span class="reward-plus">+1</span>
-      <div class="spark-badge"><img src="./foundations/assets/backgrounds/ellipse-42.svg" alt="⚡" style="filter:invert(1) sepia(1) saturate(5) hue-rotate(10deg)"></div>
+      <div class="spark-badge"><img src="./components/spark.svg" alt="spark"></div>
     </div>
     <p class="t-xl">Setup<br>completed!</p>
   </div>
@@ -874,22 +976,124 @@ function scale() {
 scale();
 addEventListener('resize', scale);
 
+// ─── Progress bar ────────────────────────────────────────────
+const PROG_W = { 1: 100, 2: 100, 3: 200, 4: 400, 5: 550, 6: 700 };
+function updateProg(n) {
+  const prog = document.getElementById('prog');
+  const fill = document.getElementById('prog-fill');
+  if (PROG_W[n] !== undefined) {
+    fill.style.width = PROG_W[n] + 'px';
+    prog.style.opacity = '1';
+  } else {
+    prog.style.opacity = '0';
+  }
+}
+
 // ─── Navigation ──────────────────────────────────────────────
 let cur = 0;
 function goTo(n) {
-  document.getElementById('s' + cur).classList.remove('active');
-  document.getElementById('s' + n).classList.add('active');
-  cur = n;
+  if (cur === 0 && n === 1) {
+    const s0 = document.getElementById('s0');
+    const s1 = document.getElementById('s1');
+    const arch = document.getElementById('arch-intro');
+
+    // S0 elements exit
+    s0.classList.add('exiting');
+
+    // 1ms later: arch swings in from off-screen
+    setTimeout(() => {
+      arch.classList.remove('done');
+      arch.classList.add('entering');
+    }, 1);
+
+    // 800ms: arch done → switch screens + show progress
+    setTimeout(() => {
+      s0.classList.remove('active', 'exiting');
+      s1.classList.add('active');
+      cur = n;
+      updateProg(n);
+    }, 800);
+
+    // 1100ms: S1 fully opaque → hide intro arch (S1's own arch-bg takes over)
+    setTimeout(() => {
+      arch.classList.remove('entering');
+      arch.classList.add('done');
+    }, 1100);
+
+  } else {
+    const outEl = document.getElementById('s' + cur);
+    const inEl  = document.getElementById('s' + n);
+    inEl.style.zIndex = '10';
+    inEl.classList.add('active');
+    setTimeout(() => {
+      // Hide outgoing instantly (no fade) so it doesn't bleed over incoming
+      outEl.style.transition = 'none';
+      outEl.classList.remove('active');
+      requestAnimationFrame(() => outEl.style.transition = '');
+      inEl.style.zIndex = '';
+      cur = n;
+      updateProg(n);
+    }, 280);
+  }
+}
+
+// ─── Toggle switch ───────────────────────────────────────────
+function flipToggle(row) {
+  const t   = row.querySelector('.toggle');
+  const lbl = row.querySelector('.toggle-on-lbl');
+  const isOff = t.classList.toggle('off');
+  lbl.textContent = isOff ? 'OFF' : 'ON';
 }
 
 // ─── Avatar selection ────────────────────────────────────────
 function pickAvatar(el) {
   el.closest('.avatar-row').querySelectorAll('.av-btn').forEach(b => b.classList.remove('sel'));
   el.classList.add('sel');
+  const img = el.querySelector('img');
+  if (img) localStorage.setItem('bp_avatar', img.getAttribute('src'));
+  localStorage.setItem('bp_avatar_bg', el.style.background || '');
 }
 
 // ─── Feel-good card toggle ───────────────────────────────────
 function toggleFc(el) { el.classList.toggle('sel'); }
+
+// ─── Carousel drag-to-scroll with momentum ───────────────────
+(function() {
+  const row = document.querySelector('.fc-row');
+  let down = false, startX, scrollLeft, velX = 0, lastX, lastT, rafId;
+
+  function momentum() {
+    cancelAnimationFrame(rafId);
+    velX *= 0.92;
+    row.scrollLeft -= velX;
+    if (Math.abs(velX) > 0.5) rafId = requestAnimationFrame(momentum);
+    else row.style.scrollSnapType = '';
+  }
+
+  row.addEventListener('mousedown', e => {
+    cancelAnimationFrame(rafId);
+    down = true; row.classList.add('is-dragging');
+    row.style.scrollSnapType = 'none';
+    startX = e.pageX; scrollLeft = row.scrollLeft;
+    lastX = e.pageX; lastT = Date.now();
+    velX = 0;
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', e => {
+    if (!down) return;
+    const now = Date.now(), dt = Math.max(now - lastT, 1);
+    velX = (lastX - e.pageX) / dt * 16;
+    lastX = e.pageX; lastT = now;
+    row.scrollLeft = scrollLeft + (startX - e.pageX);
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (!down) return;
+    down = false; row.classList.remove('is-dragging');
+    rafId = requestAnimationFrame(momentum);
+  });
+})();
 
 // ─── Person toggle ───────────────────────────────────────────
 function togglePb(el) { el.classList.toggle('sel'); }
@@ -903,11 +1107,11 @@ const DEG = Math.PI / 180;
 const rnd = n => Math.round(n * 10) / 10;
 
 const MOOD_STOPS = [
-  { e: '😴', t: 'I often feel\ndrained' },
-  { e: '😕', t: 'I feel tired most\nof the time' },
-  { e: '🙂', t: 'Some days are okay,\nsome are harder' },
-  { e: '😊', t: 'I usually feel\npretty good' },
-  { e: '🤩', t: 'I usually feel energized' },
+  { e: '😞', t: 'Low / not\nfeeling great' },
+  { e: '😕', t: 'Something feels\nweird' },
+  { e: '😐', t: 'Okay / in\nthe middle' },
+  { e: '🙂', t: 'Pretty good' },
+  { e: '😄', t: 'Really good' },
 ];
 
 function arcPt(r, deg) {
@@ -932,6 +1136,16 @@ const arcDots   = document.getElementById('arcDots');
 
 document.getElementById('arcTrack').setAttribute('d', arcPath(ARC_FILL_START, ARC_TRACK_END));
 
+// Position end-cap circles
+const [lx, ly] = arcPt(ARC_RM, ARC_FILL_START);
+const [rx, ry] = arcPt(ARC_RM, ARC_TRACK_END);
+['arcCapGrayL', 'arcCapFillL'].forEach(id => {
+  document.getElementById(id).setAttribute('cx', rnd(lx));
+  document.getElementById(id).setAttribute('cy', rnd(ly));
+});
+document.getElementById('arcCapGrayR').setAttribute('cx', rnd(rx));
+document.getElementById('arcCapGrayR').setAttribute('cy', rnd(ry));
+
 const dotEls = stopAngles.map(a => {
   const [dx, dy] = arcPt(ARC_RM, a);
   const c = document.createElementNS(NS, 'circle');
@@ -947,12 +1161,15 @@ function arcMove(a) {
   a = Math.max(ARC_A_MIN, Math.min(ARC_A_MAX, a));
   arcAngle = a;
   document.getElementById('arcFill').setAttribute('d', arcPath(ARC_FILL_START, a));
-  const [tx, ty] = arcPt(ARC_RM, a);
+  const [fx2, fy2] = arcPt(ARC_RM, a);
+  document.getElementById('arcCapFillE').setAttribute('cx', rnd(fx2));
+  document.getElementById('arcCapFillE').setAttribute('cy', rnd(fy2));
+  const [tx, ty] = [fx2, fy2];
   arcThumb.style.left = tx + 'px'; arcThumb.style.top = ty + 'px';
   const near = arcNearest(a);
   document.getElementById('arcEmoji').textContent = MOOD_STOPS[near].e;
   document.getElementById('arcLabel').innerHTML   = MOOD_STOPS[near].t.replace('\n', '<br>');
-  dotEls.forEach((c, i) => c.setAttribute('fill', i === near ? 'transparent' : '#18181f'));
+  dotEls.forEach((c, i) => c.setAttribute('fill', (stopAngles[i] > arcAngle || i === near) ? 'transparent' : '#18181f'));
 }
 
 function arcSnap(v, noAnim) {
@@ -997,6 +1214,7 @@ arcSlider.addEventListener('keydown', e => {
 });
 
 arcSnap(2, true);
+
 </script>
 </body>
 </html>

@@ -66,7 +66,9 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .user-avatar {
   width: 32px; height: 32px; border-radius: 50%;
   background: #3f50b8; display: grid; place-items: center; font-size: 16px;
+  overflow: hidden;
 }
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .user-name {
   font-family: var(--font-body); font-size: 9px; font-weight: 600; color: #a4a59f;
 }
@@ -348,6 +350,17 @@ function scale() {
   document.getElementById('device').style.setProperty('--s', s);
 }
 scale(); addEventListener('resize', scale);
+
+// Load selected avatar from onboarding
+(function() {
+  const src = localStorage.getItem('bp_avatar');
+  const bg  = localStorage.getItem('bp_avatar_bg');
+  const el  = document.querySelector('.user-avatar');
+  if (src && el) {
+    if (bg) el.style.background = bg;
+    el.innerHTML = '<img src="' + src + '" alt="avatar">';
+  }
+})();
 
 // Queue order (mood is already done on arrival)
 // card id → flow URL
