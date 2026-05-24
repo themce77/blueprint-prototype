@@ -60,20 +60,21 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .mc-title {
   font-family: var(--font-display);
-  font-size: 76px; line-height: 1.0; letter-spacing: 1px;
-  text-transform: uppercase; color: #f2f3e5; margin: 0 0 10px;
+  font-size: var(--title-large-size); line-height: var(--title-large-lh); letter-spacing: 1.5px;
+  color: #f2f3e5; margin: 0 0 10px;
 }
 .mc-sub {
-  font-family: var(--font-body); font-size: 16px; font-weight: 500;
-  color: #a4a59f; margin: 0 0 24px;
+  font-family: var(--font-body); font-size: var(--label-medium-size); font-weight: var(--fw-bold);
+  color: #a4a59f; margin: 0 0 41px;
 }
 
 .em-grid {
-  display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+  display: grid; grid-template-columns: repeat(5, 120px); gap: 20px;
+  width: 680px; margin: 0 auto;
 }
 .em-btn {
   position: relative; border: none; background: none; padding: 0;
-  cursor: pointer; aspect-ratio: 1;
+  cursor: pointer; width: 120px; height: 120px;
 }
 .em-btn img {
   width: 100%; height: 100%; display: block; object-fit: contain;
@@ -82,16 +83,18 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .em-btn span {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 13px; letter-spacing: 0.5px;
+  font-family: var(--font-display); font-size: var(--subtitle-xsmall-size); letter-spacing: var(--ls-normal);
   text-transform: uppercase; color: #1f1f25;
-  line-height: 1.2; text-align: center; padding: 0 8px; pointer-events: none;
+  line-height: var(--lh-snug); text-align: center; padding: 0 8px; pointer-events: none;
 }
 .em-check {
   position: absolute; top: 5px; right: 5px;
-  width: 26px; height: 26px; background: #f2f3e5; border-radius: 50%;
+  width: 36px; height: 36px;
   display: none; place-items: center; z-index: 5; pointer-events: none;
 }
+.em-check img { width: 100%; height: 100%; display: block; }
 .em-btn.sel .em-check { display: grid; }
+.em-btn[data-key="angry"] span { padding-bottom: 20px; }
 
 .em-grid.maxed .em-btn:not(.sel) { pointer-events: none; cursor: default; }
 .em-grid.maxed .em-btn:not(.sel) img { filter: brightness(0.35) saturate(0.4); }
@@ -104,8 +107,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .btn-continue {
   width: 270px; height: 48px;
   background: #f2f3e5; color: #1f1f25;
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
-  border-radius: 8px; border: none; cursor: pointer; transition: opacity 120ms;
+  font-family: var(--font-body); font-size: var(--label-medium-size); font-weight: var(--fw-bold);
+  border-radius: var(--radius-sm); border: none; cursor: pointer; transition: opacity 120ms;
 }
 .btn-continue:active { opacity: 0.85; }
 
@@ -115,20 +118,20 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
    ══════════════════════════════════════════════════════════════ */
 .ed-screen { background: #1f1f25; }
 
-/* Background decoration — large emotion shapes at corners */
-.ed-bg {
-  position: absolute; pointer-events: none; z-index: 0;
+/* Full-screen emotion shape background */
+.ed-shape {
+  position: absolute; left: -1px; top: -264px;
+  width: 1196px; height: 1196px;
+  pointer-events: none; z-index: 0;
 }
-.ed-bg-tl { top: -120px; left: -120px; width: 380px; opacity: 0.85; transform: rotate(180deg); }
-.ed-bg-br { bottom: -120px; right: -120px; width: 380px; opacity: 0.85; }
-.ed-bg img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.ed-shape img { width: 100%; height: 100%; display: block; }
 
 /* Title */
 .ed-title {
   position: absolute; top: 60px; left: 0; right: 0;
   font-family: var(--font-display);
-  font-size: 80px; line-height: 1.0; letter-spacing: 1px;
-  text-transform: uppercase; color: #f2f3e5;
+  font-size: var(--title-large-size); line-height: var(--title-large-lh); letter-spacing: 1.5px;
+  color: var(--colors-neutral-warm-50);
   text-align: center; margin: 0; z-index: 5;
 }
 
@@ -166,8 +169,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   pointer-events: none;
 }
 .arc-slider__pill span {
-  color: #f2f3e5; font-family: var(--font-body);
-  font-size: 15px; font-weight: 700; line-height: 1.3; text-align: center;
+  color: var(--colors-neutral-warm-50); font-family: var(--font-body);
+  font-size: var(--label-medium-size); font-weight: var(--fw-bold); line-height: var(--lh-normal); text-align: center;
 }
 
 .ed-slider-wrap {
@@ -182,8 +185,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   width: 700px;
 }
 .ed-chips-label {
-  font-family: var(--font-body); font-size: 14px; font-weight: 500;
-  color: #a4a59f; margin: 0 0 12px;
+  font-family: var(--font-body); font-size: var(--label-small-size); font-weight: var(--fw-semi);
+  color: var(--colors-gray-100); margin: 0 0 12px;
 }
 .ed-chips-label span { color: #a4a59f; }
 .ed-chips {
@@ -193,7 +196,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   height: 36px; padding: 0 16px;
   border: 1px solid #444450; border-radius: 99px;
   background: #2f2f37; color: #f2f3e5;
-  font-family: var(--font-body); font-size: 14px; font-weight: 600;
+  font-family: var(--font-body); font-size: var(--label-small-size); font-weight: var(--fw-semi);
   cursor: pointer; white-space: nowrap;
   transition: background 160ms, color 160ms, border-color 160ms;
 }
@@ -215,7 +218,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .btn-next-em {
   width: 200px; height: 48px;
   background: #f2f3e5; color: #1f1f25;
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  font-family: var(--font-body); font-size: var(--label-medium-size); font-weight: var(--fw-bold);
   border-radius: 8px; border: none; cursor: pointer; transition: opacity 120ms;
 }
 .btn-next-em:active { opacity: 0.85; }
@@ -343,65 +346,65 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
       <button class="em-btn" data-key="curious" onclick="toggleEm(this)">
         <img src="./components/emotion-curious.svg" alt=""><span>Curious</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
       <button class="em-btn" data-key="okay" onclick="toggleEm(this)">
         <img src="./components/emotion-okay.svg" alt=""><span>Okay</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
       <button class="em-btn" data-key="meh" onclick="toggleEm(this)">
         <img src="./components/emotion-meh.svg" alt=""><span>Meh</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
       <button class="em-btn" data-key="sad" onclick="toggleEm(this)">
         <img src="./components/emotion-sad.svg" alt=""><span>Sad</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
       <button class="em-btn" data-key="angry" onclick="toggleEm(this)">
         <img src="./components/emotion-angry.svg" alt=""><span>Angry</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
 
       <button class="em-btn" data-key="happy" onclick="toggleEm(this)">
         <img src="./components/emotion-happy.svg" alt=""><span>Happy</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
       <button class="em-btn" data-key="grateful" onclick="toggleEm(this)">
         <img src="./components/emotion-grateful.svg" alt=""><span>Grateful</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
       <button class="em-btn" data-key="neutral" onclick="toggleEm(this)">
         <img src="./components/emotion-neutral.svg" alt=""><span>Neutral</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
       <button class="em-btn" data-key="tired" onclick="toggleEm(this)">
         <img src="./components/emotion-tired.svg" alt=""><span>Tired</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
       <button class="em-btn" data-key="stressed" onclick="toggleEm(this)">
         <img src="./components/emotion-stressed.svg" alt=""><span>Stressed</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
 
       <button class="em-btn" data-key="excited" onclick="toggleEm(this)">
         <img src="./components/emotion-excited.svg" alt=""><span>Excited</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
       <button class="em-btn" data-key="hopeful" onclick="toggleEm(this)">
         <img src="./components/emotion-hopeful.svg" alt=""><span>Hopeful</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
       <button class="em-btn" data-key="idontknow" onclick="toggleEm(this)">
         <img src="./components/emotion-idontknow.svg" alt=""><span>I don't<br>know</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
       <button class="em-btn" data-key="lonely" onclick="toggleEm(this)">
         <img src="./components/emotion-lonely.svg" alt=""><span>Lonely</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
       <button class="em-btn" data-key="anxious" onclick="toggleEm(this)">
         <img src="./components/emotion-anxious.svg" alt=""><span>Anxious</span>
-        <div class="em-check"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="em-check"><img src="./components/checkbox.svg" alt=""></div>
       </button>
 
     </div>
@@ -527,19 +530,19 @@ scale(); addEventListener('resize', scale);
 
 // ─── Emotion data ─────────────────────────────────────────────
 const EMOTIONS = {
-  curious:   { name:'Curious',      color:'#f4c430', emoji:'🤔', levels:['Curious','Quite curious','Very curious'],         chips:['Interested','Intrigued','Fascinated','Nosy','Wonder-Filled'] },
+  curious:   { name:'Curious',      color:'#FDDA3C', emoji:'🤔', levels:['Curious','Quite curious','Very curious'],         chips:['Interested','Intrigued','Fascinated','Nosy','Wonder-Filled'],  shape:{ size:1292, left:-49,  top:-312 } },
   happy:     { name:'Happy',        color:'#f4a021', emoji:'😊', levels:['Happy','Quite happy','Very happy'],               chips:['Joyful','Content','Pleased','Cheerful','Elated'] },
   excited:   { name:'Excited',      color:'#e84326', emoji:'🤩', levels:['Excited','Quite excited','Super excited'],        chips:['Enthusiastic','Eager','Thrilled','Energised','Pumped'] },
-  okay:      { name:'Okay',         color:'#4ecb9e', emoji:'🙂', levels:['Okay','Pretty okay','Very okay'],                 chips:['Fine','Comfortable','Satisfied','Steady','Relieved'] },
+  okay:      { name:'Okay',         color:'#68DCC6', emoji:'🙂', levels:['Okay','Pretty okay','Very okay'],                 chips:['Fine','Comfortable','Satisfied','Steady','Relieved'],           shape:{ size:1524, left:-165, top:-345 } },
   grateful:  { name:'Grateful',     color:'#4ecb71', emoji:'🙏', levels:['Grateful','Quite grateful','Very grateful'],      chips:['Appreciative','Thankful','Touched','Lucky','Warm Inside'] },
   hopeful:   { name:'Hopeful',      color:'#c5e000', emoji:'😇', levels:['Hopeful','Quite hopeful','Super hopeful'],        chips:['Optimistic','Encouraged','Wishing','Inspired','Looking forward'] },
-  meh:       { name:'Meh',          color:'#b8b8a8', emoji:'😑', levels:['A bit meh','Meh','Very meh'],                     chips:['Unimpressed','Bored','Flat','Disengaged','Apathetic'] },
+  meh:       { name:'Meh',          color:'#b8b8a8', emoji:'😑', levels:['A bit meh','Meh','Very meh'],                     chips:['Unimpressed','Bored','Flat','Disengaged','Apathetic'],           shape:{ size:1196, left:-1,   top:-364 } },
   neutral:   { name:'Neutral',      color:'#a0a09a', emoji:'😐', levels:['Neutral','Quite neutral','Very neutral'],         chips:['Indifferent','Detached','Composed','Shoulder Shrug','Neither'] },
   idontknow: { name:"I Don't Know", color:'#888880', emoji:'🤷', levels:['Unsure','Quite unsure','Very unsure'],            chips:['Confused','Uncertain','Overwhelmed','Numb','Conflicted'] },
-  sad:       { name:'Sad',          color:'#5abfea', emoji:'😢', levels:['A bit sad','Sad','Very sad'],                     chips:['Sorrowful','Left Out','Let Down','Disappointed','Heartbroken'] },
+  sad:       { name:'Sad',          color:'#5abfea', emoji:'😢', levels:['A bit sad','Sad','Very sad'],                     chips:['Sorrowful','Left Out','Let Down','Disappointed','Heartbroken'],  shape:{ size:1196, left:-1,   top:-64  } },
   tired:     { name:'Tired',        color:'#4a67f5', emoji:'😴', levels:['Tired','Quite tired','Very tired'],               chips:['Exhausted','Drained','Fatigued','Sleepy','Checked Out'] },
   lonely:    { name:'Lonely',       color:'#a070d4', emoji:'😔', levels:['Lonely','Quite lonely','Super lonely'],           chips:['Isolated','Disconnected','Left Out','Longing','Forgotten'] },
-  angry:     { name:'Angry',        color:'#e84326', emoji:'😠', levels:['A bit angry','Angry','Very angry'],               chips:['Frustrated','Irritated','Furious','Annoyed','Jealous'] },
+  angry:     { name:'Angry',        color:'#e84326', emoji:'😠', levels:['A bit angry','Angry','Very angry'],               chips:['Frustrated','Irritated','Furious','Annoyed','Jealous'],          shape:{ size:1794, left:-300, top:-663 } },
   stressed:  { name:'Stressed',     color:'#be2f6e', emoji:'😤', levels:['Stressed','Quite stressed','Very stressed'],      chips:['Overwhelmed','Pressured','Tense','Rushed','Snappy'] },
   anxious:   { name:'Anxious',      color:'#b38aff', emoji:'😰', levels:['Anxious','Quite anxious','Super anxious'],        chips:['Worried','Nervous','Scared','Fearful','Panicked'] },
 };
@@ -603,9 +606,10 @@ function buildDetailScreen(key, idx, total) {
   const div = document.createElement('div');
   div.className = 'screen ed-screen';
   div.id = `ed-${idx}`;
+  div.style.background = em.color;
+  const sh = em.shape || { size:1196, left:-1, top:-264 };
   div.innerHTML = `
-    <div class="ed-bg ed-bg-tl"><img src="./components/emotion-${key}.svg" alt=""></div>
-    <div class="ed-bg ed-bg-br"><img src="./components/emotion-${key}.svg" alt=""></div>
+    <div class="ed-shape" style="width:${sh.size}px;height:${sh.size}px;left:${sh.left}px;top:${sh.top}px"><img src="./components/${key}-shape.svg" alt=""></div>
 
     <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
     <div class="prog"><div class="prog-fill" style="width:${Math.round(progWidth)}px"></div></div>

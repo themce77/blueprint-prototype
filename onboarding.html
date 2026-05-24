@@ -186,22 +186,21 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   position: absolute;
   width: 1243px; height: 1087px;
   left: 0; top: 0;
-  /* Figma start: bounding-box TL at (1383,882) when rotated -90°
-     → element center = (1383+543.5, 882+621.5) = (1926.5, 1503.5)
-     → translate = center − half-size = (1926.5−621.5, 1503.5−543.5) = (1305, 960) */
-  transform: translate(1305px, 960px) rotate(-90deg);
+  /* start: X same as end so arch stays centred; Y=750 puts arch top at ~672px
+     (162px peek from viewport bottom) — stays within overflow:hidden bounds */
+  transform: translate(-24.5px, 750px) rotate(-90deg);
   transform-origin: 50% 50%;
   pointer-events: none;
   z-index: 15;
-  opacity: 0;
+  opacity: 1;
 }
 #arch-intro.entering {
   transform: translate(-24.5px, -126.5px) rotate(0deg);
   opacity: 1;
-  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99) 1ms;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99);
 }
 #arch-intro.done {
-  transform: translate(1305px, 960px) rotate(-90deg);
+  transform: translate(-24.5px, 750px) rotate(-90deg);
   opacity: 0;
   transition: none;
 }
@@ -1000,11 +999,11 @@ function goTo(n) {
     // S0 elements exit
     s0.classList.add('exiting');
 
-    // 1ms later: arch swings in from off-screen
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       arch.classList.remove('done');
-      arch.classList.add('entering');
-    }, 1);
+      void arch.offsetHeight;
+      requestAnimationFrame(() => arch.classList.add('entering'));
+    });
 
     // 800ms: arch done → switch screens + show progress
     setTimeout(() => {
