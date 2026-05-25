@@ -24,192 +24,185 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   color: rgba(255,255,255,0.9); pointer-events: none;
 }
 
-/* ─── Layout ────────────────────────────────────────────────── */
-.today-layout {
-  position: absolute; top: 24px; left: 0; right: 0; bottom: 0;
-  display: flex;
-}
-
 /* ─── Sidebar ───────────────────────────────────────────────── */
 .today-sidebar {
-  width: 62px; flex-shrink: 0;
-  background: #111116;
-  display: flex; flex-direction: column; align-items: center;
-  padding: 14px 0 16px;
+  position: absolute;
+  left: 24px; top: 50%; transform: translateY(-50%);
+  width: 80px; height: 786px;
+  background: #2b2b32; border-radius: 20px;
+  padding: 24px 8px; box-sizing: border-box;
+  display: flex; flex-direction: column;
+  justify-content: space-between; align-items: center;
 }
+
 .sidebar-logo {
-  font-family: var(--font-body); font-size: 8px; font-weight: 700;
-  letter-spacing: 1px; color: #a4a59f; text-transform: uppercase;
-  writing-mode: vertical-rl; transform: rotate(180deg);
-  margin-bottom: 20px; height: 56px; flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 16px; color: #8e8b85; text-transform: uppercase;
+  text-align: center; letter-spacing: 0.5px;
+  height: 52px; display: flex; align-items: center; justify-content: center;
+  width: 100%;
 }
-.sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 4px; width: 100%; }
+
+.sidebar-nav { display: flex; flex-direction: column; gap: 12px; }
+
 .nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  padding: 10px 0; cursor: pointer; border-radius: 8px;
+  width: 64px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; padding: 8px 0; cursor: pointer;
+  border-radius: 12px;
   transition: background 140ms;
 }
-.nav-item:hover { background: rgba(255,255,255,0.06); }
-.nav-item.active { background: rgba(255,255,255,0.1); }
-.nav-icon { width: 22px; height: 22px; display: grid; place-items: center; }
-.nav-icon svg { width: 18px; height: 18px; }
+.nav-item.active { background: #1f1f25; }
+.nav-item:not(.active):hover { background: rgba(255,255,255,0.05); }
+
+.nav-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.nav-icon img { width: 24px; height: 24px; display: block; }
+.nav-item.active .nav-icon img { filter: brightness(0) invert(1); }
+
+.spark-badge {
+  position: relative; width: 24px; height: 24px; border-radius: 50%; overflow: hidden;
+}
+.spark-badge img {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.spark-badge img:nth-child(1) { animation: spark-c1 6400ms linear 1600ms infinite; }
+.spark-badge img:nth-child(2) { opacity: 0; animation: spark-c2 6400ms linear 1600ms infinite; }
+.spark-badge img:nth-child(3) { opacity: 0; animation: spark-c3 6400ms linear 1600ms infinite; }
+.spark-badge img:nth-child(4) { opacity: 0; animation: spark-c4 6400ms linear 1600ms infinite; }
+@keyframes spark-c1 { 0%{opacity:1} 25%{opacity:0} 75%{opacity:0} 100%{opacity:1} }
+@keyframes spark-c2 { 0%{opacity:0} 25%{opacity:1} 50%{opacity:0} 100%{opacity:0} }
+@keyframes spark-c3 { 0%{opacity:0} 50%{opacity:1} 75%{opacity:0} 100%{opacity:0} }
+@keyframes spark-c4 { 0%{opacity:0} 75%{opacity:1} 100%{opacity:0} }
+
 .nav-label {
-  font-family: var(--font-body); font-size: 9px; font-weight: 600;
-  color: #a4a59f; text-align: center; line-height: 1;
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #a4a59f; text-align: center; line-height: 16px;
+  width: 64px;
 }
 .nav-item.active .nav-label { color: #f2f3e5; }
 
 .sidebar-user {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  margin-top: 12px; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
 }
 .user-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: #3f50b8; display: grid; place-items: center; font-size: 16px;
-  overflow: hidden;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #b8c0ed; border: 2px solid #36363f;
+  overflow: hidden; display: grid; place-items: center; font-size: 10px;
+  box-sizing: border-box;
 }
 .user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .user-name {
-  font-family: var(--font-body); font-size: 9px; font-weight: 600; color: #a4a59f;
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #a4a59f; text-align: center; width: 64px;
 }
 
 /* ─── Main content ──────────────────────────────────────────── */
 .today-main {
-  flex: 1; display: flex; flex-direction: column;
-  padding: 24px 40px 28px; position: relative; min-width: 0;
+  position: absolute;
+  left: 149px; top: 50%;
+  transform: translateY(-50%);
+  width: 997px;
+  display: flex; flex-direction: column; gap: 48px;
 }
 
+/* ─── Header row ────────────────────────────────────────────── */
 .today-header {
   display: flex; justify-content: space-between; align-items: flex-start;
-  margin-bottom: 24px; flex-shrink: 0;
 }
 .today-greeting h1 {
-  font-family: var(--font-display); font-size: 60px; line-height: 1.0;
-  letter-spacing: 1px; text-transform: uppercase; color: #f2f3e5;
-  margin: 0 0 6px;
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0 0 16px;
 }
 .today-greeting p {
-  font-family: var(--font-body); font-size: 15px; font-weight: 500;
-  color: #a4a59f; margin: 0;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  letter-spacing: -0.1px; line-height: 20px;
+  color: #f2f3e5; margin: 0;
 }
 .today-sparks-widget {
-  flex-shrink: 0; background: #2f2f37; border-radius: 14px;
-  padding: 14px 20px 14px 16px;
-  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
-  min-width: 120px;
+  width: 185px; background: #1f1f25;
+  border: 1px solid #444450; border-radius: 20px;
+  padding: 36px; box-sizing: border-box;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  flex-shrink: 0;
 }
-.sparks-label { font-family: var(--font-body); font-size: 12px; font-weight: 500; color: #a4a59f; }
+.sparks-label {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #f2f3e5; line-height: 16px;
+}
 .sparks-total {
-  display: flex; align-items: center; gap: 6px;
-  font-family: var(--font-display); font-size: 40px; line-height: 1;
-  color: #f2f3e5; letter-spacing: -0.5px;
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-display); font-size: 32px; line-height: 40px;
+  letter-spacing: -0.8px; color: #f2f3e5;
 }
 .spark-icon {
-  width: 28px; height: 28px; border-radius: 50%;
+  width: 32px; height: 32px; border-radius: 50%;
   background: linear-gradient(135deg,#f08b31,#ffbb25);
   display: grid; place-items: center; font-size: 14px; flex-shrink: 0;
 }
 
 /* ─── Cards row ─────────────────────────────────────────────── */
-.today-cards {
-  display: flex; gap: 14px; flex: 1; min-height: 0;
-  align-items: flex-start;
-}
+.today-cards { display: flex; gap: 16px; }
 
-/* ─── Single card ───────────────────────────────────────────── */
 .t-card {
-  flex: 1; position: relative; border-radius: 19px; overflow: hidden;
-  min-width: 0;
-  /* Lock to SVG aspect ratio — 237 wide × 353 tall */
-  aspect-ratio: 237 / 353;
+  width: 237px; height: 353px;
+  position: relative; border-radius: 19px; overflow: hidden;
+  flex-shrink: 0;
   transition: transform 140ms cubic-bezier(0.34,1.56,0.64,1);
 }
-
-/* SVG art fills the card completely */
 .card-img {
   width: 100%; height: 100%;
-  display: block; object-fit: fill;
-  border-radius: 19px;
-  transition: filter 350ms ease;
+  display: block; object-fit: fill; border-radius: 19px;
 }
 
-/* ─── State overlays ────────────────────────────────────────── */
-.card-overlay {
-  position: absolute; inset: 0; border-radius: 19px;
-  pointer-events: none; transition: opacity 350ms;
+/* Done layer — replaces overlay+checkmark */
+.card-done-layer {
+  position: absolute; inset: 0; border-radius: 19px; overflow: hidden;
+  background: #36363f;
+  display: flex; flex-direction: column;
+  opacity: 0; pointer-events: none; z-index: 8;
+  transition: opacity 400ms 150ms;
+}
+.t-card.done .card-done-layer { opacity: 1; }
+.t-card.pre-done .card-done-layer { opacity: 1; }
+.t-card.pre-done { pointer-events: none; }
+
+.cdl-top {
+  margin: 16px 16px 0 16px; flex: 1;
+  background: #444450; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.cdl-monster { width: 180px; height: 180px; display: block; }
+.cdl-footer {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 5px; padding: 16px 0 20px;
+}
+.cdl-plus {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #f2f3e5; line-height: 16px;
+}
+.cdl-title {
+  font-family: var(--font-display); font-size: 24px; line-height: 1.12;
+  letter-spacing: -0.4px; color: #f2f3e5; text-align: center;
 }
 
-/* Queued: full color, only badge distinguishes state */
 
-/* Done: dark overlay */
-.card-done-cover {
-  position: absolute; inset: 0; border-radius: 19px;
-  background: rgba(10,10,15,0.80);
-  opacity: 0; transition: opacity 350ms; pointer-events: none;
-}
-.t-card.done .card-done-cover { opacity: 1; }
-
-/* Done checkmark */
-.card-check {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  width: 56px; height: 56px; border-radius: 50%;
-  background: #f2f3e5;
-  display: grid; place-items: center; z-index: 6; pointer-events: none;
-  transition: transform 300ms cubic-bezier(0.34,1.56,0.64,1) 80ms;
-}
-.t-card.done .card-check { transform: translate(-50%,-50%) scale(1); }
-.t-card.done-green .card-check { background: #4ecb9e; }
-/* Pre-done (mood check-in, completed before this session) — gray, no animation */
-.t-card.pre-done .card-check {
-  background: #5a5a6a;
-  transition: none;
-  transform: translate(-50%,-50%) scale(1);
-}
-.t-card.pre-done .card-done-cover { background: rgba(10,10,15,0.70); transition: none; opacity: 1; }
-.t-card.pre-done .card-check svg path { stroke: #a4a59f; }
-
-/* ─── State badge ───────────────────────────────────────────── */
-.card-badge {
-  position: absolute; top: 14px; right: 14px; z-index: 7;
-  width: 38px; height: 38px; border-radius: 50%;
-  display: grid; place-items: center;
-  transition: opacity 250ms, transform 250ms;
-  pointer-events: none;
-}
-
-/* Awake badge — white fill */
-.badge-awake {
-  background: #f2f3e5;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
-}
-
-/* Sleepy badge — dark translucent */
-.badge-sleepy {
-  background: rgba(30,30,38,0.75);
-  backdrop-filter: blur(6px);
-  border: 1.5px solid rgba(255,255,255,0.12);
-}
-
-/* Hide badges when done */
-.t-card.done .card-badge { opacity: 0; transform: scale(0.7); }
-
-/* ─── Active card interactions ──────────────────────────────── */
+/* States */
 .t-card.active { cursor: pointer; }
 .t-card.active:hover { transform: scale(1.025); }
 .t-card.queued { cursor: default; }
 .t-card.done   { cursor: default; }
 
 /* ─── Footer ────────────────────────────────────────────────── */
-.today-footer {
-  display: flex; justify-content: center; padding-top: 14px; flex-shrink: 0;
-}
+.today-footer { display: flex; justify-content: center; }
 .btn-summary {
-  height: 46px; padding: 0 48px;
-  background: rgba(255,255,255,0.08); color: #f2f3e5;
-  font-family: var(--font-body); font-size: 15px; font-weight: 600;
-  border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.12);
-  cursor: pointer; transition: opacity 120ms;
+  height: 48px; padding: 0 24px; min-width: 200px;
+  background: transparent; color: #f5f5f5;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  border-radius: 8px; border: 1px solid rgba(255,255,255,0.16);
+  cursor: pointer; letter-spacing: -0.1px;
+  box-shadow: 0 1px 1px rgba(20,21,26,0.03);
+  transition: opacity 120ms;
 }
 .btn-summary:active { opacity: 0.7; }
 
@@ -222,124 +215,120 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <div class="today-layout">
+  <!-- ── Sidebar ─────────────────────────────────────────── -->
+  <nav class="today-sidebar">
+    <div class="sidebar-logo">Sparkz</div>
 
-    <!-- ── Sidebar ─────────────────────────────────────────── -->
-    <nav class="today-sidebar">
-      <div class="sidebar-logo">Sparks EQ</div>
-      <div class="sidebar-nav">
-        <div class="nav-item active">
-          <div class="nav-icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#f2f3e5" stroke-width="1.8"/><path d="M10 6v4l2.5 2.5" stroke="#f2f3e5" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-          <span class="nav-label">Today</span>
+    <div class="sidebar-nav">
+      <div class="nav-item active">
+        <div class="nav-icon"><img src="./components/icon-01.svg" alt="Today"></div>
+        <span class="nav-label">Today</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-02.svg" alt="Journal"></div>
+        <span class="nav-label">Journal</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-03.svg" alt="My toolkit"></div>
+        <span class="nav-label">My toolkit</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
+        <span class="nav-label">Journey</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-05.svg" alt="School"></div>
+        <span class="nav-label">School</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon">
+          <div class="spark-badge">
+            <img src="./components/Spark-4.svg" alt="">
+            <img src="./components/Spark-01.svg" alt="">
+            <img src="./components/Spark-02.svg" alt="">
+            <img src="./components/Spark-03.svg" alt="">
+          </div>
         </div>
-        <div class="nav-item">
-          <div class="nav-icon"><svg viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#a4a59f" stroke-width="1.8"/><path d="M7 7h6M7 10h6M7 13h4" stroke="#a4a59f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-          <span class="nav-label">Journal</span>
-        </div>
-        <div class="nav-item">
-          <div class="nav-icon"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="5" width="12" height="10" rx="2" stroke="#a4a59f" stroke-width="1.8"/><path d="M14 8l4-2v8l-4-2V8z" stroke="#a4a59f" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
-          <span class="nav-label">My toolkit</span>
-        </div>
-        <div class="nav-item">
-          <div class="nav-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M3 17l4-8 4 4 3-5 3 9" stroke="#a4a59f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="nav-label">Journey</span>
-        </div>
-        <div class="nav-item">
-          <div class="nav-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2l2.4 5 5.6.8-4 3.9.9 5.5L10 14.5l-4.9 2.7.9-5.5-4-3.9 5.6-.8L10 2z" stroke="#a4a59f" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
-          <span class="nav-label">Sparks</span>
+        <span class="nav-label">Sparks</span>
+      </div>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="userAvatar">😊</div>
+      <span class="user-name">Sophie</span>
+    </div>
+  </nav>
+
+  <!-- ── Main content ─────────────────────────────────── -->
+  <main class="today-main">
+
+    <div class="today-header">
+      <div class="today-greeting">
+        <h1 id="greetTitle">Hi Sophie!</h1>
+        <p id="greetSub">You've had 100% attendance this week.</p>
+      </div>
+      <div class="today-sparks-widget">
+        <span class="sparks-label">Total</span>
+        <div class="sparks-total">220<div class="spark-icon">⚡</div></div>
+      </div>
+    </div>
+
+    <div class="today-cards" id="cardRow">
+
+      <!-- Notice your wins — active (first task) -->
+      <div class="t-card active" id="card-wins" onclick="openFlow('notice-wins.html')">
+        <img class="card-img" src="./components/card-1.svg" alt="Notice your wins">
+        <div class="card-done-layer">
+          <div class="cdl-top"><img class="cdl-monster" src="./components/Property 1=M01, Type=Done.svg"></div>
+          <div class="cdl-footer">
+            <span class="cdl-plus">+1</span>
+            <span class="cdl-title">Notice<br>your wins</span>
+          </div>
         </div>
       </div>
-      <div class="sidebar-user">
-        <div class="user-avatar">😊</div>
-        <span class="user-name">Sophie</span>
-      </div>
-    </nav>
 
-    <!-- ── Main ───────────────────────────────────────────── -->
-    <main class="today-main">
-
-      <div class="today-header">
-        <div class="today-greeting">
-          <h1 id="greetTitle">Hi Sophie!</h1>
-          <p id="greetSub">You've had 100% attendance this week.</p>
-        </div>
-        <div class="today-sparks-widget">
-          <span class="sparks-label">Total</span>
-          <div class="sparks-total">220<div class="spark-icon">⚡</div></div>
+      <!-- Write it out — queued -->
+      <div class="t-card queued" id="card-write">
+        <img class="card-img" src="./components/card-4.svg" alt="Write it out">
+        <div class="card-done-layer">
+          <div class="cdl-top"><img class="cdl-monster" src="./components/Property 1=M02, Type=Done.svg"></div>
+          <div class="cdl-footer">
+            <span class="cdl-plus">+1</span>
+            <span class="cdl-title">Write<br>it out</span>
+          </div>
         </div>
       </div>
 
-      <div class="today-cards" id="cardRow">
-
-        <!-- Mood check-in — always pre-done (completed at start of session) -->
-        <div class="t-card done pre-done" id="card-mood">
-          <img class="card-img" src="./components/card-2.svg" alt="Mood check-in">
-          <div class="card-done-cover"></div>
-          <div class="card-check">
-            <svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 12L10 18L20 6" stroke="#1f1f25" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <!-- All about you — queued -->
+      <div class="t-card queued" id="card-about">
+        <img class="card-img" src="./components/card-6.svg" alt="All about you">
+        <div class="card-done-layer">
+          <div class="cdl-top"><img class="cdl-monster" src="./components/Property 1=M03, Type=Done.svg"></div>
+          <div class="cdl-footer">
+            <span class="cdl-plus">+1</span>
+            <span class="cdl-title">All<br>about you</span>
           </div>
         </div>
-
-        <!-- Notice your wins — active (first task) -->
-        <div class="t-card active" id="card-wins" onclick="openFlow('notice-wins.html')">
-          <img class="card-img" src="./components/card-1.svg" alt="Notice your wins">
-          <div class="card-done-cover"></div>
-          <div class="card-check">
-            <svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 12L10 18L20 6" stroke="#1f1f25" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <!-- Awake badge -->
-          <div class="card-badge badge-awake">
-            <svg width="22" height="14" viewBox="0 0 22 14" fill="none">
-              <path d="M1 7C2.5 3 5.5 1 8 1C10.5 1 12 3 13 7C12 11 10.5 13 8 13C5.5 13 2.5 11 1 7Z" fill="#1f1f25"/>
-              <circle cx="8" cy="7" r="2.5" fill="#f2f3e5"/>
-              <path d="M9 7C10.5 3 13.5 1 16 1C18.5 1 20 3 21 7C20 11 18.5 13 16 13C13.5 13 10.5 11 9 7Z" fill="#1f1f25"/>
-              <circle cx="16" cy="7" r="2.5" fill="#f2f3e5"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Write it out — queued -->
-        <div class="t-card queued" id="card-write">
-          <img class="card-img" src="./components/card-4.svg" alt="Write it out">
-          <div class="card-done-cover"></div>
-          <div class="card-check">
-            <svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 12L10 18L20 6" stroke="#1f1f25" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <!-- Sleepy badge -->
-          <div class="card-badge badge-sleepy">
-            <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
-              <path d="M1 5 Q4 2.5 7 5" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M11 5 Q14 2.5 17 5" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round"/>
-              <text x="5" y="15" font-size="6.5" fill="#f2f3e5" font-family="-apple-system,sans-serif" font-weight="700">zzz</text>
-            </svg>
-          </div>
-        </div>
-
-        <!-- All about you — queued -->
-        <div class="t-card queued" id="card-about">
-          <img class="card-img" src="./components/card-6.svg" alt="All about you">
-          <div class="card-done-cover"></div>
-          <div class="card-check">
-            <svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 12L10 18L20 6" stroke="#1f1f25" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <!-- Sleepy badge -->
-          <div class="card-badge badge-sleepy">
-            <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
-              <path d="M1 5 Q4 2.5 7 5" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M11 5 Q14 2.5 17 5" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round"/>
-              <text x="5" y="15" font-size="6.5" fill="#f2f3e5" font-family="-apple-system,sans-serif" font-weight="700">zzz</text>
-            </svg>
-          </div>
-        </div>
-
       </div>
 
-      <div class="today-footer">
-        <button class="btn-summary">View summary</button>
+      <!-- Mood check-in — pre-done (completed in mood flow) -->
+      <div class="t-card pre-done" id="card-mood">
+        <div class="card-done-layer">
+          <div class="cdl-top"><img class="cdl-monster" src="./components/Property 1=M04, Type=Done.svg"></div>
+          <div class="cdl-footer">
+            <span class="cdl-plus">+1</span>
+            <span class="cdl-title">Mood<br>check-in</span>
+          </div>
+        </div>
       </div>
 
-    </main>
-  </div>
+    </div>
+
+    <div class="today-footer">
+      <button class="btn-summary" onclick="window.location.href='summary.html'">View summary</button>
+    </div>
+
+  </main>
 
 </div>
 </div>
@@ -355,76 +344,66 @@ scale(); addEventListener('resize', scale);
 (function() {
   const src = localStorage.getItem('bp_avatar');
   const bg  = localStorage.getItem('bp_avatar_bg');
-  const el  = document.querySelector('.user-avatar');
+  const el  = document.getElementById('userAvatar');
   if (src && el) {
     if (bg) el.style.background = bg;
     el.innerHTML = '<img src="' + src + '" alt="avatar">';
   }
 })();
 
-// Queue order (mood is already done on arrival)
-// card id → flow URL
 const FLOWS = {
   'card-wins':  'notice-wins.html',
-  'card-write': null,   // TODO
-  'card-about': null,   // TODO
+  'card-write': null,
+  'card-about': null,
 };
 const queue = ['card-wins', 'card-write', 'card-about'];
 
 function openFlow(url) {
-  if (url) {
-    window.location.href = url;
-  }
+  if (url) window.location.href = url;
 }
 
 function completeCard(id) {
   const card = document.getElementById(id);
-  if (!card.classList.contains('active')) return;
+  if (!card || !card.classList.contains('active')) return;
 
   card.classList.remove('active');
   card.classList.add('done');
 
-  // Advance queue: next queued becomes active
+  // Track completed sections for summary.html
+  const sectionMap = { 'card-wins': 'wins', 'card-write': 'write', 'card-about': 'about' };
+  const sKey = sectionMap[id];
+  if (sKey) {
+    const done = JSON.parse(localStorage.getItem('bp_today_sections') || '["mood"]');
+    if (!done.includes(sKey)) { done.push(sKey); localStorage.setItem('bp_today_sections', JSON.stringify(done)); }
+  }
+
   const nextIdx = queue.indexOf(id) + 1;
   if (nextIdx < queue.length) {
-    const next = document.getElementById(queue[nextIdx]);
+    const nextId = queue[nextIdx];
+    const next = document.getElementById(nextId);
     next.classList.remove('queued');
     next.classList.add('active');
-    const nextFlow = FLOWS[queue[nextIdx]];
-    next.setAttribute('onclick', nextFlow ? `openFlow('${nextFlow}')` : `completeCard('${queue[nextIdx]}')`);
-    // Swap badge to awake
-    const badge = next.querySelector('.card-badge');
-    if (badge) {
-      badge.classList.remove('badge-sleepy');
-      badge.classList.add('badge-awake');
-      badge.innerHTML = `<svg width="22" height="14" viewBox="0 0 22 14" fill="none">
-        <path d="M1 7C2.5 3 5.5 1 8 1C10.5 1 12 3 13 7C12 11 10.5 13 8 13C5.5 13 2.5 11 1 7Z" fill="#1f1f25"/>
-        <circle cx="8" cy="7" r="2.5" fill="#f2f3e5"/>
-        <path d="M9 7C10.5 3 13.5 1 16 1C18.5 1 20 3 21 7C20 11 18.5 13 16 13C13.5 13 10.5 11 9 7Z" fill="#1f1f25"/>
-        <circle cx="16" cy="7" r="2.5" fill="#f2f3e5"/>
-      </svg>`;
-    }
+    const nextFlow = FLOWS[nextId];
+    next.setAttribute('onclick', nextFlow ? `openFlow('${nextFlow}')` : `completeCard('${nextId}')`);
   } else {
     checkAllDone();
   }
 }
 
 function checkAllDone() {
-  const all = document.querySelectorAll('.t-card');
+  const all = document.querySelectorAll('.t-card:not(.pre-done)');
   const allDone = [...all].every(c => c.classList.contains('done'));
   if (!allDone) return;
 
   all.forEach(c => c.classList.add('done-green'));
   document.getElementById('greetTitle').textContent = 'Mission completed!';
-  document.getElementById('greetTitle').style.fontSize = '52px';
   document.getElementById('greetSub').textContent = 'Congratulations, Sophie!';
   document.getElementById('greetSub').style.color = '#4ecb9e';
 }
 
 // Handle returns from card flows
 const doneFlags = {
-  'bp_wins_done':  'card-wins',
-  'bp_mood_done':  'card-mood',
+  'bp_wins_done': 'card-wins',
 };
 Object.entries(doneFlags).forEach(([flag, cardId]) => {
   if (localStorage.getItem(flag) === '1') {

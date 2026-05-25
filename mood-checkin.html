@@ -109,6 +109,21 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   position: absolute; bottom: 56px; left: 50%;
   transform: translateX(-50%); z-index: 20;
 }
+
+@keyframes mc-enter {
+  from { transform: translateX(-50%) translateY(300px); opacity: 0; }
+  to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+}
+@keyframes mc-enter-grid {
+  from { opacity: 0; transform: translateX(-50%) translateY(300px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.mc-wrap {
+  animation: mc-enter-grid 800ms cubic-bezier(0.75,0,0.3,0.99) both;
+}
+.mc-cta {
+  animation: mc-enter 800ms cubic-bezier(0.75,0,0.3,0.99) 100ms both;
+}
 .btn-continue {
   width: 270px; height: 48px;
   background: #f2f3e5; color: #1f1f25;
@@ -232,39 +247,168 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 /* ══════════════════════════════════════════════════════════════
    Why screen
    ══════════════════════════════════════════════════════════════ */
-#s-why { background: #1f1f25; }
+.why-screen { background: #1f1f25; }
+
+.why-deco {
+  position: absolute; pointer-events: none; z-index: 0;
+}
+.why-deco img { width: 100%; height: 100%; display: block; object-fit: contain; }
+/* top-left — emotion 1 in all cases */
+.why-deco-tl { left: -245px; top: -130px; width: 425px; height: 425px; }
+/* mid-right — emotion 2 in 3-emotion case */
+.why-deco-mr { left: 1033px; top: 251px; width: 492px; height: 492px; }
+/* bottom-left — emotion 3 in 3-emotion case, and only shape in 1-emotion case */
+.why-deco-bl { left: -4px; top: 722px; width: 467px; height: 467px; transform: rotate(30deg); }
+/* bottom-right — emotion 2 in 2-emotion case */
+.why-deco-br { left: 919px; top: 537px; width: 492px; height: 492px; }
+
+/* Also style the unused static ed-bg decorations */
+.ed-bg {
+  position: absolute; width: 380px; height: 380px;
+  pointer-events: none; z-index: 0; opacity: 0.9;
+}
+.ed-bg img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.ed-bg-tl { top: -80px; left: -80px; }
+.ed-bg-br { bottom: -80px; right: -80px; }
 
 .why-title {
   position: absolute; top: 68px; left: 0; right: 0; padding: 0 200px;
-  font-family: var(--font-display); font-size: 66px; line-height: 1.0;
-  letter-spacing: 1px; text-transform: uppercase; color: #f2f3e5;
+  font-family: var(--font-display); font-size: var(--title-medium-size); line-height: var(--title-medium-lh);
+  letter-spacing: 1px; color: #f2f3e5;
   text-align: center; margin: 0; z-index: 5;
 }
 .why-grid {
-  position: absolute; top: 230px; left: 50%; transform: translateX(-50%);
-  width: 720px; z-index: 5;
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  position: absolute; top: 278px; left: 50%; transform: translateX(-50%);
+  width: 764px; z-index: 5;
+  display: grid; grid-template-columns: repeat(4, 179px); gap: 16px;
 }
 .why-block {
-  background: #2f2f37; border: 1px solid #444450; border-radius: 14px;
-  padding: 18px 12px 14px;
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  cursor: pointer; border: 1px solid transparent;
+  background: #2f2f37; border: 1px solid rgba(92,92,101,0.3); border-radius: 8px;
+  height: 94px; width: 179px; padding: 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  cursor: pointer;
   transition: background 160ms, border-color 160ms;
 }
 .why-block:hover { background: #3a3a44; }
-.why-block.sel { background: #3a3a44; border-color: #f2f3e5; }
-.why-emoji { font-size: 28px; line-height: 1; }
+.why-block.sel { background: #3a3a44; border: 3px solid #f2f3e5; }
+.why-icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+  background: #2b2b32; border: 1px solid rgba(92,92,101,0.3);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+}
+.why-emoji { font-size: 18px; line-height: 1; }
 .why-label {
-  font-family: var(--font-body); font-size: 13px; font-weight: 600;
+  font-family: var(--font-body); font-size: 14px; font-weight: 600;
   color: #f2f3e5; text-align: center; line-height: 1.3;
 }
 
 
 /* ══════════════════════════════════════════════════════════════
+   Support offer screen
+   ══════════════════════════════════════════════════════════════ */
+.support-content {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 760px; text-align: center; z-index: 5;
+  display: flex; flex-direction: column; gap: 20px; align-items: center;
+}
+.support-sub {
+  font-family: var(--font-body); font-size: 15px; font-weight: 500;
+  color: #a4a59f; margin: 0; line-height: 1.4;
+}
+.support-heading {
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1px; color: #f2f3e5; margin: 0;
+}
+.support-btns {
+  position: absolute; bottom: 65px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 16px; z-index: 5;
+}
+.btn-maybe {
+  width: 260px; height: 48px; background: #2b2b32;
+  border: 1px solid rgba(255,255,255,0.18); border-radius: 8px;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #f2f3e5; cursor: pointer; transition: opacity 120ms;
+}
+.btn-show {
+  width: 260px; height: 48px; background: #f2f3e5;
+  border: none; border-radius: 8px;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #1f1f25; cursor: pointer; transition: opacity 120ms;
+}
+.btn-maybe:active, .btn-show:active { opacity: 0.75; }
+
+/* ══════════════════════════════════════════════════════════════
+   Video player screen
+   ══════════════════════════════════════════════════════════════ */
+.video-play-wrap {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 5;
+}
+.video-play-btn {
+  background: none; border: none; cursor: pointer; padding: 0;
+  transition: opacity 120ms;
+}
+.video-play-btn:active { opacity: 0.7; }
+.video-tap-hint {
+  font-family: var(--font-body); font-size: 13px; color: rgba(255,255,255,0.4);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Video feedback screen
+   ══════════════════════════════════════════════════════════════ */
+.vfb-ellipse {
+  position: absolute; left: -351px; top: 150px;
+  width: 1910px; height: 1910px; border-radius: 50%;
+  background: #1f1f25; pointer-events: none; z-index: 0;
+}
+.vfb-main-content {
+  position: absolute; left: 291px; top: 230px;
+  width: 613px; z-index: 5; text-align: center;
+}
+.vfb-title {
+  font-family: var(--font-display); font-size: 56px; line-height: 1.06;
+  letter-spacing: 1px; color: #f2f3e5; margin: 16px 0 0;
+}
+.vfb-bubble {
+  position: absolute; z-index: 6;
+  width: 370px; padding: 10px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.vfb-bubble-green  { background: #58b880; left: 50%; top: 452px; transform: translateX(-50%); }
+.vfb-bubble-avatar {
+  width: 48px; height: 48px; flex-shrink: 0;
+  overflow: hidden; background: #f2f3e5;
+}
+.vfb-bubble-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vfb-bubble-text {
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  color: #2f2f37; line-height: 1.4; padding-top: 4px;
+}
+.vfb-cta-wrap {
+  position: absolute; bottom: 64px; left: 50%;
+  transform: translateX(-50%); z-index: 20;
+  display: flex; gap: 12px;
+}
+.vfb-btn-no {
+  height: 44px; padding: 0 28px; background: #2b2b32;
+  border: 1px solid rgba(255,255,255,0.18); border-radius: 8px;
+  font-family: var(--font-body); font-size: 15px; font-weight: 700;
+  color: #f2f3e5; cursor: pointer; transition: opacity 120ms;
+}
+.vfb-btn-yes {
+  height: 44px; padding: 0 28px; background: #f2f3e5;
+  border: none; border-radius: 8px;
+  font-family: var(--font-body); font-size: 15px; font-weight: 700;
+  color: #1f1f25; cursor: pointer; transition: opacity 120ms;
+}
+.vfb-btn-no:active, .vfb-btn-yes:active { opacity: 0.75; }
+
+
+/* ══════════════════════════════════════════════════════════════
    Sleep screen
    ══════════════════════════════════════════════════════════════ */
-#s-sleep { background: #1f1f25; }
+#s-sleep { background: #3f50b8; }
 
 .sleep-sub {
   position: absolute; top: 60px; left: 0; right: 0;
@@ -272,62 +416,121 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   color: #a4a59f; text-align: center; z-index: 5;
 }
 .sleep-title {
-  position: absolute; top: 82px; left: 0; right: 0;
-  font-family: var(--font-display); font-size: 72px; line-height: 1.0;
-  letter-spacing: 1px; text-transform: uppercase; color: #f2f3e5;
+  position: absolute; top: 88px; left: 0; right: 0;
+  font-family: var(--font-display); font-size: var(--title-medium-size); line-height: var(--title-medium-lh);
+  letter-spacing: 1px; color: #f2f3e5;
   text-align: center; margin: 0; z-index: 5;
 }
 .sleep-slider-wrap {
-  position: absolute; top: 230px; left: 50%; transform: translateX(-50%); z-index: 5;
+  position: absolute; top: 272px; left: 50%; transform: translateX(-50%); z-index: 5;
 }
 
 
 /* ══════════════════════════════════════════════════════════════
    Done screen
    ══════════════════════════════════════════════════════════════ */
-#s-done { background: #1f1f25; }
+#s-done { background: #3f50b8; transition: none; }
+
+.done-ellipse {
+  position: absolute; left: -357px; top: 79px;
+  width: 1910px; height: 1910px; border-radius: 50%;
+  background: #1f1f25; pointer-events: none; z-index: 0;
+}
+
+/* ── Sleep exit — content slides down ──────────────────────── */
+#s-sleep.s-sleep-exiting .sleep-sub,
+#s-sleep.s-sleep-exiting .sleep-title {
+  transform: translateY(400px); opacity: 0;
+  transition: transform 700ms cubic-bezier(0.75,0,0.3,0.99),
+              opacity 400ms ease;
+}
+#s-sleep.s-sleep-exiting .sleep-slider-wrap {
+  transform: translateX(-50%) translateY(400px); opacity: 0;
+  transition: transform 700ms cubic-bezier(0.75,0,0.3,0.99),
+              opacity 400ms ease;
+}
+#s-sleep.s-sleep-exiting .ed-nav {
+  transform: translateX(-50%) translateY(400px); opacity: 0;
+  transition: transform 700ms cubic-bezier(0.75,0,0.3,0.99) 60ms,
+              opacity 400ms ease 60ms;
+}
+#s-sleep.s-sleep-exiting .prog { opacity: 0; transition: opacity 300ms ease; }
 
 .done-center {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -52%);
-  display: flex; flex-direction: column; align-items: center; gap: 16px; z-index: 5;
+  position: absolute; left: 50%; top: calc(50% - 17px);
+  transform: translate(-50%, calc(-50% + 200px));
+  display: flex; flex-direction: column; align-items: center; gap: 36px; z-index: 5;
+  opacity: 0;
 }
-.done-reward { display: flex; align-items: center; gap: 8px; }
-.done-plus { font-family: var(--font-display); font-size: 28px; color: #f2f3e5; letter-spacing: -0.5px; }
-.done-spark {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: linear-gradient(135deg,#f08b31,#ffbb25);
-  display: grid; place-items: center; font-size: 14px;
+.done-top-group {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.reward-row {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+}
+.reward-plus {
+  font-family: var(--font-display); font-size: 32px;
+  line-height: 40px; letter-spacing: -0.8px; color: #f2f3e5;
+}
+.spark-badge {
+  position: relative; width: 32px; height: 32px; border-radius: 50%; overflow: hidden;
+}
+.spark-badge img {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.spark-badge img:nth-child(1) { animation: spark-c1 6400ms linear 1600ms infinite; }
+.spark-badge img:nth-child(2) { opacity: 0; animation: spark-c2 6400ms linear 1600ms infinite; }
+.spark-badge img:nth-child(3) { opacity: 0; animation: spark-c3 6400ms linear 1600ms infinite; }
+.spark-badge img:nth-child(4) { opacity: 0; animation: spark-c4 6400ms linear 1600ms infinite; }
+@keyframes spark-c1 {
+  0%   { opacity: 1; } 25%  { opacity: 0; } 75%  { opacity: 0; } 100% { opacity: 1; }
+}
+@keyframes spark-c2 {
+  0%   { opacity: 0; } 25%  { opacity: 1; } 50%  { opacity: 0; } 100% { opacity: 0; }
+}
+@keyframes spark-c3 {
+  0%   { opacity: 0; } 50%  { opacity: 1; } 75%  { opacity: 0; } 100% { opacity: 0; }
+}
+@keyframes spark-c4 {
+  0%   { opacity: 0; } 75%  { opacity: 1; } 100% { opacity: 0; }
 }
 .done-card {
   width: 200px; height: 298px; border-radius: 19px;
   overflow: hidden; position: relative;
   box-shadow: 0 8px 32px rgba(0,0,0,0.5); flex-shrink: 0;
 }
-.done-card-art {
-  width: 100%; height: 196px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 80px;
-}
-.done-card-footer {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  background: #2f2f37; padding: 10px 16px 14px;
-  display: flex; flex-direction: column; gap: 2px; align-items: flex-start;
-}
-.done-card-num {
-  font-family: var(--font-body); font-size: 10px; font-weight: 700;
-  color: #a4a59f; display: flex; align-items: center; gap: 4px;
-}
-.done-card-name {
-  font-family: var(--font-display); font-size: 15px; letter-spacing: 0.5px;
-  text-transform: uppercase; color: #f2f3e5;
-}
 .done-title {
-  font-family: var(--font-display); font-size: 72px; line-height: 1.0;
-  letter-spacing: 1px; text-transform: uppercase; color: #f2f3e5; text-align: center;
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; text-align: center; margin: 0;
 }
 .done-cta {
-  position: absolute; bottom: 56px; left: 50%; transform: translateX(-50%); z-index: 20;
+  position: absolute; top: 721px; left: 50%; transform: translateX(-50%); z-index: 20;
+  opacity: 0;
+}
+
+/* ── Entrance ──────────────────────────────────────────────── */
+#s-done.done-entered .done-center {
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  transition: transform 700ms cubic-bezier(0.75,0,0.3,0.99) 200ms,
+              opacity 400ms ease 200ms;
+}
+#s-done.done-entered .done-cta {
+  opacity: 1;
+  transition: opacity 500ms ease 450ms;
+}
+
+/* ── Exit ──────────────────────────────────────────────────── */
+#s-done.done-exiting .done-center {
+  transform: translate(-50%, calc(-50% - 300px));
+  opacity: 0;
+  transition: transform 800ms cubic-bezier(0.75,0,0.3,0.99),
+              opacity 500ms ease;
+}
+#s-done.done-exiting .done-cta {
+  opacity: 0;
+  transition: opacity 300ms ease;
 }
 
 </style>
@@ -421,44 +624,14 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 </div>
 
 
-<!-- ════════════════════════════════════════════════════════════
-     S-WHY — What makes you feel this way?
-     ════════════════════════════════════════════════════════════ -->
-<div class="screen" id="s-why">
-  <div class="ed-bg ed-bg-tl"><img src="./components/emotion-hopeful.svg" alt=""></div>
-  <div class="ed-bg ed-bg-br" style="transform:rotate(15deg)"><img src="./components/emotion-okay.svg" alt=""></div>
-
-  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
-  <div class="prog"><div class="prog-fill" style="width:680px"></div></div>
-
-  <h2 class="why-title">What makes you feel this way?</h2>
-
-  <div class="why-grid">
-    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">📚</span><span class="why-label">School life</span></button>
-    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">✍️</span><span class="why-label">Exams</span></button>
-    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">🏠</span><span class="why-label">Home life</span></button>
-    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">🤸</span><span class="why-label">Activities</span></button>
-    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">📱</span><span class="why-label">Saw something online</span></button>
-    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">👫</span><span class="why-label">Friends</span></button>
-    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">🚶</span><span class="why-label">No friends</span></button>
-    <button class="why-block" onclick="this.classList.toggle('sel')"><span class="why-emoji">😩</span><span class="why-label">Hungry</span></button>
-  </div>
-
-  <div class="ed-nav">
-    <button class="btn-back-dark" onclick="goBackFromWhy()">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <button class="btn-next-em" onclick="goTo('s-sleep')">Next</button>
-  </div>
-</div>
+<!-- Why screens are built dynamically as wh-0, wh-1, wh-2 in startDetailFlow() -->
 
 
 <!-- ════════════════════════════════════════════════════════════
      S-SLEEP — How was your sleep?
      ════════════════════════════════════════════════════════════ -->
-<div class="screen" id="s-sleep">
-  <div class="ed-bg ed-bg-tl" style="opacity:0.5"><img src="./components/emotion-tired.svg" alt=""></div>
-  <div class="ed-bg ed-bg-br" style="opacity:0.5"><img src="./components/emotion-neutral.svg" alt=""></div>
+<div class="screen" id="s-sleep" style="background:#3f50b8">
+  <img src="./components/survey-shape.svg" style="position:absolute;left:-33px;top:-390px;width:1188px;height:1599px;pointer-events:none;z-index:0;" alt="">
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
   <div class="prog"><div class="prog-fill" style="width:726px"></div></div>
@@ -486,10 +659,59 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   </div>
 
   <div class="ed-nav">
-    <button class="btn-back-dark" onclick="goTo('s-why')">
+    <button class="btn-back-dark" onclick="goBackFromSleep()">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
-    <button class="btn-next-em" onclick="goTo('s-done')">Next</button>
+    <button class="btn-next-em" onclick="goToDone()">Next</button>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     S-VIDEO — Video player (static prototype)
+     ════════════════════════════════════════════════════════════ -->
+<div class="screen" id="s-video" style="background:#000;">
+  <div class="sb" style="color:rgba(255,255,255,0.7)"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+  <div class="video-play-wrap">
+    <button class="video-play-btn" onclick="goTo('s-video-fb')">
+      <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="rgba(255,255,255,0.15)"/><polygon points="20,16 36,24 20,32" fill="#f2f3e5"/></svg>
+    </button>
+    <p class="video-tap-hint">Tap to play (prototype)</p>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     S-VIDEO-FB — Post-video feedback
+     ════════════════════════════════════════════════════════════ -->
+<div class="screen" id="s-video-fb" style="background:#3f50b8;">
+  <div class="vfb-ellipse"></div>
+  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+
+  <!-- Green bubble — centered, feedback question -->
+  <div class="vfb-bubble vfb-bubble-green">
+    <div class="vfb-bubble-avatar"><img src="./components/monster-01.svg" alt=""></div>
+    <p class="vfb-bubble-text">In your opinion, was the exercise helpful?</p>
+  </div>
+
+  <!-- Main content: reward + title -->
+  <div class="vfb-main-content">
+    <div class="reward-row">
+      <span class="reward-plus">+1</span>
+      <div class="spark-badge">
+        <img src="./components/Spark-4.svg" alt="">
+        <img src="./components/Spark-01.svg" alt="">
+        <img src="./components/Spark-02.svg" alt="">
+        <img src="./components/Spark-03.svg" alt="">
+      </div>
+    </div>
+    <h2 class="vfb-title" id="vfbTitle">Showing up in a hard moment counts</h2>
+  </div>
+
+  <!-- Answer buttons -->
+  <div class="vfb-cta-wrap">
+    <button class="vfb-btn-no" onclick="goTo('s-sleep')">Not really</button>
+    <button class="vfb-btn-yes" onclick="goTo('s-sleep')">Yes, a bit!</button>
   </div>
 </div>
 
@@ -498,22 +720,26 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
      S-DONE — Check-in complete!
      ════════════════════════════════════════════════════════════ -->
 <div class="screen" id="s-done">
-  <div class="ed-bg ed-bg-tl"><img src="./components/emotion-happy.svg" alt=""></div>
-  <div class="ed-bg ed-bg-br" style="transform:rotate(15deg)"><img src="./components/emotion-excited.svg" alt=""></div>
+  <div class="done-ellipse"></div>
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
   <div class="done-center">
-    <div class="done-reward">
-      <span class="done-plus">+1</span>
-      <div class="done-spark">⚡</div>
+    <div class="done-top-group">
+      <div class="reward-row">
+        <span class="reward-plus">+10</span>
+        <div class="spark-badge">
+          <img src="./components/Spark-4.svg" alt="spark">
+          <img src="./components/Spark-01.svg" alt="spark">
+          <img src="./components/Spark-02.svg" alt="spark">
+          <img src="./components/Spark-03.svg" alt="spark">
+        </div>
+      </div>
+      <div class="done-card">
+        <img src="./components/card-2.svg" alt="Mood check-in" style="width:100%;height:100%;display:block;border-radius:19px;">
+      </div>
     </div>
-
-    <div class="done-card">
-      <img src="./components/card-2.svg" alt="Mood check-in" style="width:100%;height:100%;display:block;border-radius:19px;">
-    </div>
-
-    <p class="done-title">Setup<br>completed!</p>
+    <p class="done-title">Check-in<br>completed!</p>
   </div>
 
   <div class="done-cta">
@@ -532,6 +758,7 @@ function scale() {
   document.getElementById('device').style.setProperty('--s', s);
 }
 scale(); addEventListener('resize', scale);
+
 
 // ─── Emotion data ─────────────────────────────────────────────
 const EMOTIONS = {
@@ -556,9 +783,31 @@ const EMOTIONS = {
 let cur = 's0';
 let detailOrder = [];
 
+function goToDone() {
+  const sleep = document.getElementById('s-sleep');
+  const done  = document.getElementById('s-done');
+
+  // Sleep content exits downward
+  sleep.classList.add('s-sleep-exiting');
+
+  // After content is sliding, swap screens (same blue bg = seamless)
+  setTimeout(() => {
+    sleep.classList.remove('active');
+    done.classList.add('active');
+    cur = 's-done';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      done.classList.add('done-entered');
+    }));
+  }, 350);
+}
+
 function finishMoodCheckin() {
-  localStorage.setItem('bp_mood_done', '1');
-  window.location.href = 'today.html';
+  const done = document.getElementById('s-done');
+  done.classList.add('done-exiting');
+  setTimeout(() => {
+    localStorage.setItem('bp_mood_done', '1');
+    window.location.href = 'today.html';
+  }, 700);
 }
 
 function goTo(id) {
@@ -587,21 +836,28 @@ function startDetailFlow() {
   if (!selected.length) return;
   detailOrder = selected;
   const device = document.getElementById('device');
-  // Remove any previously built detail screens
-  document.querySelectorAll('.ed-screen').forEach(s => s.remove());
-  // Build one screen per selected emotion
+  // Remove previously built screens
+  document.querySelectorAll('.ed-screen, .why-screen').forEach(s => s.remove());
+  // Build one detail screen per emotion
   selected.forEach((key, idx) => {
     const screen = buildDetailScreen(key, idx, selected.length);
     device.appendChild(screen);
     initArc(key);
   });
+  // Build one why screen with all selected emotions as background
+  device.appendChild(buildWhyScreen(selected));
+  // Build support screen (inserted between WHY and sleep)
+  // Remove any previously built support screen first
+  const prevSupport = document.getElementById('s-support');
+  if (prevSupport) prevSupport.remove();
+  device.appendChild(buildSupportScreen());
   goTo('ed-0');
 }
 
 // ─── Detail screen builder ────────────────────────────────────
 function buildDetailScreen(key, idx, total) {
   const em = EMOTIONS[key];
-  const progWidth = 120 + ((idx + 1) / (total + 1)) * 600;
+  const progWidth = 120 + ((idx + 1) / (total * 2 + 2)) * 600;
   const chk = `<svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7L6 11L12 3" stroke="#1f1f25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   const chipsHtml = em.chips.map(c =>
     `<button class="chip" onclick="toggleChip(this,'${em.color}')">${c}</button>`
@@ -661,11 +917,124 @@ function edBack(idx) {
   if (idx === 0) { goTo('s0'); } else { goTo(`ed-${idx - 1}`); }
 }
 function edNext(idx, total) {
-  if (idx < total - 1) { goTo(`ed-${idx + 1}`); } else { goTo('s-why'); }
+  if (idx < total - 1) { goTo(`ed-${idx + 1}`); } else { goTo('wh-0'); }
 }
-function goBackFromWhy() {
-  const last = detailOrder.length ? `ed-${detailOrder.length - 1}` : 's0';
-  goTo(last);
+function whyBack()  { goTo(`ed-${detailOrder.length - 1}`); }
+function whyNext()  {
+  const copy = getSupportCopy();
+  document.getElementById('supportSub').textContent = copy.subtitle;
+  document.getElementById('supportHeading').textContent = copy.heading;
+  const goodMoods = ['happy', 'excited', 'okay'];
+  const isGood = detailOrder.every(k => goodMoods.includes(k));
+  document.getElementById('vfbTitle').textContent = isGood
+    ? "You're already doing something great"
+    : "Showing up in a hard moment counts";
+  goTo('s-support');
+}
+function skipVideo() { goTo('s-sleep'); }
+function goBackFromSleep() { goTo('wh-0'); }
+
+// ─── Support copy helper ──────────────────────────────────────
+function getSupportCopy() {
+  const goodMoods = ['happy', 'excited', 'okay'];
+  const isGood = detailOrder.every(k => goodMoods.includes(k));
+
+  // Get selected why reasons (read from wh-0 screen's .sel buttons)
+  const selReasons = [...document.querySelectorAll('#wh-0 .why-block.sel')]
+    .map(b => b.querySelector('.why-label').textContent.trim());
+
+  // Subtitle context
+  const reasonContext = {
+    'Home life': 'at home', 'School life': 'at school', 'Exams': 'about exams',
+    'Friends': 'with friends', 'No friends': 'feeling lonely',
+    'Saw something online': 'online', 'Activities': 'with activities', 'Hungry': 'when tired',
+  };
+  const ctx = selReasons.length ? (reasonContext[selReasons[0]] || 'this way') : 'this way';
+
+  if (isGood) {
+    return {
+      subtitle: `Others your age feel this way too — ${ctx}.`,
+      heading: "Want to see how some of them keep the good feeling going?"
+    };
+  } else {
+    return {
+      subtitle: `A lot of people your age feel this way ${ctx}.`,
+      heading: "Would you like to see how some of them handle it?"
+    };
+  }
+}
+
+// ─── Support screen builder ───────────────────────────────────
+function buildSupportScreen() {
+  const div = document.createElement('div');
+  div.className = 'screen';
+  div.id = 's-support';
+  div.innerHTML = `
+    <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+    <div class="prog"><div class="prog-fill" style="width:680px"></div></div>
+    <div class="support-content">
+      <p class="support-sub" id="supportSub"></p>
+      <h2 class="support-heading" id="supportHeading"></h2>
+    </div>
+    <div class="support-btns">
+      <button class="btn-maybe" onclick="skipVideo()">Maybe later</button>
+      <button class="btn-show" onclick="goTo('s-video')">Yes, show me</button>
+    </div>
+  `;
+  return div;
+}
+
+// ─── Why screen builder ───────────────────────────────────────
+const WHY_BLOCKS = [
+  { emoji: '📚', label: 'School life' },
+  { emoji: '✍️', label: 'Exams' },
+  { emoji: '🏠', label: 'Home life' },
+  { emoji: '🤸', label: 'Activities' },
+  { emoji: '📱', label: 'Saw something online' },
+  { emoji: '👫', label: 'Friends' },
+  { emoji: '🚶', label: 'No friends' },
+  { emoji: '😩', label: 'Hungry' },
+];
+
+// Positions per count: [1 emotion], [2 emotions], [3 emotions]
+const WHY_DECO_POS = {
+  1: ['why-deco-bl'],
+  2: ['why-deco-tl', 'why-deco-br'],
+  3: ['why-deco-tl', 'why-deco-mr', 'why-deco-bl'],
+};
+
+function buildWhyScreen(selectedKeys) {
+  const n = selectedKeys.length;
+  const progWidth = 120 + ((n + 1) / (n * 2 + 2)) * 600;
+  const positions = WHY_DECO_POS[n] || WHY_DECO_POS[3];
+
+  const decosHtml = selectedKeys.slice(0, 3).map((key, i) =>
+    `<div class="why-deco ${positions[i]}"${i === 1 ? ' style="transform:rotate(40deg)"' : ''}><img src="./components/emotion-${key}.svg" alt=""></div>`
+  ).join('');
+
+  const blocksHtml = WHY_BLOCKS.map(b => `
+    <button class="why-block" onclick="this.classList.toggle('sel')">
+      <div class="why-icon"><span class="why-emoji">${b.emoji}</span></div>
+      <span class="why-label">${b.label}</span>
+    </button>`).join('');
+
+  const div = document.createElement('div');
+  div.className = 'screen why-screen';
+  div.id = 'wh-0';
+  div.innerHTML = `
+    ${decosHtml}
+    <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+    <div class="prog"><div class="prog-fill" style="width:${Math.round(progWidth)}px"></div></div>
+    <h2 class="why-title">What makes you feel this way?</h2>
+    <div class="why-grid">${blocksHtml}</div>
+    <div class="ed-nav">
+      <button class="btn-back-dark" onclick="whyBack()">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn-next-em" onclick="whyNext()">Next</button>
+    </div>
+  `;
+  return div;
 }
 
 // ─── Chip toggle ──────────────────────────────────────────────
