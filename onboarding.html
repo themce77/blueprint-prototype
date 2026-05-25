@@ -130,8 +130,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .s0-poly {
   position: absolute;
   width: 1474px; height: 1474px;
-  left: -140px; top: -288px;
-  transform: rotate(-70.64deg);
+  left: -140px; top: -420px;
+  transform: rotate(-70.64deg) scale(0.91);
   transform-origin: 737px 737px;
   pointer-events: none; z-index: 0;
 }
@@ -235,6 +235,20 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
               opacity 500ms cubic-bezier(0.75, 0, 0.3, 0.99) 60ms;
 }
 
+/* ── S6 → S7 exit animation ────────────────────────────── */
+#s6.exiting .s6-content {
+  transform: translateX(-50%) translateY(-200%);
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99);
+}
+#s6.exiting .nav {
+  transform: translateX(-50%) translateY(-300%);
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99);
+}
+#s6.exiting .s6-ellipse {
+  transform: translate(-50%, -24%) scale(1.07);
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99) 1ms;
+}
+
 /* ══════════════════════════════════════════════════════════════
    S1 — Your space
    ══════════════════════════════════════════════════════════════ */
@@ -247,7 +261,6 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   width: 1243px; height: 1087px;
   pointer-events: none; z-index: 0;
 }
-
 .s1-content {
   position: absolute;
   left: 348px; top: 295px;
@@ -589,6 +602,52 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
    S7 — Setup completed
    ══════════════════════════════════════════════════════════════ */
 #s7 { background: #3f50b8; }
+
+/* S7 elements start off-screen */
+#s7 .s7-content {
+  transform: translateY(400px);
+  opacity: 0;
+}
+#s7 .msg-green {
+  transform: translateY(400px);
+  opacity: 0;
+}
+#s7 .msg-orange {
+  transform: translateX(500px);
+  opacity: 0;
+}
+#s7 .s7-cta-wrap {
+  transform: translateX(-50%) translateY(200px);
+  opacity: 0;
+}
+
+/* Phase 2: content + green bubble enter from bottom */
+#s7.s7-entered .s7-content {
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99),
+              opacity 400ms ease;
+}
+#s7.s7-entered .msg-green {
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99),
+              opacity 400ms ease;
+}
+
+/* Phase 3: button from bottom, orange bubble from right */
+#s7.s7-phase2 .s7-cta-wrap {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99),
+              opacity 400ms ease;
+}
+#s7.s7-phase2 .msg-orange {
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99),
+              opacity 400ms ease;
+}
 
 .s7-ellipse {
   position: absolute;
@@ -1018,6 +1077,37 @@ function goTo(n) {
       arch.classList.remove('entering');
       arch.classList.add('done');
     }, 1100);
+
+  } else if (cur === 6 && n === 7) {
+    const s6   = document.getElementById('s6');
+    const s7   = document.getElementById('s7');
+    const prog = document.getElementById('prog');
+
+    // Phase 1 (t=0): text + nav slide up, circle grows+moves down
+    s6.classList.add('exiting');
+    prog.style.transition = 'transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99)';
+    prog.style.transform  = 'translateY(-120px)';
+
+    // t=800ms: switch to S7, Phase 2 — content + green bubble enter from bottom
+    setTimeout(() => {
+      s6.classList.remove('active', 'exiting');
+      s7.classList.add('active');
+      prog.style.transition = 'none';
+      prog.style.transform  = '';
+      requestAnimationFrame(() => { prog.style.transition = ''; });
+      cur = n;
+      updateProg(n);
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        s7.classList.add('s7-entered');
+      }));
+
+      // t=800+1000ms: Phase 3 — button from bottom, orange bubble from right
+      setTimeout(() => {
+        s7.classList.add('s7-phase2');
+      }, 1000);
+
+    }, 800);
 
   } else {
     const outEl = document.getElementById('s' + cur);

@@ -94,7 +94,12 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .em-check img { width: 100%; height: 100%; display: block; }
 .em-btn.sel .em-check { display: grid; }
-.em-btn[data-key="angry"] span { padding-bottom: 20px; }
+.em-btn[data-key="curious"] span { padding-bottom: 5px; }
+.em-btn[data-key="angry"] span { padding-top: 10px; }
+.em-btn[data-key="sad"] span { padding-bottom: 5px; }
+.em-btn[data-key="grateful"] span { padding-bottom: 5px; }
+.em-btn[data-key="stressed"] span { padding-bottom: 40px; }
+.em-btn[data-key="tired"] span { padding-top: 10px; }
 
 .em-grid.maxed .em-btn:not(.sel) { pointer-events: none; cursor: default; }
 .em-grid.maxed .em-btn:not(.sel) img { filter: brightness(0.35) saturate(0.4); }
@@ -174,13 +179,13 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 
 .ed-slider-wrap {
-  position: absolute; top: 175px; left: 50%;
+  position: absolute; top: 223px; left: 50%;
   transform: translateX(-50%); z-index: 5;
 }
 
 /* More specifically + chips */
 .ed-chips-section {
-  position: absolute; top: 482px; left: 50%;
+  position: absolute; top: 530px; left: 50%;
   transform: translateX(-50%); text-align: center; z-index: 5;
   width: 700px;
 }
@@ -530,21 +535,21 @@ scale(); addEventListener('resize', scale);
 
 // ─── Emotion data ─────────────────────────────────────────────
 const EMOTIONS = {
-  curious:   { name:'Curious',      color:'#FDDA3C', emoji:'🤔', levels:['Curious','Quite curious','Very curious'],         chips:['Interested','Intrigued','Fascinated','Nosy','Wonder-Filled'],  shape:{ size:1292, left:-49,  top:-312 } },
-  happy:     { name:'Happy',        color:'#f4a021', emoji:'😊', levels:['Happy','Quite happy','Very happy'],               chips:['Joyful','Content','Pleased','Cheerful','Elated'] },
-  excited:   { name:'Excited',      color:'#e84326', emoji:'🤩', levels:['Excited','Quite excited','Super excited'],        chips:['Enthusiastic','Eager','Thrilled','Energised','Pumped'] },
-  okay:      { name:'Okay',         color:'#68DCC6', emoji:'🙂', levels:['Okay','Pretty okay','Very okay'],                 chips:['Fine','Comfortable','Satisfied','Steady','Relieved'],           shape:{ size:1524, left:-165, top:-345 } },
-  grateful:  { name:'Grateful',     color:'#4ecb71', emoji:'🙏', levels:['Grateful','Quite grateful','Very grateful'],      chips:['Appreciative','Thankful','Touched','Lucky','Warm Inside'] },
-  hopeful:   { name:'Hopeful',      color:'#c5e000', emoji:'😇', levels:['Hopeful','Quite hopeful','Super hopeful'],        chips:['Optimistic','Encouraged','Wishing','Inspired','Looking forward'] },
-  meh:       { name:'Meh',          color:'#b8b8a8', emoji:'😑', levels:['A bit meh','Meh','Very meh'],                     chips:['Unimpressed','Bored','Flat','Disengaged','Apathetic'],           shape:{ size:1196, left:-1,   top:-364 } },
-  neutral:   { name:'Neutral',      color:'#a0a09a', emoji:'😐', levels:['Neutral','Quite neutral','Very neutral'],         chips:['Indifferent','Detached','Composed','Shoulder Shrug','Neither'] },
-  idontknow: { name:"I Don't Know", color:'#888880', emoji:'🤷', levels:['Unsure','Quite unsure','Very unsure'],            chips:['Confused','Uncertain','Overwhelmed','Numb','Conflicted'] },
-  sad:       { name:'Sad',          color:'#5abfea', emoji:'😢', levels:['A bit sad','Sad','Very sad'],                     chips:['Sorrowful','Left Out','Let Down','Disappointed','Heartbroken'],  shape:{ size:1196, left:-1,   top:-64  } },
-  tired:     { name:'Tired',        color:'#4a67f5', emoji:'😴', levels:['Tired','Quite tired','Very tired'],               chips:['Exhausted','Drained','Fatigued','Sleepy','Checked Out'] },
-  lonely:    { name:'Lonely',       color:'#a070d4', emoji:'😔', levels:['Lonely','Quite lonely','Super lonely'],           chips:['Isolated','Disconnected','Left Out','Longing','Forgotten'] },
-  angry:     { name:'Angry',        color:'#e84326', emoji:'😠', levels:['A bit angry','Angry','Very angry'],               chips:['Frustrated','Irritated','Furious','Annoyed','Jealous'],          shape:{ size:1794, left:-300, top:-663 } },
-  stressed:  { name:'Stressed',     color:'#be2f6e', emoji:'😤', levels:['Stressed','Quite stressed','Very stressed'],      chips:['Overwhelmed','Pressured','Tense','Rushed','Snappy'] },
-  anxious:   { name:'Anxious',      color:'#b38aff', emoji:'😰', levels:['Anxious','Quite anxious','Super anxious'],        chips:['Worried','Nervous','Scared','Fearful','Panicked'] },
+  curious:   { name:'Curious',      color:'#FDDA3C', emoji:'🤔', levels:['Interested','Curious','Have to know!'],          chips:['Interested','Intrigued','Fascinated','Nosy','Wonder-Filled'],  shape:{ size:1454, left:-130, top:-460 } },
+  happy:     { name:'Happy',        color:'#f4a021', emoji:'😊', levels:['Good','Happy','Joyful'],                          chips:['Joyful','Content','Pleased','Cheerful','Elated'],              shape:{ size:1495, left:-151, top:-331 } },
+  excited:   { name:'Excited',      color:'#e84326', emoji:'🤩', levels:['Looking forward to it','Excited','Pumped'],       chips:['Enthusiastic','Eager','Thrilled','Energised','Pumped'],         shape:{ size:1495, left:-151, top:-331 } },
+  okay:      { name:'Okay',         color:'#68DCC6', emoji:'🙂', levels:['Fine','Okay','Pretty good'],                      chips:['Fine','Comfortable','Satisfied','Steady','Relieved'],           shape:{ size:1511, left:-159, top:-339 } },
+  grateful:  { name:'Grateful',     color:'#4ecb71', emoji:'🙏', levels:['Warm inside','Grateful','Thankful'],              chips:['Appreciative','Thankful','Touched','Lucky','Warm Inside'],       shape:{ size:1405, left:-106, top:-286 } },
+  hopeful:   { name:'Hopeful',      color:'#c5e000', emoji:'😇', levels:['A little hopeful','Hopeful','Optimistic'],        chips:['Optimistic','Encouraged','Wishing','Inspired','Looking forward'], shape:{ size:1495, left:-151, top:-331 } },
+  meh:       { name:'Meh',          color:'#b8b8a8', emoji:'😑', levels:['Blah','Meh','Over it'],                           chips:['Unimpressed','Bored','Flat','Disengaged','Apathetic'],           shape:{ size:1108, left:43,   top:-262 } },
+  neutral:   { name:'Neutral',      color:'#a0a09a', emoji:'😐', levels:['Just okay','Neutral','Normal'],                   chips:['Indifferent','Detached','Composed','Shoulder Shrug','Neither'],  shape:{ size:1244, left:-25,  top:-205 } },
+  idontknow: { name:"I Don't Know", color:'#888880', emoji:'🤷', levels:['Unsure','Not sure','Confused'],                   chips:['Confused','Uncertain','Overwhelmed','Numb','Conflicted'],        shape:{ size:1555, left:-181, top:-361 } },
+  sad:       { name:'Sad',          color:'#5abfea', emoji:'😢', levels:['Down','Sad','Hurt'],                              chips:['Sorrowful','Left Out','Let Down','Disappointed','Heartbroken'],  shape:{ size:1281, left:-44,  top:-74  } },
+  tired:     { name:'Tired',        color:'#4a67f5', emoji:'😴', levels:['Low energy','Tired','Exhausted'],                 chips:['Exhausted','Drained','Fatigued','Sleepy','Checked Out'],         shape:{ size:1495, left:-151, top:-286 } },
+  lonely:    { name:'Lonely',       color:'#a070d4', emoji:'😔', levels:['A little alone','Lonely','Isolated'],             chips:['Isolated','Disconnected','Left Out','Longing','Forgotten'],      shape:{ size:1495, left:-151, top:-331 } },
+  angry:     { name:'Angry',        color:'#e84326', emoji:'😠', levels:['Annoyed','Angry','Furious'],                      chips:['Frustrated','Irritated','Furious','Annoyed','Jealous'],          shape:{ size:1615, left:-211, top:-591 } },
+  stressed:  { name:'Stressed',     color:'#be2f6e', emoji:'😤', levels:['Tense','Stressed','Overwhelmed'],                 chips:['Overwhelmed','Pressured','Tense','Rushed','Snappy'],             shape:{ size:1495, left:-151, top:-131 } },
+  anxious:   { name:'Anxious',      color:'#b38aff', emoji:'😰', levels:['Uneasy','Anxious','Panicked'],                    chips:['Worried','Nervous','Scared','Fearful','Panicked'],               shape:{ size:1495, left:-151, top:-331 } },
 };
 
 // ─── Screen nav ───────────────────────────────────────────────
@@ -607,7 +612,7 @@ function buildDetailScreen(key, idx, total) {
   div.className = 'screen ed-screen';
   div.id = `ed-${idx}`;
   div.style.background = em.color;
-  const sh = em.shape || { size:1196, left:-1, top:-264 };
+  const sh = em.shape || { size:1495, left:-151, top:-331 };
   div.innerHTML = `
     <div class="ed-shape" style="width:${sh.size}px;height:${sh.size}px;left:${sh.left}px;top:${sh.top}px"><img src="./components/${key}-shape.svg" alt=""></div>
 
