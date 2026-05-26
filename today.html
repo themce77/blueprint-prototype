@@ -86,7 +86,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   display: flex; flex-direction: column; align-items: center; gap: 12px;
 }
 .user-avatar {
-  width: 24px; height: 24px; border-radius: 50%;
+  width: 32px; height: 32px; border-radius: 50%;
   background: #b8c0ed; border: 2px solid #36363f;
   overflow: hidden; display: grid; place-items: center; font-size: 10px;
   box-sizing: border-box;
@@ -136,9 +136,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   letter-spacing: -0.8px; color: #f2f3e5;
 }
 .spark-icon {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: linear-gradient(135deg,#f08b31,#ffbb25);
-  display: grid; place-items: center; font-size: 14px; flex-shrink: 0;
+  width: 32px; height: 32px; flex-shrink: 0; display: block;
 }
 
 /* ─── Cards row ─────────────────────────────────────────────── */
@@ -154,44 +152,32 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   width: 100%; height: 100%;
   display: block; object-fit: fill; border-radius: 19px;
 }
+.card-monster {
+  position: absolute; top: 28px; left: 50%;
+  transform: translateX(-50%);
+  width: 180px; height: 180px;
+  pointer-events: none; z-index: 2;
+  transition: opacity 300ms ease;
+}
 
-/* Done layer — replaces overlay+checkmark */
+/* Done layer */
 .card-done-layer {
   position: absolute; inset: 0; border-radius: 19px; overflow: hidden;
-  background: #36363f;
-  display: flex; flex-direction: column;
   opacity: 0; pointer-events: none; z-index: 8;
   transition: opacity 400ms 150ms;
 }
 .t-card.done .card-done-layer { opacity: 1; }
 .t-card.pre-done .card-done-layer { opacity: 1; }
-.t-card.pre-done { pointer-events: none; }
-
-.cdl-top {
-  margin: 16px 16px 0 16px; flex: 1;
-  background: #444450; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center; overflow: hidden;
-}
-.cdl-monster { width: 180px; height: 180px; display: block; }
-.cdl-footer {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 5px; padding: 16px 0 20px;
-}
-.cdl-plus {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
-  color: #f2f3e5; line-height: 16px;
-}
-.cdl-title {
-  font-family: var(--font-display); font-size: 24px; line-height: 1.12;
-  letter-spacing: -0.4px; color: #f2f3e5; text-align: center;
-}
+.t-card.pre-done { cursor: pointer; opacity: 0.5; }
+.card-done-layer img { width: 100%; height: 100%; display: block; object-fit: fill; }
 
 
 /* States */
 .t-card.active { cursor: pointer; }
 .t-card.active:hover { transform: scale(1.025); }
-.t-card.queued { cursor: default; }
-.t-card.done   { cursor: default; }
+.t-card.queued { cursor: pointer; }
+.t-card.queued:hover { transform: scale(1.025); }
+.t-card.done   { cursor: pointer; opacity: 0.5; }
 
 /* ─── Footer ────────────────────────────────────────────────── */
 .today-footer { display: flex; justify-content: center; }
@@ -205,6 +191,107 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   transition: opacity 120ms;
 }
 .btn-summary:active { opacity: 0.7; }
+
+/* Mood overlay */
+.mood-ov {
+  position: absolute; inset: 0; background: #1f1f25; z-index: 50;
+  opacity: 0; pointer-events: none;
+  transition: opacity 220ms ease;
+  display: flex; flex-direction: column;
+}
+.mood-ov.open { opacity: 1; pointer-events: all; }
+.mood-ov-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 24px; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+  font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.9); pointer-events: none;
+}
+.mood-ov-back {
+  position: absolute; left: 24px; top: 48px;
+  width: 48px; height: 48px;
+  background: #2b2b32; border: 1px solid #444450; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 6; transition: opacity 120ms;
+}
+.mood-ov-back:active { opacity: 0.7; }
+.mood-ov-body {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 48px;
+}
+.mood-ov-hdr { display: flex; align-items: center; gap: 12px; }
+.mood-ov-icon { width: 32px; height: 32px; display: block; }
+.mood-ov-title { font-family: var(--font-body); font-size: 20px; font-weight: 700; color: #f2f3e5; }
+.mood-ov-emotions { display: flex; gap: 40px; align-items: center; justify-content: center; }
+.mood-ov-tile {
+  position: relative; width: 160px; height: 160px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.mood-ov-tile img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; }
+.mood-ov-label {
+  position: relative; z-index: 1;
+  font-family: var(--font-display); font-size: 20px; color: #1f1f25; text-align: center;
+}
+.mood-ov-chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; max-width: 600px; }
+.mood-ov-chip {
+  font-family: var(--font-body); font-size: 13px; font-weight: 700;
+  color: #f2f3e5; background: #2b2b32; border: 1px solid #444450;
+  border-radius: 100px; padding: 8px 16px;
+}
+.mood-ov-reasons { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.mood-ov-reasons-label {
+  font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  color: #a4a59f; text-transform: uppercase; letter-spacing: 0.8px;
+}
+.mood-ov-reasons-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.mood-ov-reason {
+  display: flex; align-items: center; gap: 10px;
+  background: #2b2b32; border: 2px solid #f2f3e5; border-radius: 12px; padding: 10px 18px;
+  font-family: var(--font-body); font-size: 14px; font-weight: 700; color: #f2f3e5;
+}
+.mood-ov-reason-emoji { font-size: 18px; line-height: 1; }
+.mood-ov-edit {
+  height: 48px; padding: 0 32px; min-width: 220px;
+  background: #f2f3e5; color: #1f1f25;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  border-radius: 8px; border: none; cursor: pointer; letter-spacing: -0.1px;
+  transition: opacity 120ms;
+}
+.mood-ov-edit:active { opacity: 0.8; }
+
+/* Wins overlay */
+.wins-ov {
+  position: absolute; inset: 0; background: #1f1f25; z-index: 50;
+  opacity: 0; pointer-events: none;
+  transition: opacity 220ms ease;
+  display: flex; flex-direction: column;
+}
+.wins-ov.open { opacity: 1; pointer-events: all; }
+.wins-ov-back {
+  position: absolute; left: 24px; top: 48px;
+  width: 48px; height: 48px;
+  background: #2b2b32; border: 1px solid #444450; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 6; transition: opacity 120ms;
+}
+.wins-ov-back:active { opacity: 0.7; }
+.wins-ov-body {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 32px; padding: 0 48px;
+}
+.wins-ov-hdr { display: flex; align-items: center; gap: 12px; }
+.wins-ov-icon { width: 32px; height: 32px; display: block; }
+.wins-ov-title { font-family: var(--font-body); font-size: 20px; font-weight: 700; color: #f2f3e5; }
+.wins-ov-question {
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
+  color: #a4a59f; text-align: center; max-width: 500px; line-height: 1.5;
+}
+.wins-ov-answer {
+  background: #2b2b32; border: 1px solid #444450; border-radius: 16px;
+  padding: 24px; width: 100%; max-width: 560px;
+  font-family: var(--font-body); font-size: 15px; font-weight: 500;
+  color: #f2f3e5; line-height: 1.6;
+}
 
 </style>
 </head>
@@ -221,14 +308,14 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
     <div class="sidebar-nav">
       <div class="nav-item active">
-        <div class="nav-icon"><img src="./components/icon-01.svg" alt="Today"></div>
+        <div class="nav-icon"><img src="./components/icon-02.svg" alt="Today"></div>
         <span class="nav-label">Today</span>
       </div>
       <div class="nav-item">
-        <div class="nav-icon"><img src="./components/icon-02.svg" alt="Journal"></div>
+        <div class="nav-icon"><img src="./components/icon-01.svg" alt="Journal"></div>
         <span class="nav-label">Journal</span>
       </div>
-      <div class="nav-item">
+      <div class="nav-item" onclick="goToolkit()">
         <div class="nav-icon"><img src="./components/icon-03.svg" alt="My toolkit"></div>
         <span class="nav-label">My toolkit</span>
       </div>
@@ -241,14 +328,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <span class="nav-label">School</span>
       </div>
       <div class="nav-item">
-        <div class="nav-icon">
-          <div class="spark-badge">
-            <img src="./components/Spark-4.svg" alt="">
-            <img src="./components/Spark-01.svg" alt="">
-            <img src="./components/Spark-02.svg" alt="">
-            <img src="./components/Spark-03.svg" alt="">
-          </div>
-        </div>
+        <div class="nav-icon"><img src="./components/icon-06.svg" alt="Sparks"></div>
         <span class="nav-label">Sparks</span>
       </div>
     </div>
@@ -269,7 +349,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
       <div class="today-sparks-widget">
         <span class="sparks-label">Total</span>
-        <div class="sparks-total">220<div class="spark-icon">⚡</div></div>
+        <div class="sparks-total" id="sparksTotal">0<img class="spark-icon" src="./components/Spark-4.svg" alt="spark"></div>
       </div>
     </div>
 
@@ -278,47 +358,34 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <!-- Notice your wins — active (first task) -->
       <div class="t-card active" id="card-wins" onclick="openFlow('notice-wins.html')">
         <img class="card-img" src="./components/card-1.svg" alt="Notice your wins">
+        <img class="card-monster" src="./components/Property 1=M01, Type=Default.svg" alt="">
         <div class="card-done-layer">
-          <div class="cdl-top"><img class="cdl-monster" src="./components/Property 1=M01, Type=Done.svg"></div>
-          <div class="cdl-footer">
-            <span class="cdl-plus">+1</span>
-            <span class="cdl-title">Notice<br>your wins</span>
-          </div>
+          <img src="./components/card-02.svg" alt="Notice your wins done">
         </div>
       </div>
 
       <!-- Write it out — queued -->
-      <div class="t-card queued" id="card-write">
+      <div class="t-card queued" id="card-write" onclick="openFlow('write-it-out.html')">
         <img class="card-img" src="./components/card-4.svg" alt="Write it out">
+        <img class="card-monster" src="./components/Property 1=M02, Type=Sleepy.svg" alt="">
         <div class="card-done-layer">
-          <div class="cdl-top"><img class="cdl-monster" src="./components/Property 1=M02, Type=Done.svg"></div>
-          <div class="cdl-footer">
-            <span class="cdl-plus">+1</span>
-            <span class="cdl-title">Write<br>it out</span>
-          </div>
+          <img src="./components/card-01.svg" alt="Write it out done">
         </div>
       </div>
 
       <!-- All about you — queued -->
-      <div class="t-card queued" id="card-about">
+      <div class="t-card queued" id="card-about" onclick="openFlow('all-about-you.html')">
         <img class="card-img" src="./components/card-6.svg" alt="All about you">
+        <img class="card-monster" src="./components/Property 1=M03, Type=Sleepy.svg" alt="">
         <div class="card-done-layer">
-          <div class="cdl-top"><img class="cdl-monster" src="./components/Property 1=M03, Type=Done.svg"></div>
-          <div class="cdl-footer">
-            <span class="cdl-plus">+1</span>
-            <span class="cdl-title">All<br>about you</span>
-          </div>
+          <img src="./components/card-04.svg" alt="All about you done">
         </div>
       </div>
 
       <!-- Mood check-in — pre-done (completed in mood flow) -->
-      <div class="t-card pre-done" id="card-mood">
+      <div class="t-card pre-done" id="card-mood" onclick="openMoodOverlay()">
         <div class="card-done-layer">
-          <div class="cdl-top"><img class="cdl-monster" src="./components/Property 1=M04, Type=Done.svg"></div>
-          <div class="cdl-footer">
-            <span class="cdl-plus">+1</span>
-            <span class="cdl-title">Mood<br>check-in</span>
-          </div>
+          <img src="./components/card-03.svg" alt="Mood check-in done">
         </div>
       </div>
 
@@ -330,6 +397,28 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   </main>
 
+  <!-- Wins overlay -->
+  <div class="wins-ov" id="winsOv">
+    <div class="mood-ov-bar"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+    <button class="wins-ov-back" id="winsOvBack">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18L9 12L15 6" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="wins-ov-body" id="winsOvBody"></div>
+  </div>
+
+  <!-- Mood overlay -->
+  <div class="mood-ov" id="moodOv">
+    <div class="mood-ov-bar"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+    <button class="mood-ov-back" id="moodOvBack">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18L9 12L15 6" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="mood-ov-body" id="moodOvBody"></div>
+  </div>
+
 </div>
 </div>
 
@@ -339,6 +428,20 @@ function scale() {
   document.getElementById('device').style.setProperty('--s', s);
 }
 scale(); addEventListener('resize', scale);
+
+// ─── Sparks total ─────────────────────────────────────────────
+function updateSparks() {
+  let sparks = 10; // onboarding
+  if (localStorage.getItem('bp_mood_done') === '1') sparks += 10; // mood check-in
+  if (localStorage.getItem('bp_video_watched') === '1') sparks += 1;
+  const sections = JSON.parse(localStorage.getItem('bp_today_sections') || '["mood"]');
+  if (sections.includes('wins'))  sparks += 1;
+  if (sections.includes('write')) sparks += 1;
+  if (sections.includes('about')) sparks += 1;
+  const el = document.getElementById('sparksTotal');
+  el.childNodes[0].textContent = sparks;
+}
+updateSparks();
 
 // Load selected avatar from onboarding
 (function() {
@@ -351,23 +454,131 @@ scale(); addEventListener('resize', scale);
   }
 })();
 
+const MOOD_CHIPS = {
+  HAPPY:   ['Grateful', 'Loved', 'Content', 'Proud'],
+  EXCITED: ['Energetic', 'Inspired', 'Motivated', 'Eager'],
+  ANXIOUS: ['Nervous', 'Worried', 'Overwhelmed'],
+  SAD:     ['Lonely', 'Disappointed', 'Hurt'],
+  TIRED:   ['Drained', 'Exhausted', 'Unfocused'],
+  OKAY:    ['Balanced', 'Calm', 'Neutral'],
+  MEH:     ['Flat', 'Bored', 'Restless'],
+  GRATEFUL:['Thankful', 'Warm', 'Connected'],
+  CURIOUS: ['Engaged', 'Interested', 'Open'],
+  STRESSED:['Tense', 'Pressured', 'Overwhelmed'],
+  LONELY:  ['Isolated', 'Left out', 'Disconnected'],
+  ANGRY:   ['Frustrated', 'Irritated', 'Annoyed'],
+  HOPEFUL: ['Optimistic', 'Looking forward', 'Motivated'],
+};
+const ALL_REASONS = [
+  { emoji: '📚', label: 'School life' }, { emoji: '✍️', label: 'Exams' },
+  { emoji: '🏠', label: 'Home life' },   { emoji: '🤸', label: 'Activities' },
+  { emoji: '📱', label: 'Saw something online' }, { emoji: '👫', label: 'Friends' },
+  { emoji: '🚶', label: 'No friends' },  { emoji: '😩', label: 'Hungry' },
+];
+const REASON_MAP = Object.fromEntries(ALL_REASONS.map(r => [r.label, r]));
+
+function openMoodOverlay() {
+  const savedEmotions = JSON.parse(localStorage.getItem('bp_mood_emotions') || '[]');
+  const savedReasons  = JSON.parse(localStorage.getItem('bp_mood_reasons')  || '[]');
+  const emotions = savedEmotions.length
+    ? savedEmotions.map(k => ({ name: k.toUpperCase(), img: `emotion-${k}.svg` }))
+    : [];
+
+  const tiles = emotions.map(e =>
+    `<div class="mood-ov-tile">
+      <img src="./components/${e.img}" alt="">
+      <span class="mood-ov-label">${e.name}</span>
+    </div>`
+  ).join('');
+
+  const allChips = emotions.flatMap(e => MOOD_CHIPS[e.name] || []);
+  const chipsHtml = [...new Set(allChips)].slice(0, 6)
+    .map(c => `<span class="mood-ov-chip">${c}</span>`).join('');
+  const chipsSection = chipsHtml ? `<div class="mood-ov-chips">${chipsHtml}</div>` : '';
+
+  const reasonsHtml = savedReasons.length
+    ? `<div class="mood-ov-reasons">
+        <span class="mood-ov-reasons-label">What made you feel this way</span>
+        <div class="mood-ov-reasons-row">
+          ${savedReasons.map(r => {
+            const item = REASON_MAP[r] || { emoji: '•', label: r };
+            return `<div class="mood-ov-reason"><span class="mood-ov-reason-emoji">${item.emoji}</span>${item.label}</div>`;
+          }).join('')}
+        </div>
+      </div>`
+    : '';
+
+  document.getElementById('moodOvBody').innerHTML = `
+    <div class="mood-ov-hdr">
+      <img class="mood-ov-icon" src="./components/section-icon-mood.svg" alt="">
+      <span class="mood-ov-title">Mood check-in</span>
+    </div>
+    <div class="mood-ov-emotions">${tiles}</div>
+    ${chipsSection}
+    ${reasonsHtml}
+    <button class="mood-ov-edit" onclick="window.location.href='mood-checkin.html?edit=1'">Edit mood check-in</button>
+  `;
+  document.getElementById('moodOv').classList.add('open');
+}
+
+document.getElementById('moodOvBack').addEventListener('click', () => {
+  document.getElementById('moodOv').classList.remove('open');
+});
+
+function openWinsOverlay() {
+  const note     = localStorage.getItem('bp_wins_note') || '';
+  const question = localStorage.getItem('bp_wins_question') || "What's one small thing that happened this week that made you smile — even briefly?";
+  document.getElementById('winsOvBody').innerHTML = `
+    <div class="wins-ov-hdr">
+      <img class="wins-ov-icon" src="./components/section-icon-wins.svg" alt="">
+      <span class="wins-ov-title">Notice your wins</span>
+    </div>
+    <p class="wins-ov-question">${question}</p>
+    ${note ? `<div class="wins-ov-answer">${note}</div>` : ''}
+    <button class="mood-ov-edit" onclick="window.location.href='notice-wins.html'">Edit</button>
+  `;
+  document.getElementById('winsOv').classList.add('open');
+}
+
+document.getElementById('winsOvBack').addEventListener('click', () => {
+  document.getElementById('winsOv').classList.remove('open');
+});
+
 const FLOWS = {
   'card-wins':  'notice-wins.html',
-  'card-write': null,
-  'card-about': null,
+  'card-write': 'write-it-out.html',
+  'card-about': 'all-about-you.html',
 };
 const queue = ['card-wins', 'card-write', 'card-about'];
+const overlayFns = { 'card-wins': 'openWinsOverlay()', 'card-mood': 'openMoodOverlay()' };
 
 function openFlow(url) {
   if (url) window.location.href = url;
 }
 
+function goToolkit() {
+  window.location.href = 'my-toolkit.html';
+}
+
 function completeCard(id) {
   const card = document.getElementById(id);
-  if (!card || !card.classList.contains('active')) return;
+  if (!card || card.classList.contains('done')) return;
 
-  card.classList.remove('active');
+  card.classList.remove('active', 'queued');
   card.classList.add('done');
+
+  // Track in sessionStorage so state survives page navigation within this tab
+  const _sd = JSON.parse(sessionStorage.getItem('bp_session_done') || '[]');
+  if (!_sd.includes(id)) { _sd.push(id); sessionStorage.setItem('bp_session_done', JSON.stringify(_sd)); }
+
+  // Re-enable click to edit via overlay or flow
+  const flow = FLOWS[id];
+  if (overlayFns[id]) card.setAttribute('onclick', overlayFns[id]);
+  else if (flow) card.setAttribute('onclick', `openFlow('${flow}')`);
+  else card.removeAttribute('onclick');
+
+  // Move done card to end of row
+  document.getElementById('cardRow').appendChild(card);
 
   // Track completed sections for summary.html
   const sectionMap = { 'card-wins': 'wins', 'card-write': 'write', 'card-about': 'about' };
@@ -377,17 +588,22 @@ function completeCard(id) {
     if (!done.includes(sKey)) { done.push(sKey); localStorage.setItem('bp_today_sections', JSON.stringify(done)); }
   }
 
-  const nextIdx = queue.indexOf(id) + 1;
-  if (nextIdx < queue.length) {
-    const nextId = queue[nextIdx];
-    const next = document.getElementById(nextId);
-    next.classList.remove('queued');
-    next.classList.add('active');
-    const nextFlow = FLOWS[nextId];
-    next.setAttribute('onclick', nextFlow ? `openFlow('${nextFlow}')` : `completeCard('${nextId}')`);
-  } else {
-    checkAllDone();
-  }
+  // Update monster: first non-done queue card gets Default, rest keep Sleepy
+  let foundFirst = false;
+  queue.forEach(qid => {
+    const qcard = document.getElementById(qid);
+    if (!qcard || qcard.classList.contains('done')) return;
+    const monster = qcard.querySelector('.card-monster');
+    if (!monster) return;
+    if (!foundFirst) {
+      monster.src = monster.src.replace('Type=Sleepy', 'Type=Default');
+      foundFirst = true;
+    } else {
+      monster.src = monster.src.replace('Type=Default', 'Type=Sleepy');
+    }
+  });
+
+  checkAllDone();
 }
 
 function checkAllDone() {
@@ -403,14 +619,52 @@ function checkAllDone() {
 
 // Handle returns from card flows
 const doneFlags = {
-  'bp_wins_done': 'card-wins',
+  'bp_wins_done':  'card-wins',
+  'bp_write_done': 'card-write',
+  'bp_about_done': 'card-about',
 };
-Object.entries(doneFlags).forEach(([flag, cardId]) => {
-  if (localStorage.getItem(flag) === '1') {
-    localStorage.removeItem(flag);
-    completeCard(cardId);
-  }
+
+// If arriving directly (not returned from a flow), reset session so each demo starts clean
+const hasIncomingFlag = Object.keys(doneFlags).some(f => localStorage.getItem(f) === '1');
+if (!hasIncomingFlag) sessionStorage.removeItem('bp_session_done');
+
+// Restore cards done earlier this tab session (sessionStorage resets on tab close)
+const sessionDone = JSON.parse(sessionStorage.getItem('bp_session_done') || '[]');
+sessionDone.forEach(id => {
+  const c = document.getElementById(id);
+  if (!c || c.classList.contains('done')) return;
+  c.classList.remove('queued', 'active');
+  c.classList.add('done');
+  const f = FLOWS[id];
+  if (overlayFns[id]) c.setAttribute('onclick', overlayFns[id]);
+  else if (f) c.setAttribute('onclick', `openFlow('${f}')`);
+  else c.removeAttribute('onclick');
+  document.getElementById('cardRow').appendChild(c);
 });
+// Refresh monster state after restore
+let foundFirst = false;
+queue.forEach(id => {
+  const c = document.getElementById(id);
+  if (!c || c.classList.contains('done')) return;
+  const m = c.querySelector('.card-monster');
+  if (!m) return;
+  m.src = foundFirst
+    ? m.src.replace('Type=Default', 'Type=Sleepy')
+    : m.src.replace('Type=Sleepy', 'Type=Default');
+  foundFirst = true;
+});
+
+Object.entries(doneFlags).forEach(([flag, cardId]) => {
+  if (localStorage.getItem(flag) !== '1') return;
+  localStorage.removeItem(flag);
+  const card = document.getElementById(cardId);
+  if (card && !card.classList.contains('done') && !card.classList.contains('active')) {
+    card.classList.remove('queued');
+    card.classList.add('active');
+  }
+  completeCard(cardId);
+});
+updateSparks();
 </script>
 </body>
 </html>

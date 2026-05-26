@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint — My toolkit</title>
+<link rel="stylesheet" href="./foundations/tokens.css">
+<style>
+
+body { background: #0a0a0f; overflow: hidden; margin: 0; }
+.bp-stage { position: fixed; inset: 0; display: grid; place-items: center; }
+.bp-device {
+  width: 1194px; height: 834px; position: relative; overflow: hidden;
+  border-radius: 20px; transform-origin: center center;
+  transform: scale(var(--s,1)); background: #1f1f25;
+}
+
+/* ─── Status bar ────────────────────────────────────────────── */
+.sb {
+  position: absolute; top: 0; left: 0; right: 0; height: 24px; z-index: 30;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.9); pointer-events: none;
+}
+
+/* ─── Sidebar ───────────────────────────────────────────────── */
+.today-sidebar {
+  position: absolute;
+  left: 24px; top: 50%; transform: translateY(-50%);
+  width: 80px; height: 786px;
+  background: #2b2b32; border-radius: 20px;
+  padding: 24px 8px; box-sizing: border-box;
+  display: flex; flex-direction: column;
+  justify-content: space-between; align-items: center;
+}
+.sidebar-logo {
+  font-family: var(--font-display); font-size: 16px; color: #8e8b85;
+  text-transform: uppercase; text-align: center; letter-spacing: 0.5px;
+  height: 52px; display: flex; align-items: center; justify-content: center; width: 100%;
+}
+.sidebar-nav { display: flex; flex-direction: column; gap: 12px; }
+.nav-item {
+  width: 64px; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 12px; padding: 8px 0; cursor: pointer;
+  border-radius: 12px; transition: background 140ms;
+}
+.nav-item.active { background: #1f1f25; }
+.nav-item:not(.active):hover { background: rgba(255,255,255,0.05); }
+.nav-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.nav-icon img { width: 24px; height: 24px; display: block; }
+.nav-item.active .nav-icon img { filter: brightness(0) invert(1); }
+.nav-label {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #a4a59f; text-align: center; line-height: 16px; width: 64px;
+}
+.nav-item.active .nav-label { color: #f2f3e5; }
+.sidebar-user { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.user-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #b8c0ed; border: 2px solid #36363f;
+  overflow: hidden; display: grid; place-items: center; font-size: 10px;
+  box-sizing: border-box;
+}
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.user-name {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #a4a59f; text-align: center; width: 64px;
+}
+
+/* ─── Main content ──────────────────────────────────────────── */
+.toolkit-main {
+  position: absolute;
+  left: 149px; top: 50%; transform: translateY(-50%);
+  width: 997px;
+  display: flex; flex-direction: column; align-items: center;
+}
+
+/* ─── Title ─────────────────────────────────────────────────── */
+.toolkit-title {
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  color: #f2f3e5; letter-spacing: -1px;
+  margin: 0 0 48px; text-align: center;
+}
+
+/* ─── Filter pills ──────────────────────────────────────────── */
+.filter-row {
+  display: flex; gap: 8px; margin-bottom: 32px;
+}
+.filter-pill {
+  height: 40px; padding: 0 20px;
+  border-radius: 100px; border: none;
+  background: #2b2b35; color: rgba(242,243,229,0.5);
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  cursor: pointer; transition: background 120ms, color 120ms;
+  display: flex; align-items: center;
+}
+.filter-pill.active { background: #f2f3e5; color: #1f1f25; }
+.filter-pill:not(.active):hover { color: #f2f3e5; }
+
+/* ─── Tab panels ────────────────────────────────────────────── */
+.tab-panel { display: none; width: 100%; min-height: 485px; }
+.tab-panel.active { display: block; }
+
+/* ─── Video row ─────────────────────────────────────────────── */
+.video-row {
+  display: flex; gap: 24px; align-items: flex-start; width: 100%;
+}
+
+/* ─── Video tile ────────────────────────────────────────────── */
+.video-tile {
+  flex: 1; height: 485px; border-radius: 20px; overflow: hidden;
+  position: relative; cursor: pointer;
+  transition: transform 140ms cubic-bezier(0.34,1.56,0.64,1);
+}
+.video-tile:hover { transform: scale(1.02); }
+
+.video-tile-bg {
+  position: absolute; inset: 0; overflow: hidden;
+}
+.video-tile-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Heart button — top right */
+.heart-btn {
+  position: absolute; top: 12px; right: 12px;
+  width: 48px; height: 48px;
+  background: none; border: none; padding: 0; margin: 0;
+  outline: none; appearance: none; -webkit-appearance: none;
+  box-shadow: none; -webkit-tap-highlight-color: transparent;
+  cursor: pointer; display: block;
+  transition: transform 120ms;
+  z-index: 2;
+}
+.heart-btn:active { transform: scale(0.9); }
+.heart-btn img { width: 48px; height: 48px; display: block; }
+
+/* Info box — bottom right */
+.video-info {
+  position: absolute; bottom: 12px; right: 12px;
+  width: 240px;
+  background: #36363f; border-radius: 12px;
+  padding: 8px; box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 6px;
+  z-index: 2;
+}
+.video-meta {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.video-duration {
+  font-family: var(--font-body); font-size: 18px; font-weight: 700;
+  color: #f2f3e5; letter-spacing: -0.2px;
+}
+.video-sparks {
+  display: flex; align-items: center; gap: 4px;
+  font-family: var(--font-body); font-size: 18px; font-weight: 700;
+  color: #f2f3e5; letter-spacing: -0.2px;
+}
+.video-sparks img { width: 16px; height: 16px; display: block; }
+.video-title {
+  font-family: var(--font-display); font-size: 24px; color: #f2f3e5;
+  line-height: 1.12; letter-spacing: -0.4px; margin: 0;
+}
+
+/* ─── Browse grid ───────────────────────────────────────────── */
+.browse-grid { display: flex; flex-direction: column; width: 100%; }
+.browse-row { display: flex; gap: 12px; justify-content: center; }
+.browse-row:first-child { margin-bottom: -12px; }
+
+.category-circle {
+  width: 220px; height: 220px; border-radius: 149px;
+  position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0;
+  transition: transform 140ms cubic-bezier(0.34,1.56,0.64,1);
+}
+.category-circle:hover { transform: scale(1.04); }
+
+.category-circle-bg {
+  position: absolute; inset: 0;
+}
+.category-circle-bg img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+
+.category-inner {
+  position: relative; z-index: 1;
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: space-between;
+  padding: 28px 36px; box-sizing: border-box;
+}
+
+.category-emoji-btn {
+  width: 96px; height: 96px; flex-shrink: 0;
+  background: #1f1f25; border: 10px solid #2f2f37; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 38px; line-height: 1;
+  box-sizing: border-box;
+}
+
+.category-label {
+  font-family: var(--font-body); font-size: 20px; font-weight: 700;
+  color: #f2f3e5; text-align: center; letter-spacing: -0.4px; line-height: 1.1;
+}
+
+/* ─── Empty state ───────────────────────────────────────────── */
+.saved-empty {
+  font-family: var(--font-display); color: #a4a59f;
+  font-size: 32px; font-weight: 400;
+  text-align: center; margin: 120px 0 0;
+}
+
+</style>
+</head>
+<body>
+
+<div class="bp-stage">
+<div class="bp-device" id="device">
+
+  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+
+  <!-- Sidebar -->
+  <nav class="today-sidebar">
+    <div class="sidebar-logo">Sparkz</div>
+    <div class="sidebar-nav">
+      <div class="nav-item" onclick="window.location.href='today.html'">
+        <div class="nav-icon"><img src="./components/icon-02.svg" alt="Today"></div>
+        <span class="nav-label">Today</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-01.svg" alt="Journal"></div>
+        <span class="nav-label">Journal</span>
+      </div>
+      <div class="nav-item active">
+        <div class="nav-icon"><img src="./components/icon-03.svg" alt="My toolkit"></div>
+        <span class="nav-label">My toolkit</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
+        <span class="nav-label">Journey</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-05.svg" alt="School"></div>
+        <span class="nav-label">School</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-06.svg" alt="Sparks"></div>
+        <span class="nav-label">Sparks</span>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="userAvatar">😊</div>
+      <span class="user-name">Sophie</span>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="toolkit-main">
+
+    <h1 class="toolkit-title">My toolkit</h1>
+
+    <div class="filter-row">
+      <button class="filter-pill" onclick="setFilter('doitagain', this)">Do it again</button>
+      <button class="filter-pill active" onclick="setFilter('recommended', this)">Recommended</button>
+      <button class="filter-pill" onclick="setFilter('saved', this)">Saved</button>
+      <button class="filter-pill" onclick="setFilter('browse', this)">Browse</button>
+    </div>
+
+    <!-- ─── RECOMMENDED ─────────────────────────────────────── -->
+    <div class="tab-panel active" id="tab-recommended">
+      <div class="video-row">
+
+        <div class="video-tile" style="background:#d5e9de;">
+          <div class="video-tile-bg"><img src="./components/carousel-01.svg" alt=""></div>
+          <div class="heart-btn" data-vid="v1" onclick="toggleHeart(this)">
+            <img src="./components/heart-default.svg" alt="save">
+          </div>
+          <div class="video-info">
+            <div class="video-meta">
+              <span class="video-duration">1:07</span>
+              <span class="video-sparks">1 <img src="./components/spark.svg" alt="spark"></span>
+            </div>
+            <p class="video-title">Karl Anthony Tawns Overcoming Challenges</p>
+          </div>
+        </div>
+
+        <div class="video-tile" style="background:#fef5cc;">
+          <div class="video-tile-bg"><img src="./components/carousel-02.svg" alt=""></div>
+          <div class="heart-btn" data-vid="v2" onclick="toggleHeart(this)">
+            <img src="./components/heart-default.svg" alt="save">
+          </div>
+          <div class="video-info">
+            <div class="video-meta">
+              <span class="video-duration">1:07</span>
+              <span class="video-sparks">1 <img src="./components/spark.svg" alt="spark"></span>
+            </div>
+            <p class="video-title">Aurora Strauss: Calm in the Crash</p>
+          </div>
+        </div>
+
+        <div class="video-tile" style="background:#f7ddc6;">
+          <div class="video-tile-bg"><img src="./components/carousel-03.svg" alt=""></div>
+          <div class="heart-btn" data-vid="v3" onclick="toggleHeart(this)">
+            <img src="./components/heart-default.svg" alt="save">
+          </div>
+          <div class="video-info">
+            <div class="video-meta">
+              <span class="video-duration">1:07</span>
+              <span class="video-sparks">1 <img src="./components/spark.svg" alt="spark"></span>
+            </div>
+            <p class="video-title">Jim Kwik: A small simple step</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── DO IT AGAIN ─────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-doitagain">
+      <div class="video-row">
+
+        <div class="video-tile">
+          <div class="video-tile-bg"><img src="./components/video-thumbnail.jpg" alt="" style="object-fit:cover;"></div>
+          <div class="heart-btn" data-vid="vwatch" onclick="toggleHeart(this)">
+            <img src="./components/heart-default.svg" alt="save">
+          </div>
+          <div class="video-info">
+            <div class="video-meta">
+              <span class="video-duration">1:07</span>
+              <span class="video-sparks">1 <img src="./components/spark.svg" alt="spark"></span>
+            </div>
+            <p class="video-title">Karl Anthony Tawns Overcoming Challenges</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── SAVED ────────────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-saved">
+      <div class="video-row" id="savedRow"></div>
+      <p class="saved-empty" id="savedEmpty">Save your favourite exercises!</p>
+    </div>
+
+    <!-- ─── BROWSE ───────────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-browse">
+      <div class="browse-grid">
+        <div class="browse-row">
+          <div class="category-circle" style="background:#3f50b8;">
+            <div class="category-circle-bg"><img src="./components/category-01.svg" alt=""></div>
+            <div class="category-inner">
+              <div class="category-emoji-btn">😮‍💨</div>
+              <span class="category-label">Calm down</span>
+            </div>
+          </div>
+          <div class="category-circle" style="background:#e65800;">
+            <div class="category-circle-bg"><img src="./components/category-02.svg" alt=""></div>
+            <div class="category-inner">
+              <div class="category-emoji-btn">⚡</div>
+              <span class="category-label">Boost energy</span>
+            </div>
+          </div>
+          <div class="category-circle" style="background:#219653;">
+            <div class="category-circle-bg"><img src="./components/category-03.svg" alt=""></div>
+            <div class="category-inner">
+              <div class="category-emoji-btn">🌈</div>
+              <span class="category-label">Feel good</span>
+            </div>
+          </div>
+        </div>
+        <div class="browse-row">
+          <div class="category-circle" style="background:#49aee1;">
+            <div class="category-circle-bg"><img src="./components/category-04.svg" alt=""></div>
+            <div class="category-inner">
+              <div class="category-emoji-btn">🧠</div>
+              <span class="category-label">Focus</span>
+            </div>
+          </div>
+          <div class="category-circle" style="background:#7040c8;">
+            <div class="category-circle-bg"><img src="./components/category-05.svg" alt=""></div>
+            <div class="category-inner">
+              <div class="category-emoji-btn">😴</div>
+              <span class="category-label">Wind down</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+</div>
+
+<script>
+function scale() {
+  const s = Math.min(innerWidth / 1194, innerHeight / 834) * 0.96;
+  document.getElementById('device').style.setProperty('--s', s);
+}
+scale(); addEventListener('resize', scale);
+
+(function() {
+  const src = localStorage.getItem('bp_avatar_src');
+  const bg  = localStorage.getItem('bp_avatar_bg');
+  const el  = document.getElementById('userAvatar');
+  if (src && el) {
+    if (bg) el.style.background = bg;
+    el.innerHTML = '<img src="' + src + '" alt="avatar">';
+  }
+})();
+
+const tabMap = {
+  'recommended': 'tab-recommended',
+  'browse':      'tab-browse',
+  'doitagain':   'tab-doitagain',
+  'saved':       'tab-saved',
+};
+
+function setFilter(tab, btn) {
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  Object.values(tabMap).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  const target = document.getElementById(tabMap[tab]);
+  if (target) target.classList.add('active');
+}
+
+const VIDEOS = {
+  v1:     { bg: '#d5e9de', img: './components/carousel-01.svg',      title: 'Karl Anthony Tawns Overcoming Challenges' },
+  v2:     { bg: '#fef5cc', img: './components/carousel-02.svg',      title: 'Aurora Strauss: Calm in the Crash' },
+  v3:     { bg: '#f7ddc6', img: './components/carousel-03.svg',      title: 'Jim Kwik: A small simple step' },
+  vwatch: { bg: '#1a1a1a', img: './components/video-thumbnail.jpg',  title: 'Karl Anthony Tawns Overcoming Challenges' },
+};
+
+const savedSet = new Set();
+
+function toggleHeart(btn) {
+  const vid = btn.dataset.vid;
+  const nowSaved = !btn.classList.contains('saved');
+
+  // Sync all buttons with same vid
+  document.querySelectorAll(`[data-vid="${vid}"]`).forEach(b => {
+    const img = b.querySelector('img');
+    if (nowSaved) {
+      b.classList.add('saved');
+      img.src = './components/heart-saved.svg';
+    } else {
+      b.classList.remove('saved');
+      img.src = './components/heart-default.svg';
+    }
+  });
+
+  if (nowSaved) savedSet.add(vid);
+  else savedSet.delete(vid);
+
+  renderSaved();
+}
+
+function renderSaved() {
+  const row   = document.getElementById('savedRow');
+  const empty = document.getElementById('savedEmpty');
+
+  if (savedSet.size === 0) {
+    row.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  row.style.display = 'flex';
+  row.innerHTML = [...savedSet].map(vid => {
+    const v = VIDEOS[vid] || {};
+    return `
+      <div class="video-tile" style="background:${v.bg || '#36363f'};">
+        <div class="video-tile-bg"><img src="${v.img}" alt="" style="object-fit:cover;"></div>
+        <div class="heart-btn saved" data-vid="${vid}" onclick="toggleHeart(this)">
+          <img src="./components/heart-saved.svg" alt="saved">
+        </div>
+        <div class="video-info">
+          <div class="video-meta">
+            <span class="video-duration">1:07</span>
+            <span class="video-sparks">1 <img src="./components/spark.svg" alt="spark"></span>
+          </div>
+          <p class="video-title">${v.title}</p>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// Init saved tab
+renderSaved();
+</script>
+</body>
+</html>

@@ -267,7 +267,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   width: 497px; z-index: 5;
 }
 .s1-content .t-xl { width: 377px; margin: 0 auto 24px; }
-.s1-content .t-body { width: 357px; margin: 0 auto; }
+.s1-content .t-body { width: 452px; margin: 0 auto; }
 
 
 /* ══════════════════════════════════════════════════════════════
@@ -649,10 +649,38 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
               opacity 400ms ease;
 }
 
+/* ── S7 → mood-checkin exit animation ──────────────────── */
+#s7.s7-exiting .s7-content {
+  transform: translateY(-400px);
+  opacity: 0;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99),
+              opacity 500ms ease;
+}
+#s7.s7-exiting .msg-green {
+  transform: translateY(-400px);
+  opacity: 0;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99),
+              opacity 500ms ease;
+}
+#s7.s7-exiting .msg-orange {
+  transform: translateY(-400px);
+  opacity: 0;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99),
+              opacity 500ms ease;
+}
+#s7.s7-exiting .s7-cta-wrap {
+  transform: translateX(-50%) translateY(-400px);
+  opacity: 0;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99),
+              opacity 500ms ease;
+}
+
 .s7-ellipse {
   position: absolute;
-  left: 0; top: 150px;
-  width: 1194px; height: auto;
+  left: -351px; top: 150px;
+  width: 1910px; height: 1910px;
+  border-radius: 50%;
+  background: #1f1f25;
   pointer-events: none; z-index: 0;
 }
 
@@ -671,10 +699,42 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   line-height: 40px; letter-spacing: -0.8px; color: #f2f3e5;
 }
 .spark-badge {
+  position: relative;
   width: 32px; height: 32px; border-radius: 50%;
   overflow: hidden;
 }
-.spark-badge img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.spark-badge img {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.spark-badge img:nth-child(1) { animation: spark-c1 6400ms linear 1600ms infinite; }
+.spark-badge img:nth-child(2) { opacity: 0; animation: spark-c2 6400ms linear 1600ms infinite; }
+.spark-badge img:nth-child(3) { opacity: 0; animation: spark-c3 6400ms linear 1600ms infinite; }
+.spark-badge img:nth-child(4) { opacity: 0; animation: spark-c4 6400ms linear 1600ms infinite; }
+
+@keyframes spark-c1 {
+  0%   { opacity: 1; }
+  25%  { opacity: 0; }
+  75%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes spark-c2 {
+  0%   { opacity: 0; }
+  25%  { opacity: 1; }
+  50%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes spark-c3 {
+  0%   { opacity: 0; }
+  50%  { opacity: 1; }
+  75%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes spark-c4 {
+  0%   { opacity: 0; }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}
 
 .s7-content .t-xl { margin-top: 0; }
 
@@ -694,8 +754,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .msg-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .msg-text {
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
-  color: #2f2f37; line-height: 1.35; padding-top: 4px;
+  font-family: var(--font-body); font-size: var(--subtitle-small-size); font-weight: 700;
+  color: #2f2f37; line-height: var(--subtitle-small-lh); padding-top: 4px;
 }
 
 .s7-cta-wrap {
@@ -753,7 +813,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <div class="s1-content">
     <p class="t-xl" style="white-space:nowrap">Your space</p>
-    <p class="t-body">Teachers don't see your notes or daily check-ins. If you ever choose to ask for help, a trusted adult at school can reach out to support you.</p>
+    <p class="t-body">You choose how support works for you. With "Get Support," your school may see overall patterns — not your exact words. With "Keep It Private," your check-ins stay private. If something suggests you may be in serious danger, we may still reach out to support you.</p>
   </div>
 
   <div class="nav">
@@ -992,32 +1052,37 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
      S7 — "Setup completed!"
      ════════════════════════════════════════════════════════════ -->
 <div class="screen" id="s7">
-  <img class="s7-ellipse" src="./foundations/assets/backgrounds/ellipse-42.svg" alt="">
+  <div class="s7-ellipse"></div>
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
   <!-- Orange bubble — top right -->
   <div class="msg-bubble msg-orange">
     <div class="msg-avatar"><img src="./components/monster-02.svg" alt=""></div>
-    <p class="msg-text">You earned 1 Sparks! All your Sparks add up — your class is working together to help others.</p>
+    <p class="msg-text">You earned 10 Sparks! They add up over time – just like the work you put in.</p>
   </div>
 
   <!-- Green bubble — lower left -->
   <div class="msg-bubble msg-green">
     <div class="msg-avatar"><img src="./components/monster-01.svg" alt=""></div>
-    <p class="msg-text">Remember! Nothing you do here affects your grades. It's just here to support you.</p>
+    <p class="msg-text">This is your space – a toolkit you can use whenever you need it. Nothing here affects your grades.</p>
   </div>
 
   <div class="s7-content">
     <div class="reward-row">
-      <span class="reward-plus">+1</span>
-      <div class="spark-badge"><img src="./components/spark.svg" alt="spark"></div>
+      <span class="reward-plus">+10</span>
+      <div class="spark-badge">
+        <img src="./components/Spark-4.svg" alt="spark">
+        <img src="./components/Spark-01.svg" alt="spark">
+        <img src="./components/Spark-02.svg" alt="spark">
+        <img src="./components/Spark-03.svg" alt="spark">
+      </div>
     </div>
     <p class="t-xl">Setup<br>completed!</p>
   </div>
 
   <div class="s7-cta-wrap">
-    <button class="btn-cta" onclick="window.location.href='mood-checkin.html'">Start with how you feel</button>
+    <button class="btn-cta" onclick="startMoodCheckin()">Start by logging your mood</button>
   </div>
 </div>
 
@@ -1090,7 +1155,9 @@ function goTo(n) {
 
     // t=800ms: switch to S7, Phase 2 — content + green bubble enter from bottom
     setTimeout(() => {
+      s6.style.transition = 'none';
       s6.classList.remove('active', 'exiting');
+      requestAnimationFrame(() => { s6.style.transition = ''; });
       s7.classList.add('active');
       prog.style.transition = 'none';
       prog.style.transform  = '';
@@ -1186,6 +1253,24 @@ function toggleFc(el) { el.classList.toggle('sel'); }
 
 // ─── Person toggle ───────────────────────────────────────────
 function togglePb(el) { el.classList.toggle('sel'); }
+
+function startMoodCheckin() {
+  const s7      = document.getElementById('s7');
+  const ellipse = s7.querySelector('.s7-ellipse');
+
+  // All content flies up
+  s7.classList.add('s7-exiting');
+
+  // The circle rises from below and fills the screen
+  ellipse.style.transition = 'top 800ms cubic-bezier(0.75,0,0.3,0.99)';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    ellipse.style.top = '-538px';
+  }));
+
+  setTimeout(() => {
+    window.location.href = 'mood-checkin.html';
+  }, 800);
+}
 
 // ─── Arc Slider ───────────────────────────────────────────────
 const ARC_CX = 263, ARC_CY = 247;

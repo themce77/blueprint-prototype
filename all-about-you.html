@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blueprint — Notice your wins</title>
+<title>Blueprint — All about you</title>
 <link rel="stylesheet" href="./foundations/tokens.css">
 <style>
 
@@ -33,72 +33,62 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 
 /* ════════════════════════════════════════════════════════════
-   SCREEN 1 — Write
+   SCREEN 1 — Survey
    ════════════════════════════════════════════════════════════ */
-#s-write {
-  background: #3e4fb8;
-}
+#s-survey { background: #58b880; }
 
-/* Summertime Sadness background shape */
-.write-bg-shape {
+/* Dark asterisk background shape */
+.survey-bg-shape {
   position: absolute;
-  width: 1674px; height: 1674px;
-  left: 0; right: 0; top: 0; bottom: 0;
-  margin: auto;
-  transform: scale(1.2);
+  width: 1189px; height: 1599px;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%) scale(1.38);
   pointer-events: none; z-index: 0;
-  display: block;
 }
 
 /* back button */
 .btn-back {
   position: absolute; top: 36px; left: 24px; z-index: 10;
-  width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.15);
+  width: 48px; height: 48px; border-radius: 8px;
+  background: rgba(255,255,255,0.16);
   border: none; cursor: pointer; display: grid; place-items: center;
   transition: background 120ms;
 }
-.btn-back:hover { background: rgba(255,255,255,0.22); }
-.btn-back svg { width: 18px; height: 18px; }
+.btn-back:hover { background: rgba(255,255,255,0.24); }
+.btn-back svg { width: 20px; height: 20px; }
 
-/* header + content combined flow */
-.write-body {
+/* header + content flow */
+.survey-body {
   position: absolute; top: 115px; left: 50%; transform: translateX(-50%); z-index: 5;
   width: 440px; display: flex; flex-direction: column; align-items: center;
 }
-.write-header {
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
+.survey-header {
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
   margin-bottom: 48px; width: 100%;
 }
 .spark-pill {
-  display: flex; align-items: center; gap: 6px;
-  background: rgba(255,255,255,0.18); border-radius: 100px;
-  padding: 4px 12px 4px 8px;
-  font-family: var(--font-display); font-size: 18px; color: #f2f3e5;
+  display: flex; align-items: center; gap: 8px;
+  background: #2f2f37; border-radius: 99px;
+  padding: 8px 12px;
+  font-family: var(--font-display); font-size: 20px; color: #f2f3e5; line-height: 1.05;
 }
-.spark-pill-icon {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: linear-gradient(135deg, #f08b31, #ffbb25);
-  display: grid; place-items: center;
-}
-.spark-pill-icon img { width: 16px; height: 16px; display: block; }
-.write-title {
+.survey-title {
   font-family: var(--font-display); font-size: 32px; letter-spacing: -0.8px;
-  color: #f2f3e5; margin: 0; line-height: 40px;
-  text-align: center;
+  color: #f2f3e5; margin: 0; line-height: 40px; text-align: center;
 }
 
-/* content area (message + textarea — now separate) */
-.write-content {
+/* content area */
+.survey-content {
   width: 100%; display: flex; flex-direction: column; gap: 24px;
 }
 
-/* monster message bubble */
+/* message bubble */
 .msg-bubble {
-  background: #49aee1; border-radius: 0;
+  background: #58b880; border-radius: 0;
   padding: 10px; display: flex; align-items: flex-start; gap: 12px;
 }
 .msg-avatar {
-  width: 48px; height: 48px; border-radius: 0; background: #f2f3e5;
+  width: 48px; height: 48px; background: #f2f3e5;
   flex-shrink: 0; display: grid; place-items: center;
 }
 .msg-monster { position: relative; width: 40px; height: 40px; }
@@ -113,32 +103,35 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   color: #2f2f37; line-height: 1.1; letter-spacing: -0.4px;
 }
 
-/* text area */
-.write-area {
-  background: #36363f;
-  border: 1px solid rgba(255,255,255,0.16);
-  border-radius: 8px;
-  position: relative;
+/* emoji grid */
+.emoji-grid {
+  display: flex; flex-direction: column; gap: 16px;
 }
-.write-textarea {
-  width: 100%; box-sizing: border-box;
-  border: none; outline: none; resize: none;
-  font-family: var(--font-body); font-size: 16px; font-weight: 600;
-  color: #f2f3e5; padding: 10px 16px;
-  background: transparent; min-height: 200px;
+.emoji-row {
+  display: flex; justify-content: space-between; align-items: center;
 }
-.write-textarea::placeholder { color: #adadad; font-weight: 400; }
+.emoji-btn {
+  width: 78px; height: 78px; border-radius: 50%;
+  background: #2f2f37; border: 8px solid #2f2f37;
+  cursor: pointer; display: grid; place-items: center;
+  font-size: 40px; line-height: 1;
+  transition: border 120ms;
+  box-sizing: border-box; flex-shrink: 0;
+  padding: 0;
+}
+.emoji-btn.selected { border: 3px solid #f2f3e5; }
+.emoji-btn:hover:not(.selected) { border-color: rgba(242,243,229,0.25); }
 
 /* save button */
 .btn-save-wrap {
   position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); z-index: 10;
 }
 .btn-save {
-  width: 280px; height: 52px; border-radius: 12px;
-  background: #f1f2e4; color: #1f1f24;
+  width: 270px; height: 48px; border-radius: 8px;
+  background: #f2f3e5; color: #1f1f25;
   font-family: var(--font-body); font-size: 16px; font-weight: 700;
   border: none; cursor: pointer; transition: opacity 150ms, transform 120ms;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
+  display: flex; align-items: center; justify-content: center;
 }
 .btn-save:active { transform: scale(0.97); }
 .btn-save:disabled { opacity: 0.4; cursor: default; }
@@ -146,58 +139,36 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 /* ════════════════════════════════════════════════════════════
    SCREEN 2 — Completed
    ════════════════════════════════════════════════════════════ */
-#s-done {
-  background: #1f1f25;
-}
-
-/* Large Summertime Sadness for done screen */
-.done-bg-shape {
-  position: absolute;
-  width: 2579px; height: 2579px;
-  left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none; z-index: 0;
-  opacity: 0.35;
-}
+#s-done { background: #1f1f25; }
 
 .done-center {
   position: absolute; inset: 0; z-index: 5;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
-
 .done-reward-row {
   display: flex; align-items: center; gap: 8px; margin-bottom: 24px;
 }
 .done-reward-text {
   font-family: var(--font-display); font-size: 32px; color: #f2f3e5; line-height: 1;
 }
-.done-spark-badge {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: linear-gradient(135deg, #f08b31, #ffbb25);
-  display: grid; place-items: center;
-}
-.done-spark-badge img { width: 22px; height: 22px; display: block; }
-
 .done-card-wrap {
   width: 237px; height: 353px; position: relative;
   animation: float 3s ease-in-out infinite;
   margin-bottom: 28px;
 }
-.done-card-wrap .done-card-img {
+.done-card-img {
   width: 100%; height: 100%; border-radius: 19px; display: block;
 }
-.done-card-wrap .done-monster {
+.done-monster {
   position: absolute; top: 20px; left: 50%;
   transform: translateX(-50%);
   width: 180px; height: 180px;
   pointer-events: none;
 }
-
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-10px); }
 }
-
 .done-title {
   font-family: var(--font-display); font-size: 80px; line-height: 1;
   text-transform: uppercase; color: #f2f3e5; letter-spacing: 1px;
@@ -211,67 +182,69 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 <div class="bp-stage">
 <div class="bp-device" id="device">
 
-  <!-- ══════════════════════════════════════════════════════════
-       SCREEN 1 — Write your win
-       ══════════════════════════════════════════════════════════ -->
-  <div class="screen active" id="s-write">
-    <img class="write-bg-shape" src="./components/wins-bg.svg" alt="">
+  <!-- SCREEN 1 — Survey -->
+  <div class="screen active" id="s-survey">
+    <img class="survey-bg-shape" src="./components/asterisk-3.svg" alt="">
 
     <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
     <button class="btn-back" onclick="history.back()">
-      <svg viewBox="0 0 18 18" fill="none">
-        <path d="M11 4L6 9L11 14" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M12 5L7 10L12 15" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
 
-    <div class="write-body">
-    <div class="write-header">
-      <div class="spark-pill">
-        +1 <img src="./components/spark.svg" alt="spark" style="width:20px;height:20px;display:inline-block;vertical-align:middle;">
+    <div class="survey-body">
+      <div class="survey-header">
+        <div class="spark-pill">
+          1 <img src="./components/spark.svg" alt="spark" style="width:20px;height:20px;display:block;">
+        </div>
+        <h1 class="survey-title">All about you</h1>
       </div>
-      <h1 class="write-title">Notice your wins</h1>
-    </div>
 
-    <div class="write-content">
-      <div class="msg-bubble">
-        <div class="msg-avatar">
-          <div class="msg-monster">
-            <img class="msg-butterfly" src="./components/monster-butterfly.svg" alt="">
-            <div class="msg-eyes">
-              <img class="msg-eye" src="./components/monster-eye.svg" alt="">
-              <img class="msg-eye" src="./components/monster-eye.svg" alt="">
+      <div class="survey-content">
+        <div class="msg-bubble">
+          <div class="msg-avatar">
+            <div class="msg-monster">
+              <img class="msg-butterfly" src="./components/monster-butterfly.svg" alt="">
+              <div class="msg-eyes">
+                <img class="msg-eye" src="./components/monster-eye.svg" alt="">
+                <img class="msg-eye" src="./components/monster-eye.svg" alt="">
+              </div>
             </div>
           </div>
+          <p class="msg-text">Pick the emoji that best captures how you've felt for most of this week.</p>
         </div>
-        <p class="msg-text">What's one small thing that happened this week that made you smile — even briefly?</p>
-      </div>
 
-      <div class="write-area">
-        <textarea
-          class="write-textarea"
-          id="noteInput"
-          placeholder="Start writing here"
-          oninput="onInput()"
-        ></textarea>
+        <div class="emoji-grid">
+          <div class="emoji-row">
+            <button class="emoji-btn" onclick="selectEmoji(this)">😔</button>
+            <button class="emoji-btn" onclick="selectEmoji(this)">😟</button>
+            <button class="emoji-btn" onclick="selectEmoji(this)">😐</button>
+            <button class="emoji-btn" onclick="selectEmoji(this)">🙂</button>
+            <button class="emoji-btn" onclick="selectEmoji(this)">🤩</button>
+          </div>
+          <div class="emoji-row">
+            <button class="emoji-btn" onclick="selectEmoji(this)">😄</button>
+            <button class="emoji-btn" onclick="selectEmoji(this)">😤</button>
+            <button class="emoji-btn" onclick="selectEmoji(this)">😰</button>
+            <button class="emoji-btn" onclick="selectEmoji(this)">😴</button>
+            <button class="emoji-btn" onclick="selectEmoji(this)">🥳</button>
+          </div>
+        </div>
       </div>
-    </div>
     </div>
 
     <div class="btn-save-wrap">
-      <button class="btn-save" id="btnSave" disabled onclick="saveNote()">
+      <button class="btn-save" id="btnSave" disabled onclick="saveSurvey()">
         Save
       </button>
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════════
-       SCREEN 2 — Completed!
-       ══════════════════════════════════════════════════════════ -->
+  <!-- SCREEN 2 — Completed -->
   <div class="screen" id="s-done">
     <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
-
-    <img class="done-bg-shape" src="./components/wins-bg-done.svg" alt="">
 
     <div class="done-center">
       <div class="done-reward-row">
@@ -280,8 +253,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
 
       <div class="done-card-wrap">
-        <img class="done-card-img" src="./components/card-1.svg" alt="Notice your wins">
-        <img class="done-monster" src="./components/Property 1=M01, Type=Default.svg" alt="">
+        <img class="done-card-img" src="./components/challenge-card-6.svg" alt="All about you">
       </div>
 
       <p class="done-title">Completed!</p>
@@ -298,34 +270,40 @@ function scale() {
 }
 scale(); addEventListener('resize', scale);
 
-let cur = 's-write';
+let cur = 's-survey';
 function goTo(id) {
   document.getElementById(cur).classList.remove('active');
   document.getElementById(id).classList.add('active');
   cur = id;
 }
 
-function onInput() {
-  const val = document.getElementById('noteInput').value.trim();
-  document.getElementById('btnSave').disabled = val.length === 0;
+let selectedBtn = null;
+function selectEmoji(btn) {
+  if (selectedBtn) selectedBtn.classList.remove('selected');
+  btn.classList.add('selected');
+  selectedBtn = btn;
+  document.getElementById('btnSave').disabled = false;
 }
 
-function saveNote() {
-  const val = document.getElementById('noteInput').value.trim();
-  localStorage.setItem('bp_wins_note', val);
-  localStorage.setItem('bp_wins_question', "What's one small thing that happened this week that made you smile — even briefly?");
+function saveSurvey() {
+  if (!selectedBtn) return;
+  localStorage.setItem('bp_about_emoji', selectedBtn.textContent.trim());
+  localStorage.setItem('bp_about_done', '1');
   goTo('s-done');
-  localStorage.setItem('bp_wins_done', '1');
-  setTimeout(() => {
-    window.location.href = 'today.html';
-  }, 2500);
+  setTimeout(() => { window.location.href = 'today.html'; }, 2500);
 }
 
-// Edit mode: pre-fill textarea if returning to edit
+// Pre-fill if returning to edit
 (function() {
-  const saved = localStorage.getItem('bp_wins_note');
-  if (saved) document.getElementById('noteInput').value = saved;
-  onInput();
+  const saved = localStorage.getItem('bp_about_emoji');
+  if (!saved) return;
+  document.querySelectorAll('.emoji-btn').forEach(btn => {
+    if (btn.textContent.trim() === saved) {
+      btn.classList.add('selected');
+      selectedBtn = btn;
+      document.getElementById('btnSave').disabled = false;
+    }
+  });
 })();
 </script>
 </body>

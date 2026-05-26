@@ -327,6 +327,8 @@ button {
 
 img, svg { display: block; max-width: 100%; }
 
+h1, h2, h3 { text-transform: none; }
+
 /* ─────────────────────────────────────────────────────────────
    12. DEVICE CANVAS HELPER
    Fixed 390×844 (iPhone-like) coord system, letterboxed on any viewport.

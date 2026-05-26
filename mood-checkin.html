@@ -672,11 +672,15 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
      ════════════════════════════════════════════════════════════ -->
 <div class="screen" id="s-video" style="background:#000;">
   <div class="sb" style="color:rgba(255,255,255,0.7)"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
-  <div class="video-play-wrap">
-    <button class="video-play-btn" onclick="goTo('s-video-fb')">
-      <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="rgba(255,255,255,0.15)"/><polygon points="20,16 36,24 20,32" fill="#f2f3e5"/></svg>
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:994px;height:485px;border-radius:20px;overflow:hidden;">
+    <img src="./components/video-thumbnail.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+    <div style="position:absolute;top:12px;right:12px;">
+      <img src="./components/heart-default.svg" alt="save" style="width:48px;height:48px;display:block;cursor:pointer;">
+    </div>
+    <button class="video-play-btn" onclick="localStorage.setItem('bp_video_watched','1'); goTo('s-video-fb')" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+      <svg width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="36" fill="rgba(0,0,0,0.45)"/><polygon points="30,22 54,36 30,50" fill="#f2f3e5"/></svg>
     </button>
-    <p class="video-tap-hint">Tap to play (prototype)</p>
+    <p class="video-tap-hint" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);margin:0;">Tap to play (prototype)</p>
   </div>
 </div>
 
@@ -737,13 +741,14 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
       <div class="done-card">
         <img src="./components/card-2.svg" alt="Mood check-in" style="width:100%;height:100%;display:block;border-radius:19px;">
+        <img src="./components/Property 1=M04, Type=Default.svg" alt="" style="position:absolute;top:16px;left:50%;transform:translateX(-50%);width:160px;height:160px;">
       </div>
     </div>
-    <p class="done-title">Check-in<br>completed!</p>
+    <p class="done-title" id="doneTitle">Check-in<br>completed!</p>
   </div>
 
   <div class="done-cta">
-    <button class="btn-next-em" style="width:270px" onclick="finishMoodCheckin()">Start your day</button>
+    <button class="btn-next-em" style="width:270px" id="doneBtn" onclick="finishMoodCheckin()">Start your day</button>
   </div>
 </div>
 
@@ -758,6 +763,12 @@ function scale() {
   document.getElementById('device').style.setProperty('--s', s);
 }
 scale(); addEventListener('resize', scale);
+
+if (new URLSearchParams(location.search).get('edit') === '1') {
+  document.getElementById('doneTitle').innerHTML = 'Check-in<br>updated!';
+  document.querySelector('#s-done .reward-row').style.display = 'none';
+  document.getElementById('doneBtn').textContent = 'Back to your day';
+}
 
 
 // ─── Emotion data ─────────────────────────────────────────────
@@ -802,6 +813,11 @@ function goToDone() {
 }
 
 function finishMoodCheckin() {
+  localStorage.setItem('bp_mood_emotions', JSON.stringify(detailOrder));
+  const reasons = [...document.querySelectorAll('#wh-0 .why-block.sel')]
+    .map(b => b.querySelector('.why-label').textContent.trim());
+  localStorage.setItem('bp_mood_reasons', JSON.stringify(reasons));
+
   const done = document.getElementById('s-done');
   done.classList.add('done-exiting');
   setTimeout(() => {
