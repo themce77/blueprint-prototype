@@ -21,7 +21,7 @@ export async function onRequest(context) {
         }
       });
     }
-    return loginPage("Złe hasło, spróbuj ponownie.");
+    return loginPage("Bad password, try again");
   }
 
   if (request.method === "GET") {
