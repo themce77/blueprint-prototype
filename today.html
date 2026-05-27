@@ -152,32 +152,13 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   width: 100%; height: 100%;
   display: block; object-fit: fill; border-radius: 19px;
 }
-.card-monster {
-  position: absolute; top: 28px; left: 50%;
-  transform: translateX(-50%);
-  width: 180px; height: 180px;
-  pointer-events: none; z-index: 2;
-  transition: opacity 300ms ease;
-}
-
-/* Done layer */
-.card-done-layer {
-  position: absolute; inset: 0; border-radius: 19px; overflow: hidden;
-  opacity: 0; pointer-events: none; z-index: 8;
-  transition: opacity 400ms 150ms;
-}
-.t-card.done .card-done-layer { opacity: 1; }
-.t-card.pre-done .card-done-layer { opacity: 1; }
-.t-card.pre-done { cursor: pointer; opacity: 0.5; }
-.card-done-layer img { width: 100%; height: 100%; display: block; object-fit: fill; }
-
 
 /* States */
-.t-card.active { cursor: pointer; }
-.t-card.active:hover { transform: scale(1.025); }
-.t-card.queued { cursor: pointer; }
-.t-card.queued:hover { transform: scale(1.025); }
-.t-card.done   { cursor: pointer; opacity: 0.5; }
+.t-card.sleepy      { cursor: default; }
+.t-card.recommended { cursor: pointer; }
+.t-card.recommended:hover { transform: scale(1.025); }
+.t-card.done        { cursor: pointer; }
+.t-card.done:hover  { transform: scale(1.025); }
 
 /* ─── Footer ────────────────────────────────────────────────── */
 .today-footer { display: flex; justify-content: center; }
@@ -355,38 +336,24 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
     <div class="today-cards" id="cardRow">
 
-      <!-- Notice your wins — active (first task) -->
-      <div class="t-card active" id="card-wins" onclick="openFlow('notice-wins.html')">
-        <img class="card-img" src="./components/card-1.svg" alt="Notice your wins">
-        <img class="card-monster" src="./components/Property 1=M01, Type=Default.svg" alt="">
-        <div class="card-done-layer">
-          <img src="./components/card-02.svg" alt="Notice your wins done">
-        </div>
+      <!-- Write it out — sleepy (not yet active) -->
+      <div class="t-card sleepy" id="card-write">
+        <img class="card-img" src="./components/Write-i-o-01.svg" alt="Write it out">
       </div>
 
-      <!-- Write it out — queued -->
-      <div class="t-card queued" id="card-write" onclick="openFlow('write-it-out.html')">
-        <img class="card-img" src="./components/card-4.svg" alt="Write it out">
-        <img class="card-monster" src="./components/Property 1=M02, Type=Sleepy.svg" alt="">
-        <div class="card-done-layer">
-          <img src="./components/card-01.svg" alt="Write it out done">
-        </div>
+      <!-- All about you — sleepy -->
+      <div class="t-card sleepy" id="card-about">
+        <img class="card-img" src="./components/All-a-y-01.svg" alt="All about you">
       </div>
 
-      <!-- All about you — queued -->
-      <div class="t-card queued" id="card-about" onclick="openFlow('all-about-you.html')">
-        <img class="card-img" src="./components/card-6.svg" alt="All about you">
-        <img class="card-monster" src="./components/Property 1=M03, Type=Sleepy.svg" alt="">
-        <div class="card-done-layer">
-          <img src="./components/card-04.svg" alt="All about you done">
-        </div>
+      <!-- Notice your wins — recommended (first priority) -->
+      <div class="t-card recommended" id="card-wins" onclick="openFlow('notice-wins.html')">
+        <img class="card-img" src="./components/Notice-y-w-02.svg" alt="Notice your wins">
       </div>
 
-      <!-- Mood check-in — pre-done (completed in mood flow) -->
-      <div class="t-card pre-done" id="card-mood" onclick="openMoodOverlay()">
-        <div class="card-done-layer">
-          <img src="./components/card-03.svg" alt="Mood check-in done">
-        </div>
+      <!-- Mood check-in — done (completed in mood flow) -->
+      <div class="t-card done" id="card-mood" onclick="openMoodOverlay()">
+        <img class="card-img" src="./components/Mood-checkin-04.svg" alt="Mood check-in">
       </div>
 
     </div>
@@ -544,13 +511,15 @@ document.getElementById('winsOvBack').addEventListener('click', () => {
   document.getElementById('winsOv').classList.remove('open');
 });
 
-const FLOWS = {
-  'card-wins':  'notice-wins.html',
-  'card-write': 'write-it-out.html',
-  'card-about': 'all-about-you.html',
+// ─── Card config ──────────────────────────────────────────────
+const CARD_CFG = {
+  'card-wins':  { svg: 'Notice-y-w',  flow: 'notice-wins.html',  overlay: 'openWinsOverlay()', section: 'wins'  },
+  'card-write': { svg: 'Write-i-o',   flow: 'write-it-out.html',                                section: 'write' },
+  'card-about': { svg: 'All-a-y',     flow: 'all-about-you.html',                               section: 'about' },
 };
+
+// Priority queue: wins first, then write, then about
 const queue = ['card-wins', 'card-write', 'card-about'];
-const overlayFns = { 'card-wins': 'openWinsOverlay()', 'card-mood': 'openMoodOverlay()' };
 
 function openFlow(url) {
   if (url) window.location.href = url;
@@ -560,110 +529,116 @@ function goToolkit() {
   window.location.href = 'my-toolkit.html';
 }
 
+function setCardState(id, state) {
+  const card = document.getElementById(id);
+  const img  = card && card.querySelector('.card-img');
+  const cfg  = CARD_CFG[id];
+  if (!card || !img || !cfg) return;
+
+  card.className = 't-card ' + state;
+
+  const suffixMap = { sleepy: '01', recommended: '02', done: '04' };
+  img.src = `./components/${cfg.svg}-${suffixMap[state]}.svg`;
+
+  if (state === 'recommended') {
+    card.setAttribute('onclick', `openFlow('${cfg.flow}')`);
+  } else if (state === 'done') {
+    if (cfg.overlay) card.setAttribute('onclick', cfg.overlay);
+    else             card.setAttribute('onclick', `openFlow('${cfg.flow}')`);
+  } else {
+    card.removeAttribute('onclick');
+  }
+}
+
 function completeCard(id) {
   const card = document.getElementById(id);
   if (!card || card.classList.contains('done')) return;
 
-  card.classList.remove('active', 'queued');
-  card.classList.add('done');
-
-  // Track in sessionStorage so state survives page navigation within this tab
-  const _sd = JSON.parse(sessionStorage.getItem('bp_session_done') || '[]');
-  if (!_sd.includes(id)) { _sd.push(id); sessionStorage.setItem('bp_session_done', JSON.stringify(_sd)); }
-
-  // Re-enable click to edit via overlay or flow
-  const flow = FLOWS[id];
-  if (overlayFns[id]) card.setAttribute('onclick', overlayFns[id]);
-  else if (flow) card.setAttribute('onclick', `openFlow('${flow}')`);
-  else card.removeAttribute('onclick');
+  setCardState(id, 'done');
 
   // Move done card to end of row
-  document.getElementById('cardRow').appendChild(card);
+  const row = document.getElementById('cardRow');
+  row.appendChild(card);
 
-  // Track completed sections for summary.html
-  const sectionMap = { 'card-wins': 'wins', 'card-write': 'write', 'card-about': 'about' };
-  const sKey = sectionMap[id];
-  if (sKey) {
+  // Track in sessionStorage (persists across page navigations in this tab)
+  const sd = JSON.parse(sessionStorage.getItem('bp_session_done') || '[]');
+  if (!sd.includes(id)) { sd.push(id); sessionStorage.setItem('bp_session_done', JSON.stringify(sd)); }
+
+  // Track for summary.html
+  const cfg = CARD_CFG[id];
+  if (cfg && cfg.section) {
     const done = JSON.parse(localStorage.getItem('bp_today_sections') || '["mood"]');
-    if (!done.includes(sKey)) { done.push(sKey); localStorage.setItem('bp_today_sections', JSON.stringify(done)); }
+    if (!done.includes(cfg.section)) { done.push(cfg.section); localStorage.setItem('bp_today_sections', JSON.stringify(done)); }
   }
 
-  // Update monster: first non-done queue card gets Default, rest keep Sleepy
-  let foundFirst = false;
-  queue.forEach(qid => {
-    const qcard = document.getElementById(qid);
-    if (!qcard || qcard.classList.contains('done')) return;
-    const monster = qcard.querySelector('.card-monster');
-    if (!monster) return;
-    if (!foundFirst) {
-      monster.src = monster.src.replace('Type=Sleepy', 'Type=Default');
-      foundFirst = true;
-    } else {
-      monster.src = monster.src.replace('Type=Default', 'Type=Sleepy');
+  // Promote next queue card: sleepy → recommended, reposition before first done
+  const idx = queue.indexOf(id);
+  if (idx >= 0 && idx + 1 < queue.length) {
+    const nextId  = queue[idx + 1];
+    const nextCard = document.getElementById(nextId);
+    if (nextCard && !nextCard.classList.contains('done')) {
+      setCardState(nextId, 'recommended');
+      const firstDone = row.querySelector('.t-card.done');
+      if (firstDone) row.insertBefore(nextCard, firstDone);
     }
-  });
+  }
 
   checkAllDone();
 }
 
 function checkAllDone() {
-  const all = document.querySelectorAll('.t-card:not(.pre-done)');
-  const allDone = [...all].every(c => c.classList.contains('done'));
+  const cards = document.querySelectorAll('#cardRow .t-card');
+  const allDone = [...cards].every(c => c.classList.contains('done'));
   if (!allDone) return;
-
-  all.forEach(c => c.classList.add('done-green'));
-  document.getElementById('greetTitle').textContent = 'Mission completed!';
-  document.getElementById('greetSub').textContent = 'Congratulations, Sophie!';
-  document.getElementById('greetSub').style.color = '#4ecb9e';
+  document.getElementById('greetTitle').textContent = 'All collected!';
+  document.getElementById('greetSub').textContent   = 'Today completed';
+  document.getElementById('greetSub').style.color   = '#4ecb9e';
 }
 
-// Handle returns from card flows
+// ─── Restore state on page load ───────────────────────────────
 const doneFlags = {
   'bp_wins_done':  'card-wins',
   'bp_write_done': 'card-write',
   'bp_about_done': 'card-about',
 };
 
-// If arriving directly (not returned from a flow), reset session so each demo starts clean
+// If no incoming completion flag → fresh demo run → clear session
 const hasIncomingFlag = Object.keys(doneFlags).some(f => localStorage.getItem(f) === '1');
 if (!hasIncomingFlag) sessionStorage.removeItem('bp_session_done');
 
-// Restore cards done earlier this tab session (sessionStorage resets on tab close)
+// Restore from session (handles navigating back from a flow mid-session)
 const sessionDone = JSON.parse(sessionStorage.getItem('bp_session_done') || '[]');
+
+// Apply done states silently (no animation, no queue promotion — state was already set)
 sessionDone.forEach(id => {
-  const c = document.getElementById(id);
-  if (!c || c.classList.contains('done')) return;
-  c.classList.remove('queued', 'active');
-  c.classList.add('done');
-  const f = FLOWS[id];
-  if (overlayFns[id]) c.setAttribute('onclick', overlayFns[id]);
-  else if (f) c.setAttribute('onclick', `openFlow('${f}')`);
-  else c.removeAttribute('onclick');
-  document.getElementById('cardRow').appendChild(c);
-});
-// Refresh monster state after restore
-let foundFirst = false;
-queue.forEach(id => {
-  const c = document.getElementById(id);
-  if (!c || c.classList.contains('done')) return;
-  const m = c.querySelector('.card-monster');
-  if (!m) return;
-  m.src = foundFirst
-    ? m.src.replace('Type=Default', 'Type=Sleepy')
-    : m.src.replace('Type=Sleepy', 'Type=Default');
-  foundFirst = true;
+  const card = document.getElementById(id);
+  const cfg  = CARD_CFG[id];
+  if (!card || card.classList.contains('done') || !cfg) return;
+  setCardState(id, 'done');
+  document.getElementById('cardRow').appendChild(card);
 });
 
+// After restoring done cards, promote the next pending card to recommended
+const firstPending = queue.find(id => {
+  const c = document.getElementById(id);
+  return c && !c.classList.contains('done');
+});
+if (firstPending) {
+  const firstDone = document.querySelector('#cardRow .t-card.done');
+  setCardState(firstPending, 'recommended');
+  if (firstDone) document.getElementById('cardRow').insertBefore(
+    document.getElementById(firstPending), firstDone
+  );
+}
+
+// Handle returns from flows (localStorage flags set by the flow pages)
 Object.entries(doneFlags).forEach(([flag, cardId]) => {
   if (localStorage.getItem(flag) !== '1') return;
   localStorage.removeItem(flag);
-  const card = document.getElementById(cardId);
-  if (card && !card.classList.contains('done') && !card.classList.contains('active')) {
-    card.classList.remove('queued');
-    card.classList.add('active');
-  }
   completeCard(cardId);
 });
+
+checkAllDone();
 updateSparks();
 </script>
 </body>

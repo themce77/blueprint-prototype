@@ -344,21 +344,21 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <div class="tab-panel" id="tab-browse">
       <div class="browse-grid">
         <div class="browse-row">
-          <div class="category-circle" style="background:#3f50b8;">
+          <div class="category-circle" style="background:#3f50b8;" onclick="window.location.href='category.html?cat=calm-down'">
             <div class="category-circle-bg"><img src="./components/category-01.svg" alt=""></div>
             <div class="category-inner">
               <div class="category-emoji-btn">😮‍💨</div>
               <span class="category-label">Calm down</span>
             </div>
           </div>
-          <div class="category-circle" style="background:#e65800;">
+          <div class="category-circle" style="background:#e65800;" onclick="window.location.href='category.html?cat=boost-energy'">
             <div class="category-circle-bg"><img src="./components/category-02.svg" alt=""></div>
             <div class="category-inner">
               <div class="category-emoji-btn">⚡</div>
               <span class="category-label">Boost energy</span>
             </div>
           </div>
-          <div class="category-circle" style="background:#219653;">
+          <div class="category-circle" style="background:#219653;" onclick="window.location.href='category.html?cat=feel-good'">
             <div class="category-circle-bg"><img src="./components/category-03.svg" alt=""></div>
             <div class="category-inner">
               <div class="category-emoji-btn">🌈</div>
@@ -367,14 +367,14 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
           </div>
         </div>
         <div class="browse-row">
-          <div class="category-circle" style="background:#49aee1;">
+          <div class="category-circle" style="background:#49aee1;" onclick="window.location.href='category.html?cat=focus'">
             <div class="category-circle-bg"><img src="./components/category-04.svg" alt=""></div>
             <div class="category-inner">
               <div class="category-emoji-btn">🧠</div>
               <span class="category-label">Focus</span>
             </div>
           </div>
-          <div class="category-circle" style="background:#7040c8;">
+          <div class="category-circle" style="background:#7040c8;" onclick="window.location.href='category.html?cat=wind-down'">
             <div class="category-circle-bg"><img src="./components/category-05.svg" alt=""></div>
             <div class="category-inner">
               <div class="category-emoji-btn">😴</div>
@@ -489,6 +489,16 @@ function renderSaved() {
 
 // Init saved tab
 renderSaved();
+
+// Activate tab from URL param (e.g. when returning from category.html?tab=browse)
+(function() {
+  const p = new URLSearchParams(location.search);
+  const tab = p.get('tab');
+  if (tab && tabMap[tab]) {
+    const pill = document.querySelector(`.filter-pill[onclick*="'${tab}'"]`);
+    if (pill) setFilter(tab, pill);
+  }
+})();
 </script>
 </body>
 </html>
