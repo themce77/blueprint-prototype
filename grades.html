@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint — Grades</title>
+<link rel="stylesheet" href="./foundations/tokens.css">
+<style>
+
+body { background: #0a0a0f; overflow: hidden; margin: 0; }
+.bp-stage { position: fixed; inset: 0; display: grid; place-items: center; }
+.bp-device {
+  width: 1194px; height: 834px; position: relative; overflow: hidden;
+  border-radius: 20px; transform-origin: center center;
+  transform: scale(var(--s,1)); background: #1f1f25;
+}
+
+/* ─── Status bar ────────────────────────────────────────────── */
+.sb {
+  position: absolute; top: 0; left: 0; right: 0; height: 24px; z-index: 30;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.9); pointer-events: none;
+}
+
+/* ─── Sidebar ───────────────────────────────────────────────── */
+.today-sidebar {
+  position: absolute;
+  left: 24px; top: 50%; transform: translateY(-50%);
+  width: 80px; height: 786px;
+  background: #2b2b32; border-radius: 20px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: space-between;
+  padding: 24px 8px; box-sizing: border-box;
+  z-index: 20;
+}
+.sidebar-logo {
+  font-family: var(--font-display); font-size: 16px; color: #8e8b85;
+  text-transform: uppercase; text-align: center; letter-spacing: 0.5px;
+  height: 52px; display: flex; align-items: center; justify-content: center; width: 100%;
+}
+.sidebar-nav { display: flex; flex-direction: column; gap: 12px; }
+.nav-item {
+  width: 64px; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 12px; padding: 8px 0; cursor: pointer;
+  transition: background 140ms;
+}
+.nav-item.active { background: #1f1f25; }
+.nav-item:not(.active):hover { background: rgba(255,255,255,0.05); }
+.nav-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.nav-icon img { width: 24px; height: 24px; display: block; }
+.nav-item.active .nav-icon img { filter: brightness(0) invert(1); }
+.nav-label {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #a4a59f; text-align: center; width: 64px; line-height: 16px;
+}
+.nav-item.active .nav-label { color: #f2f3e5; }
+.sidebar-user { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.user-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #b8c0ed; border: 2px solid #36363f;
+  overflow: hidden; display: grid; place-items: center; font-size: 10px;
+  box-sizing: border-box;
+}
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.user-name {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #a4a59f; text-align: center; width: 64px;
+}
+
+/* ─── Right dark background ─────────────────────────────────── */
+.grades-right-bg {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 545px;
+  background: #2b2b32;
+}
+
+/* ─── Left column ───────────────────────────────────────────── */
+.col-left {
+  position: absolute; left: 152px; top: 72px;
+  width: 449px;
+  display: flex; flex-direction: column; gap: 32px;
+}
+
+.grades-title {
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0;
+}
+
+/* ─── Tab pills ─────────────────────────────────────────────── */
+.tab-pills { display: flex; gap: 8px; }
+.tab-pill {
+  display: flex; align-items: center; justify-content: center;
+  padding: 11px 14px; border-radius: 14px;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  cursor: pointer; border: none; transition: background 150ms, color 150ms;
+}
+.tab-pill-active { background: #f2f3e5; color: #2b2b35; }
+.tab-pill-inactive { background: #2b2b35; color: rgba(242,243,229,0.5); }
+
+/* ─── Tab panels ────────────────────────────────────────────── */
+.tab-panel { display: none; }
+.tab-panel.active { display: contents; }
+
+/* ─── Subject list (Grades tab) ─────────────────────────────── */
+.subjects-list { display: flex; flex-direction: column; gap: 8px; }
+.subject-card {
+  width: 449px; height: 82px; border-radius: 12px;
+  background: #1f1f25; border: 1px solid #36363f;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px; box-sizing: border-box;
+  cursor: pointer; transition: background 120ms;
+}
+.subject-card:hover { background: #252530; }
+.subject-left { display: flex; flex-direction: column; gap: 8px; }
+.subject-name {
+  font-family: var(--font-body); font-size: 20px; font-weight: 700;
+  color: #f2f3e5; line-height: 1.1; letter-spacing: -0.4px;
+}
+.subject-teacher {
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  color: #737472; letter-spacing: -0.1px;
+}
+.subject-right { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.subject-grade {
+  font-family: var(--font-body); font-size: 20px; font-weight: 700;
+  color: #f2f3e5; line-height: 1.1; letter-spacing: -0.4px;
+}
+.subject-pct {
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  color: #737472; letter-spacing: -0.1px;
+}
+
+/* ─── Attendance cards ──────────────────────────────────────── */
+.att-stat-card {
+  width: 449px; border-radius: 16px;
+  background: #1f1f25; border: 1px solid #444450;
+  padding: 24px; box-sizing: border-box;
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.att-stat-left { display: flex; flex-direction: column; gap: 16px; }
+.att-stat-label {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #737472; letter-spacing: 0;
+}
+.att-stat-number {
+  font-family: var(--font-display); font-size: 32px; line-height: 1.25;
+  letter-spacing: -0.8px; color: #f2f3e5;
+}
+.att-badge {
+  background: #36363f; border: 1px solid #36363f;
+  border-radius: 8px; padding: 8px;
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #f2f3e5; white-space: nowrap;
+}
+
+.att-chart-card {
+  width: 449px; height: 282px; border-radius: 16px;
+  background: #1f1f25; border: 1px solid #444450;
+  position: relative; overflow: hidden;
+}
+.att-chart-months {
+  position: absolute; bottom: 16px; left: 37px; right: 39px;
+  display: flex; justify-content: space-between;
+  font-family: var(--font-body); font-size: 10px; font-weight: 700;
+  color: #737472; letter-spacing: 0.1px;
+}
+.att-chart-line {
+  position: absolute; top: 38px; left: 36px;
+  width: 374px; height: 163px;
+}
+
+/* ─── Right columns ─────────────────────────────────────────── */
+.col-right {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 16px;
+  transition: left 200ms;
+}
+.col-right-grades  { left: 697px; width: 449px; }
+.col-right-attend  { left: 697px; width: 449px; }
+
+/* ─── Video card ─────────────────────────────────────────────── */
+.video-card {
+  border-radius: 20px; position: relative; overflow: hidden;
+  flex-shrink: 0; width: 100%; height: 449px;
+}
+.video-card-grades { background: #addbf2; }
+.video-card-attend { background: #d6c0fe; }
+
+.video-cloud-1 {
+  position: absolute; left: 37px; top: 96px;
+  width: 561px; transform: rotate(15deg); pointer-events: none;
+}
+.video-cloud-2 {
+  position: absolute; left: -303px; top: 237px;
+  width: 687px; pointer-events: none;
+}
+.video-mithosis-1 {
+  position: absolute; left: -136px; top: 121px;
+  width: 408px; transform: rotate(-30deg); pointer-events: none; opacity: 0.7;
+}
+.video-mithosis-2 {
+  position: absolute; left: 132px; top: -123px;
+  width: 408px; transform: rotate(-30deg); pointer-events: none; opacity: 0.7;
+}
+
+.video-bookmark {
+  position: absolute; top: 12px; right: 12px;
+  width: 48px; height: 48px; border-radius: 8px;
+  background: #36363f; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.video-play {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 44px; height: 44px; border-radius: 12px;
+  background: #f2f3e5; display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.video-title-box {
+  position: absolute; bottom: 12px; right: 12px;
+  width: 260px; border-radius: 12px;
+  background: #36363f; padding: 8px; box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.video-meta {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.video-duration {
+  font-family: var(--font-body); font-size: 18px; font-weight: 700;
+  color: #f2f3e5; letter-spacing: -0.2px;
+}
+.video-spark {
+  display: flex; align-items: center; gap: 4px;
+  font-family: var(--font-body); font-size: 18px; font-weight: 700;
+  color: #f2f3e5; letter-spacing: -0.2px;
+}
+.video-spark img { width: 16px; height: 16px; display: block; }
+.video-title-text {
+  font-family: var(--font-display); font-size: 24px; line-height: 1.12;
+  color: #f2f3e5; letter-spacing: -0.4px; margin: 0;
+}
+
+/* ─── Remember card ──────────────────────────────────────────── */
+.remember-card {
+  border-radius: 20px; width: 100%;
+  background: #1f1f25; padding: 24px; box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 36px; flex-shrink: 0;
+}
+.remember-body { display: flex; flex-direction: column; gap: 8px; }
+.remember-label {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #737472; letter-spacing: 0;
+}
+.remember-text {
+  font-family: var(--font-body); font-size: 20px; font-weight: 700;
+  color: #f2f3e5; line-height: 1.1; letter-spacing: -0.4px; margin: 0;
+}
+.remember-actions { display: flex; gap: 12px; }
+.remember-btn {
+  flex: 1; height: 48px; border-radius: 8px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.16);
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #f5f5f5; cursor: pointer; transition: background 120ms;
+}
+.remember-btn:hover { background: rgba(255,255,255,0.06); }
+
+/* ─── Main content dim ───────────────────────────────────────── */
+#main-content {
+  position: absolute; inset: 0;
+  transition: opacity 500ms ease;
+}
+#main-content.dimmed { opacity: 0.3; pointer-events: none; }
+
+/* ─── Subject Drawer ─────────────────────────────────────────── */
+.subject-drawer {
+  position: absolute; top: 0; right: 0;
+  width: 580px; height: 834px;
+  background: #2b2b32;
+  z-index: 50;
+  transform: translateX(100%);
+  transition: transform 1200ms cubic-bezier(0.73, -0.01, 0.2, 0.98);
+  overflow-y: auto; overflow-x: hidden;
+  padding: 24px 10px; box-sizing: border-box;
+}
+.subject-drawer.open { transform: translateX(0); }
+
+.drw-inner {
+  display: flex; flex-direction: column; gap: 32px;
+  padding: 16px; border-radius: 8px;
+}
+.drw-top { display: flex; flex-direction: column; gap: 16px; }
+.drw-head { display: flex; justify-content: space-between; align-items: flex-start; }
+.drw-name {
+  font-family: var(--font-display); font-size: 32px; line-height: 40px;
+  letter-spacing: -0.8px; color: #fff; display: block; margin-bottom: 2px;
+}
+.drw-teacher {
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  color: #737472; line-height: 20px; letter-spacing: -0.1px; display: block;
+}
+.drw-grade-col { text-align: right; }
+.drw-grade {
+  font-family: var(--font-display); font-size: 32px; line-height: 40px;
+  letter-spacing: -0.8px; color: #fff; display: block;
+}
+.drw-pct {
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  color: rgba(255,255,255,0.25); line-height: 20px; letter-spacing: -0.1px; display: block;
+}
+.drw-divider { height: 1px; background: #444450; }
+.drw-msg {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: #36363f; padding: 10px;
+}
+.drw-monster {
+  width: 32px; height: 32px; flex-shrink: 0;
+  background: #49aee1; display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.drw-monster img { width: 26.667px; height: 26.667px; display: block; }
+.drw-msg-text {
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #a4a59f; letter-spacing: -0.1px; line-height: 20px; flex: 1; margin: 0;
+}
+
+.drw-stats-section { display: flex; flex-direction: column; gap: 24px; }
+.drw-stats { display: flex; flex-direction: column; gap: 12px; }
+.drw-stats-row { display: flex; gap: 12px; }
+.drw-stat {
+  flex: 1; border: 1px solid #444450; border-radius: 12px;
+  padding: 12px; display: flex; flex-direction: column; gap: 15px;
+}
+.drw-stat.ungraded { opacity: 0.6; justify-content: space-between; min-height: 86px; gap: 0; }
+.drw-stat-label {
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  color: #737472; letter-spacing: -0.1px; line-height: 20px; margin-bottom: 4px;
+}
+.drw-stat-val {
+  font-family: var(--font-display); font-size: 20px; line-height: 1.05;
+  color: #f2f3e5; text-transform: uppercase;
+}
+.drw-stat-bar-track {
+  height: 3px; background: #2f2f37; border-radius: 2px; position: relative; width: 100%;
+}
+.drw-stat-bar-fill {
+  position: absolute; left: 0; top: 0; height: 3px;
+  background: #737472; border-radius: 2px;
+}
+.drw-stat-na {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #444450; line-height: 16px;
+}
+.drw-hint {
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #a4a59f; letter-spacing: -0.1px; line-height: 20px; margin: 0;
+}
+.drw-btns { display: flex; gap: 12px; }
+.drw-btn {
+  flex: 1; height: 40px; border-radius: 8px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.16);
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  color: #f5f5f5; cursor: pointer; letter-spacing: -0.1px;
+  transition: background 120ms;
+}
+.drw-btn:hover { background: rgba(255,255,255,0.06); }
+.drw-btn.drw-btn-on { background: rgba(255,255,255,0.16); border-color: transparent; color: #ededed; }
+
+/* ─── Drawer panels ──────────────────────────────────────────── */
+.drw-panel { display: none; flex-direction: column; gap: 12px; }
+.drw-panel.show { display: flex; }
+
+.drw-note-cards-row { display: flex; gap: 12px; }
+.drw-note-card {
+  flex: 1; border: 1px solid #444450; border-radius: 12px;
+  padding: 12px; display: flex; flex-direction: column; gap: 12px; min-width: 0;
+}
+.drw-note-label {
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  color: #737472; letter-spacing: -0.1px; line-height: 20px;
+}
+.drw-note-rows { display: flex; flex-direction: column; gap: 8px; }
+.drw-note-row {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  letter-spacing: -0.1px; line-height: 20px;
+}
+.drw-note-row-name { color: #737472; }
+.drw-note-row-score { color: #a4a59f; }
+
+.drw-calc-q {
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #a4a59f; letter-spacing: -0.1px; line-height: 20px; margin: 0 0 16px;
+}
+.drw-grade-picker { display: flex; gap: 8px; flex-wrap: wrap; }
+.drw-grade-pill {
+  width: 32px; height: 32px; border-radius: 8px;
+  border: 1px solid #444450; background: transparent;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #f2f3e5; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 120ms;
+}
+.drw-grade-pill.selected { border-color: #a4a59f; }
+.drw-calc-result {
+  border: 1px solid #444450; border-radius: 12px; padding: 12px;
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.drw-calc-pct {
+  font-family: var(--font-display); font-size: 20px; line-height: 1.05;
+  color: #f2f3e5; text-transform: uppercase;
+}
+.drw-calc-needed {
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  color: #737472; letter-spacing: -0.1px; line-height: 20px;
+}
+.drw-calc-context {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #737472; line-height: 16px; white-space: nowrap;
+}
+
+</style>
+</head>
+<body>
+
+<div class="bp-stage">
+<div class="bp-device" id="device">
+
+<div id="main-content">
+
+  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+
+  <!-- Sidebar -->
+  <nav class="today-sidebar">
+    <div class="sidebar-logo">Sparkz</div>
+    <div class="sidebar-nav">
+      <div class="nav-item" onclick="window.location.href='today.html'">
+        <div class="nav-icon"><img src="./components/icon-02.svg" alt="Today"></div>
+        <span class="nav-label">Today</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='journal.html'">
+        <div class="nav-icon"><img src="./components/icon-01.svg" alt="Journal"></div>
+        <span class="nav-label">Journal</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='my-toolkit.html'">
+        <div class="nav-icon"><img src="./components/icon-03.svg" alt="My toolkit"></div>
+        <span class="nav-label">My toolkit</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
+        <span class="nav-label">Journey</span>
+      </div>
+      <div class="nav-item active">
+        <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
+        <span class="nav-label">Grades</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-06.svg" alt="Sparks"></div>
+        <span class="nav-label">Sparks</span>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="userAvatar">😊</div>
+      <span class="user-name">Sophie</span>
+    </div>
+  </nav>
+
+  <!-- Right dark background -->
+  <div class="grades-right-bg"></div>
+
+  <!-- Left column -->
+  <div class="col-left">
+    <h1 class="grades-title">Grades</h1>
+
+    <div class="tab-pills">
+      <button class="tab-pill tab-pill-active"   id="pill-grades"  onclick="switchTab('grades')">Grades</button>
+      <button class="tab-pill tab-pill-inactive" id="pill-attend"  onclick="switchTab('attend')">Attendance</button>
+    </div>
+
+    <!-- Grades panel -->
+    <div class="tab-panel active" id="panel-grades-left">
+      <div class="subjects-list">
+        <div class="subject-card" onclick="openSubjectDrawer('Math')">
+          <div class="subject-left">
+            <span class="subject-name">Math</span>
+            <span class="subject-teacher">Mr Kowalski</span>
+          </div>
+          <div class="subject-right">
+            <span class="subject-grade">B</span>
+            <span class="subject-pct">84.2%</span>
+          </div>
+        </div>
+        <div class="subject-card" onclick="openSubjectDrawer('Art')">
+          <div class="subject-left">
+            <span class="subject-name">Art</span>
+            <span class="subject-teacher">Mr Smith</span>
+          </div>
+          <div class="subject-right">
+            <span class="subject-grade">A-</span>
+            <span class="subject-pct">84.2%</span>
+          </div>
+        </div>
+        <div class="subject-card" onclick="openSubjectDrawer('Biology')">
+          <div class="subject-left">
+            <span class="subject-name">Biology</span>
+            <span class="subject-teacher">Mr Smith</span>
+          </div>
+          <div class="subject-right">
+            <span class="subject-grade">C</span>
+            <span class="subject-pct">66.3%</span>
+          </div>
+        </div>
+        <div class="subject-card" onclick="openSubjectDrawer('Music')">
+          <div class="subject-left">
+            <span class="subject-name">Music</span>
+            <span class="subject-teacher">Mr Smith</span>
+          </div>
+          <div class="subject-right">
+            <span class="subject-grade">C</span>
+            <span class="subject-pct">66.3%</span>
+          </div>
+        </div>
+        <div class="subject-card" onclick="openSubjectDrawer('Physics')">
+          <div class="subject-left">
+            <span class="subject-name">Physics</span>
+            <span class="subject-teacher">Mr Smith</span>
+          </div>
+          <div class="subject-right">
+            <span class="subject-grade">C</span>
+            <span class="subject-pct">66.3%</span>
+          </div>
+        </div>
+        <div class="subject-card" onclick="openSubjectDrawer('History')">
+          <div class="subject-left">
+            <span class="subject-name">History</span>
+            <span class="subject-teacher">Ms Johnson</span>
+          </div>
+          <div class="subject-right">
+            <span class="subject-grade">B+</span>
+            <span class="subject-pct">88.1%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendance panel -->
+    <div class="tab-panel" id="panel-attend-left">
+      <div class="att-stat-card">
+        <div class="att-stat-left">
+          <span class="att-stat-label">This semester</span>
+          <span class="att-stat-number">70.2%</span>
+        </div>
+        <div class="att-badge">Harder lately</div>
+      </div>
+      <div class="att-chart-card">
+        <img class="att-chart-line" src="./components/chart-attendance.svg" alt="">
+        <div class="att-chart-months">
+          <span>Feb</span><span>Mar</span><span>Apr</span><span>May</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right column — Grades -->
+  <div class="col-right col-right-grades" id="col-right-grades">
+    <div class="video-card video-card-grades">
+      <img class="video-cloud-1" src="./components/cloud-grades-1.svg" alt="">
+      <img class="video-cloud-2" src="./components/cloud-grades-2.svg" alt="">
+      <button class="video-bookmark">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M5 3C4.44772 3 4 3.44772 4 4V17L10 14L16 17V4C16 3.44772 15.5523 3 15 3H5Z" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="video-play">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M7 4L16 10L7 16V4Z" fill="#1f1f25"/>
+        </svg>
+      </div>
+      <div class="video-title-box">
+        <div class="video-meta">
+          <span class="video-duration">1:30</span>
+          <div class="video-spark">1 <img src="./components/Spark-4.svg" alt="spark"></div>
+        </div>
+        <p class="video-title-text">The emotional<br>side of grades</p>
+      </div>
+    </div>
+    <div class="remember-card">
+      <div class="remember-body">
+        <span class="remember-label">Remember</span>
+        <p class="remember-text">Even Einstein had some problems at school. Would you like to write about how you feel?</p>
+      </div>
+      <div class="remember-actions">
+        <button class="remember-btn" onclick="window.location.href='write-it-out.html?from=grades'">Write it out</button>
+        <button class="remember-btn">Need extra support</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column — Attendance -->
+  <div class="col-right col-right-attend" id="col-right-attend" style="display:none">
+    <div class="video-card video-card-attend">
+      <img class="video-mithosis-1" src="./components/mithosis.svg" alt="">
+      <img class="video-mithosis-2" src="./components/mithosis.svg" alt="">
+      <button class="video-bookmark">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M5 3C4.44772 3 4 3.44772 4 4V17L10 14L16 17V4C16 3.44772 15.5523 3 15 3H5Z" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="video-play">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M7 4L16 10L7 16V4Z" fill="#1f1f25"/>
+        </svg>
+      </div>
+      <div class="video-title-box">
+        <div class="video-meta">
+          <span class="video-duration">1:30</span>
+          <div class="video-spark">1 <img src="./components/Spark-4.svg" alt="spark"></div>
+        </div>
+        <p class="video-title-text">How to catch up after missing school</p>
+      </div>
+    </div>
+    <div class="remember-card">
+      <div class="remember-body">
+        <span class="remember-label">Remember</span>
+        <p class="remember-text">You started really strong. Lately it's been a little harder to show up — if something's going on, your Journal is here.</p>
+      </div>
+      <div class="remember-actions">
+        <button class="remember-btn" onclick="window.location.href='write-it-out.html?from=grades'">Write it out</button>
+        <button class="remember-btn">Need extra support</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<div id="drw-overlay" onclick="closeSubjectDrawer()" style="position:absolute;inset:0;z-index:49;display:none;"></div>
+
+<!-- Subject Drawer -->
+<div class="subject-drawer" id="subject-drawer">
+  <div class="drw-inner">
+
+    <!-- Header + divider + message -->
+    <div class="drw-top">
+      <div class="drw-head">
+        <div>
+          <span id="drw-name" class="drw-name">Math</span>
+          <span id="drw-teacher" class="drw-teacher">Mr Kowalski</span>
+        </div>
+        <div class="drw-grade-col">
+          <span id="drw-grade" class="drw-grade">B</span>
+          <span id="drw-pct" class="drw-pct">84.2%</span>
+        </div>
+      </div>
+      <div class="drw-divider"></div>
+      <div class="drw-msg">
+        <div class="drw-monster">
+          <img src="https://www.figma.com/api/mcp/asset/54eafe58-57a2-4ece-9aa2-3e9abeaa2499" alt="">
+        </div>
+        <p id="drw-msg-text" class="drw-msg-text">Things are looking good here. You've been consistent with homework and it shows. Next up: quiz on Dec 3.</p>
+      </div>
+    </div>
+
+    <!-- Stats grid + hint -->
+    <div class="drw-stats-section">
+      <div class="drw-stats">
+        <div class="drw-stats-row">
+          <div class="drw-stat">
+            <div>
+              <div class="drw-stat-label">Homework</div>
+              <div id="drw-hw-val" class="drw-stat-val">91.7%</div>
+            </div>
+            <div class="drw-stat-bar-track">
+              <div id="drw-hw-bar" class="drw-stat-bar-fill" style="width:91.7%"></div>
+            </div>
+          </div>
+          <div class="drw-stat">
+            <div>
+              <div class="drw-stat-label">Quizzes</div>
+              <div id="drw-qz-val" class="drw-stat-val">80.5%</div>
+            </div>
+            <div class="drw-stat-bar-track">
+              <div id="drw-qz-bar" class="drw-stat-bar-fill" style="width:80.5%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="drw-stats-row">
+          <div class="drw-stat">
+            <div>
+              <div class="drw-stat-label">Midterm</div>
+              <div id="drw-mt-val" class="drw-stat-val">84.0%</div>
+            </div>
+            <div class="drw-stat-bar-track">
+              <div id="drw-mt-bar" class="drw-stat-bar-fill" style="width:84%"></div>
+            </div>
+          </div>
+          <div class="drw-stat ungraded">
+            <div class="drw-stat-label">Final Exam</div>
+            <div class="drw-stat-na">Not graded yet</div>
+          </div>
+        </div>
+      </div>
+      <p id="drw-hint" class="drw-hint">Review chapter 7 before the quiz — it's only 12 pages.</p>
+    </div>
+
+    <div class="drw-divider"></div>
+
+    <!-- Buttons -->
+    <div class="drw-btns">
+      <button class="drw-btn" id="drw-btn-seeall" onclick="toggleDrawerPanel('assign')">See all assignments</button>
+      <button class="drw-btn" id="drw-btn-calc"   onclick="toggleDrawerPanel('calc')">Calculate my target grade</button>
+    </div>
+
+    <!-- Panel: See all assignments -->
+    <div class="drw-panel" id="drw-panel-assign">
+      <div class="drw-note-cards-row">
+        <div class="drw-note-card">
+          <div class="drw-note-label">Homework</div>
+          <div class="drw-note-rows" id="drw-assign-hw"></div>
+        </div>
+        <div class="drw-note-card">
+          <div class="drw-note-label">Quizzes</div>
+          <div class="drw-note-rows" id="drw-assign-qz"></div>
+        </div>
+      </div>
+      <div style="width:calc(50% - 6px)">
+        <div class="drw-note-card">
+          <div class="drw-note-label">Midterm</div>
+          <div class="drw-note-rows" id="drw-assign-mt"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: Calculate target grade -->
+    <div class="drw-panel" id="drw-panel-calc">
+      <div>
+        <p class="drw-calc-q">What final grade do you want to achieve?</p>
+        <div class="drw-grade-picker" id="drw-grade-picker">
+          <button class="drw-grade-pill" onclick="selectTargetGrade(this)">A</button>
+          <button class="drw-grade-pill" onclick="selectTargetGrade(this)">A-</button>
+          <button class="drw-grade-pill" onclick="selectTargetGrade(this)">B+</button>
+          <button class="drw-grade-pill" onclick="selectTargetGrade(this)">B</button>
+          <button class="drw-grade-pill" onclick="selectTargetGrade(this)">B-</button>
+          <button class="drw-grade-pill" onclick="selectTargetGrade(this)">C+</button>
+          <button class="drw-grade-pill" onclick="selectTargetGrade(this)">C</button>
+        </div>
+      </div>
+      <div class="drw-calc-result" id="drw-calc-result" style="display:none">
+        <div>
+          <div id="drw-calc-pct" class="drw-calc-pct">68%</div>
+          <div class="drw-calc-needed">Needed</div>
+        </div>
+        <div class="drw-calc-context">On final exam</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+function scale() {
+  const s = Math.min(innerWidth / 1194, innerHeight / 834) * 0.96;
+  const dev = document.getElementById('device');
+  dev.style.setProperty('--s', s);
+  dev.style.transform = 'scale(' + s + ')';
+}
+scale(); addEventListener('resize', scale);
+
+function switchTab(tab) {
+  const isGrades = tab === 'grades';
+
+  // Pills
+  document.getElementById('pill-grades').className = 'tab-pill ' + (isGrades ? 'tab-pill-active' : 'tab-pill-inactive');
+  document.getElementById('pill-attend').className = 'tab-pill ' + (isGrades ? 'tab-pill-inactive' : 'tab-pill-active');
+
+  // Left panels
+  document.getElementById('panel-grades-left').className = 'tab-panel' + (isGrades ? ' active' : '');
+  document.getElementById('panel-attend-left').className = 'tab-panel' + (isGrades ? '' : ' active');
+
+  // Right columns
+  document.getElementById('col-right-grades').style.display = isGrades ? '' : 'none';
+  document.getElementById('col-right-attend').style.display = isGrades ? 'none' : '';
+}
+
+const subjectData = {
+  'Math': {
+    grade: 'B', pct: '84.2%', teacher: 'Mr Kowalski',
+    message: "Things are looking good here. You've been consistent with homework and it shows. Next up: quiz on Dec 3.",
+    hw: '91.7%', hwBar: 91.7, qz: '80.5%', qzBar: 80.5, mt: '84.0%', mtBar: 84,
+    hint: "Review chapter 7 before the quiz — it's only 12 pages.",
+    notes: {
+      hw: [['HW 1','18/20'],['HW 2','18/20'],['HW 3','19/20']],
+      qz: [['Quiz 1','82/100'],['Quiz 2','70/100']],
+      mt: [['Exam','84/100']]
+    },
+    calc: { 'A':'95%','A-':'89%','B+':'81%','B':'72%','B-':'68%','C+':'55%','C':'42%' }
+  },
+  'Art': {
+    grade: 'A-', pct: '84.2%', teacher: 'Ms Rivera',
+    message: "You're crushing it in Art. Your portfolio piece really stood out. Keep that energy for the final project.",
+    hw: '88.0%', hwBar: 88, qz: '92.5%', qzBar: 92.5, mt: '80.0%', mtBar: 80,
+    hint: "Final project brief drops next week — start thinking about your theme.",
+    notes: {
+      hw: [['HW 1','17/20'],['HW 2','19/20'],['Portfolio','A']],
+      qz: [['Quiz 1','91/100'],['Quiz 2','94/100']],
+      mt: [['Project','80/100']]
+    },
+    calc: { 'A':'92%','A-':'82%','B+':'70%','B':'58%','B-':'46%','C+':'34%','C':'22%' }
+  },
+  'Biology': {
+    grade: 'C', pct: '66.3%', teacher: 'Mr Smith',
+    message: "Homework has been solid but tests are pulling the grade down. Reviewing your notes before each quiz would help.",
+    hw: '75.0%', hwBar: 75, qz: '62.0%', qzBar: 62, mt: '58.0%', mtBar: 58,
+    hint: "Cell division is worth 30% of the final. It's worth the extra hour.",
+    notes: {
+      hw: [['HW 1','14/20'],['HW 2','16/20'],['HW 3','12/20']],
+      qz: [['Quiz 1','65/100'],['Quiz 2','60/100']],
+      mt: [['Exam','58/100']]
+    },
+    calc: { 'A':'100%','A-':'97%','B+':'89%','B':'80%','B-':'71%','C+':'63%','C':'54%' }
+  },
+  'Music': {
+    grade: 'C', pct: '66.3%', teacher: 'Ms Park',
+    message: "You started well but performance scores have dipped. Practice sessions are logged — try to get two in before Friday.",
+    hw: '70.0%', hwBar: 70, qz: '68.0%', qzBar: 68, mt: '65.0%', mtBar: 65,
+    hint: "The rhythm section quiz is Dec 8. Three practice runs should do it.",
+    notes: {
+      hw: [['HW 1','13/20'],['HW 2','15/20'],['HW 3','14/20']],
+      qz: [['Quiz 1','68/100'],['Quiz 2','72/100']],
+      mt: [['Performance','65/100']]
+    },
+    calc: { 'A':'100%','A-':'95%','B+':'87%','B':'78%','B-':'70%','C+':'61%','C':'52%' }
+  },
+  'Physics': {
+    grade: 'C', pct: '66.3%', teacher: 'Mr Nowak',
+    message: "Lab work has been great — that's saving you here. Brush up on motion equations before the next test.",
+    hw: '72.0%', hwBar: 72, qz: '65.0%', qzBar: 65, mt: '60.0%', mtBar: 60,
+    hint: "Chapter 4 is where most people drop marks. Don't skip the examples.",
+    notes: {
+      hw: [['HW 1','15/20'],['HW 2','13/20'],['Lab','18/20']],
+      qz: [['Quiz 1','68/100'],['Quiz 2','62/100']],
+      mt: [['Exam','60/100']]
+    },
+    calc: { 'A':'100%','A-':'96%','B+':'88%','B':'79%','B-':'70%','C+':'61%','C':'52%' }
+  },
+  'History': {
+    grade: 'B+', pct: '88.1%', teacher: 'Ms Johnson',
+    message: "Strong overall — your essays show real engagement with the material. Keep it up through the final stretch.",
+    hw: '90.0%', hwBar: 90, qz: '86.0%', qzBar: 86, mt: '88.0%', mtBar: 88,
+    hint: "The final covers chapters 8–12. You've already nailed 8 and 9.",
+    notes: {
+      hw: [['Essay 1','18/20'],['HW 1','19/20'],['HW 2','17/20']],
+      qz: [['Quiz 1','86/100'],['Quiz 2','88/100']],
+      mt: [['Exam','88/100']]
+    },
+    calc: { 'A':'97%','A-':'88%','B+':'76%','B':'65%','B-':'53%','C+':'41%','C':'30%' }
+  }
+};
+
+let _currentSubjectData = null;
+
+function renderNoteRows(elId, rows) {
+  document.getElementById(elId).innerHTML = rows.map(([name, score]) =>
+    `<div class="drw-note-row"><span class="drw-note-row-name">${name}</span><span class="drw-note-row-score">${score}</span></div>`
+  ).join('');
+}
+
+function openSubjectDrawer(subject) {
+  const d = subjectData[subject];
+  _currentSubjectData = d;
+  document.getElementById('drw-name').textContent = subject;
+  document.getElementById('drw-teacher').textContent = d.teacher;
+  document.getElementById('drw-grade').textContent = d.grade;
+  document.getElementById('drw-pct').textContent = d.pct;
+  document.getElementById('drw-msg-text').textContent = d.message;
+  document.getElementById('drw-hw-val').textContent = d.hw;
+  document.getElementById('drw-qz-val').textContent = d.qz;
+  document.getElementById('drw-mt-val').textContent = d.mt;
+  document.getElementById('drw-hw-bar').style.width = d.hwBar + '%';
+  document.getElementById('drw-qz-bar').style.width = d.qzBar + '%';
+  document.getElementById('drw-mt-bar').style.width = d.mtBar + '%';
+  document.getElementById('drw-hint').textContent = d.hint;
+  renderNoteRows('drw-assign-hw', d.notes.hw);
+  renderNoteRows('drw-assign-qz', d.notes.qz);
+  renderNoteRows('drw-assign-mt', d.notes.mt);
+  // Reset panels
+  toggleDrawerPanel(null);
+  document.getElementById('drw-calc-result').style.display = 'none';
+  document.querySelectorAll('.drw-grade-pill').forEach(b => b.classList.remove('selected'));
+  document.getElementById('subject-drawer').classList.add('open');
+  document.getElementById('main-content').classList.add('dimmed');
+  document.getElementById('drw-overlay').style.display = '';
+}
+
+function closeSubjectDrawer() {
+  document.getElementById('subject-drawer').classList.remove('open');
+  document.getElementById('main-content').classList.remove('dimmed');
+  document.getElementById('drw-overlay').style.display = 'none';
+}
+
+let _activePanel = null;
+function toggleDrawerPanel(panel) {
+  ['assign','calc'].forEach(p => {
+    document.getElementById('drw-panel-' + p).classList.remove('show');
+    document.getElementById('drw-btn-' + (p === 'assign' ? 'seeall' : 'calc')).classList.remove('drw-btn-on');
+  });
+  if (panel && panel !== _activePanel) {
+    document.getElementById('drw-panel-' + panel).classList.add('show');
+    document.getElementById('drw-btn-' + (panel === 'assign' ? 'seeall' : 'calc')).classList.add('drw-btn-on');
+    _activePanel = panel;
+  } else {
+    _activePanel = null;
+  }
+}
+
+function selectTargetGrade(btn) {
+  document.querySelectorAll('.drw-grade-pill').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const grade = btn.textContent.trim();
+  const pct = _currentSubjectData && _currentSubjectData.calc[grade] || '—';
+  document.getElementById('drw-calc-pct').textContent = pct;
+  document.getElementById('drw-calc-result').style.display = '';
+}
+
+(function() {
+  const src = localStorage.getItem('bp_avatar');
+  const bg  = localStorage.getItem('bp_avatar_bg');
+  const el  = document.getElementById('userAvatar');
+  if (src && el) {
+    if (bg) el.style.background = bg;
+    el.innerHTML = '<img src="' + src + '" alt="avatar">';
+  }
+})();
+</script>
+</body>
+</html>

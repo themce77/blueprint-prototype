@@ -4,10 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blueprint — Today</title>
+<script>if(sessionStorage.getItem('bp_enter_anim')==='1')document.documentElement.setAttribute('data-entry','');</script>
 <link rel="stylesheet" href="./foundations/tokens.css">
 <style>
 
 body { background: #0a0a0f; overflow: hidden; margin: 0; }
+
+/* Entry animation — elements hidden before first paint when coming from completed.html */
+html[data-entry] .today-sidebar { transform: translateY(-50%) translateX(-140px) !important; opacity: 0 !important; }
+html[data-entry] .today-header  { transform: translateY(-80px) !important;  opacity: 0 !important; }
+html[data-entry] #cardRow        { transform: translateY(120px) !important;  opacity: 0 !important; }
+html[data-entry] .today-footer   { transform: translateY(120px) !important;  opacity: 0 !important; }
 .bp-stage { position: fixed; inset: 0; display: grid; place-items: center; }
 .bp-device {
   width: 1194px; height: 834px; position: relative; overflow: hidden;
@@ -248,6 +255,30 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .mood-ov-edit:active { opacity: 0.8; }
 
+/* ─── Szuflada animation overlay ─────────────────────────────── */
+.szuf-anim-clone {
+  position: absolute;
+  width: 237px; height: 353px;
+  border-radius: 19px; overflow: hidden;
+  transform-origin: top left;
+  will-change: transform, opacity;
+}
+.szuf-anim-clone img { width: 100%; height: 100%; display: block; object-fit: fill; }
+.szuf-wrap-anim {
+  position: absolute;
+  left: 280px; top: 900px;
+  width: 635px; height: 817px;
+  transition: top 800ms cubic-bezier(0.4,0,0.2,1);
+  will-change: top;
+}
+.szuf-wrap-anim > img { width: 635px; height: 817px; display: block; }
+.szuf-mini {
+  position: absolute;
+  width: 114.136px; height: 170px;
+  border-radius: 9.26px; overflow: hidden;
+}
+.szuf-mini img { width: 100%; height: 100%; display: block; object-fit: fill; }
+
 /* Wins overlay */
 .wins-ov {
   position: absolute; inset: 0; background: #1f1f25; z-index: 50;
@@ -301,7 +332,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <div class="nav-icon"><img src="./components/icon-02.svg" alt="Today"></div>
         <span class="nav-label">Today</span>
       </div>
-      <div class="nav-item">
+      <div class="nav-item" onclick="window.location.href='journal.html'">
         <div class="nav-icon"><img src="./components/icon-01.svg" alt="Journal"></div>
         <span class="nav-label">Journal</span>
       </div>
@@ -313,9 +344,9 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
         <span class="nav-label">Journey</span>
       </div>
-      <div class="nav-item">
-        <div class="nav-icon"><img src="./components/icon-05.svg" alt="School"></div>
-        <span class="nav-label">School</span>
+      <div class="nav-item" onclick="window.location.href='grades.html'">
+        <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
+        <span class="nav-label">Grades</span>
       </div>
       <div class="nav-item">
         <div class="nav-icon"><img src="./components/icon-06.svg" alt="Sparks"></div>
@@ -434,6 +465,25 @@ function scale() {
   document.getElementById('device').style.setProperty('--s', s);
 }
 scale(); addEventListener('resize', scale);
+
+// ─── Entry animation (coming from completed.html) ─────────────
+(function() {
+  if (sessionStorage.getItem('bp_enter_anim') !== '1') return;
+  sessionStorage.removeItem('bp_enter_anim');
+
+  const T = 'transform 800ms cubic-bezier(0.73,-0.01,0.2,0.98), opacity 800ms cubic-bezier(0.73,-0.01,0.2,0.98)';
+
+  setTimeout(() => {
+    // Set transitions first, then remove data-entry — CSS goes from off-screen to default
+    document.querySelector('.today-sidebar').style.transition = T;
+    document.querySelector('.today-header').style.transition  = T;
+    document.getElementById('cardRow').style.transition       = T;
+    document.querySelector('.today-footer').style.transition  = T;
+    requestAnimationFrame(() => {
+      document.documentElement.removeAttribute('data-entry');
+    });
+  }, 800);
+})();
 
 // ─── Sparks total ─────────────────────────────────────────────
 function updateSparks() {
@@ -620,6 +670,97 @@ function checkAllDone() {
   document.getElementById('greetTitle').textContent = 'Today completed';
   document.getElementById('greetSub').textContent   = 'All four are awake. See you tomorrow.';
   document.getElementById('greetSub').style.color   = '#a4a59f';
+}
+
+// ─── Szuflada card-fly animation ─────────────────────────────
+const SZUF_CARD_CFG = {
+  'card-mood':  { svg: 'Mood-checkin-04.svg', col: 0 },
+  'card-wins':  { svg: 'Notice-y-w-04.svg',   col: 1 },
+  'card-write': { svg: 'Write-i-o-04.svg',     col: 2 },
+  'card-about': { svg: 'All-a-y-04.svg',       col: 3 },
+};
+const SZUF_COL_X  = [16, 138.136, 260.271, 382.408, 504.544];
+const SZUF_ROW_Y  = [16, 194, 372, 550];
+const SZUF_LEFT   = 280;
+const SZUF_TOP_IN = 96;
+const MINI_W      = 114.136;
+const MINI_H      = 170;
+const CARD_W      = 237;
+const MINI_SCALE  = MINI_W / CARD_W;
+
+function animateToDrawer(cardId, afterDone) {
+  const animCfg = SZUF_CARD_CFG[cardId];
+  if (!animCfg) { afterDone(); return; }
+
+  const device  = document.getElementById('device');
+  const devRect = device.getBoundingClientRect();
+  const s       = devRect.width / 1194;
+
+  const cardEl   = document.getElementById(cardId);
+  const cardRect = cardEl.getBoundingClientRect();
+  const cardDevLeft = (cardRect.left - devRect.left) / s;
+  const cardDevTop  = (cardRect.top  - devRect.top)  / s;
+
+  // Target slot within device (szuflada at SZUF_TOP_IN)
+  const slotLeft = SZUF_LEFT + SZUF_COL_X[animCfg.col];
+  const slotTop  = SZUF_TOP_IN + SZUF_ROW_Y[0];
+  const dx = slotLeft - cardDevLeft;
+  const dy = slotTop  - cardDevTop;
+
+  // Build overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:absolute;inset:0;z-index:40;pointer-events:none;';
+
+  // Flying clone
+  const clone = document.createElement('div');
+  clone.className = 'szuf-anim-clone';
+  clone.style.left = cardDevLeft + 'px';
+  clone.style.top  = cardDevTop  + 'px';
+  clone.style.transition = 'none';
+  clone.innerHTML = `<img src="./components/${animCfg.svg}" alt="">`;
+  overlay.appendChild(clone);
+
+  // Szuflada wrapper
+  const szufWrap = document.createElement('div');
+  szufWrap.className = 'szuf-wrap-anim';
+  szufWrap.innerHTML = `<img src="./components/szuflada.svg" alt="">`;
+
+  // Pre-populate already-done mini cards
+  const sections = JSON.parse(localStorage.getItem('bp_today_sections') || '["mood"]');
+  const SECTION_OF = { 'card-mood': 'mood', 'card-wins': 'wins', 'card-write': 'write', 'card-about': 'about' };
+  Object.entries(SZUF_CARD_CFG).forEach(([cid, cfg]) => {
+    if (cid === cardId) return;
+    const sec = SECTION_OF[cid];
+    if (!sec || !sections.includes(sec)) return;
+    const mini = document.createElement('div');
+    mini.className = 'szuf-mini';
+    mini.style.left = SZUF_COL_X[cfg.col] + 'px';
+    mini.style.top  = SZUF_ROW_Y[0] + 'px';
+    mini.innerHTML  = `<img src="./components/${cfg.svg}" alt="">`;
+    szufWrap.appendChild(mini);
+  });
+  overlay.appendChild(szufWrap);
+
+  device.appendChild(overlay);
+
+  // 1. Slide szuflada in (800ms)
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    szufWrap.style.top = SZUF_TOP_IN + 'px';
+  }));
+
+  // 2. Fly card to slot (starts at t=750ms, so it lands just after szuflada arrives)
+  setTimeout(() => {
+    clone.style.transition = 'transform 620ms cubic-bezier(0.4,0,0.15,1)';
+    clone.style.transform  = `translate(${dx}px,${dy}px) scale(${MINI_SCALE})`;
+  }, 750);
+
+  // 3. Complete card + slide szuflada out (t=1600ms)
+  setTimeout(() => {
+    afterDone();
+    updateSparks();
+    szufWrap.style.top = '900px';
+    setTimeout(() => overlay.remove(), 900);
+  }, 1600);
 }
 
 // ─── Restore state on page load ───────────────────────────────

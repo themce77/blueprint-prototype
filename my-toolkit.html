@@ -208,6 +208,71 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   text-align: center; margin: 120px 0 0;
 }
 
+/* ─── Simplified "My toolkit" (no video watched) ────────────── */
+.toolkit-simple {
+  position: absolute;
+  left: 149px; top: 50%; transform: translateY(-50%);
+  width: 997px;
+  display: flex; flex-direction: column; gap: 36px;
+}
+.tk-header-row {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tk-title-big {
+  font-family: var(--font-display); font-size: 80px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0;
+}
+.tk-mood-widget {
+  border: 1px solid #36363f; border-radius: 12px;
+  padding: 16px; display: flex; flex-direction: column;
+  align-items: center; gap: 12px; min-width: 200px;
+}
+.tk-mood-label {
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  color: #f2f3e5; opacity: 0.4; margin: 0;
+}
+.tk-mood-emotions { display: flex; gap: 20px; align-items: center; }
+.tk-mood-tile {
+  position: relative; width: 60px; height: 60px; flex-shrink: 0;
+}
+.tk-mood-tile img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: block; object-fit: contain;
+}
+.tk-mood-name {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 9px; color: #1f1f25;
+  text-align: center; letter-spacing: -0.05px;
+}
+.tk-featured-video {
+  width: 100%; height: 485px; border-radius: 20px; overflow: hidden;
+  position: relative; cursor: pointer;
+  transition: transform 140ms cubic-bezier(0.34,1.56,0.64,1);
+}
+.tk-featured-video:hover { transform: scale(1.01); }
+.btn-explore {
+  height: 48px; padding: 0 24px; align-self: center; min-width: 200px;
+  background: transparent; color: #f5f5f5;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  border-radius: 8px; border: 1px solid rgba(255,255,255,0.16);
+  cursor: pointer; letter-spacing: -0.1px;
+  box-shadow: 0 1px 1px rgba(20,21,26,0.03);
+  transition: opacity 120ms;
+}
+.btn-explore:active { opacity: 0.7; }
+
+/* ─── Explore back button ────────────────────────────────────── */
+.explore-back {
+  position: absolute; left: 24px; top: 48px;
+  width: 48px; height: 48px;
+  background: rgba(255,255,255,0.16); border: none; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 10;
+  transition: opacity 120ms;
+}
+.explore-back:active { opacity: 0.7; }
+
 </style>
 </head>
 <body>
@@ -225,7 +290,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <div class="nav-icon"><img src="./components/icon-02.svg" alt="Today"></div>
         <span class="nav-label">Today</span>
       </div>
-      <div class="nav-item">
+      <div class="nav-item" onclick="window.location.href='journal.html'">
         <div class="nav-icon"><img src="./components/icon-01.svg" alt="Journal"></div>
         <span class="nav-label">Journal</span>
       </div>
@@ -237,9 +302,9 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
         <span class="nav-label">Journey</span>
       </div>
-      <div class="nav-item">
-        <div class="nav-icon"><img src="./components/icon-05.svg" alt="School"></div>
-        <span class="nav-label">School</span>
+      <div class="nav-item" onclick="window.location.href='grades.html'">
+        <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
+        <span class="nav-label">Grades</span>
       </div>
       <div class="nav-item">
         <div class="nav-icon"><img src="./components/icon-06.svg" alt="Sparks"></div>
@@ -252,10 +317,35 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     </div>
   </nav>
 
-  <!-- Main -->
-  <main class="toolkit-main">
+  <!-- Simplified view (no video watched) -->
+  <section class="toolkit-simple" id="mainSimple" style="display:none">
+    <div class="tk-header-row">
+      <h1 class="tk-title-big">My toolkit</h1>
+      <div class="tk-mood-widget" id="moodWidget"></div>
+    </div>
 
-    <h1 class="toolkit-title">My toolkit</h1>
+    <div class="tk-featured-video" onclick="window.location.href='toolkit-video.html'">
+      <div class="video-tile-bg"><img src="./components/video-thumbnail.jpg" alt="" style="object-fit:cover;"></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(182deg,rgba(0,0,0,0) 44%,rgba(0,0,0,0.5) 84%);"></div>
+      <div class="heart-btn" data-vid="vfeatured" onclick="event.stopPropagation();toggleHeart(this)" style="z-index:2">
+        <img src="./components/heart-default.svg" alt="save">
+      </div>
+      <div class="video-info" style="z-index:2">
+        <div class="video-meta">
+          <span class="video-duration">1:07</span>
+          <span class="video-sparks">1 <img src="./components/spark.svg" alt="spark"></span>
+        </div>
+        <p class="video-title">Jim Kwik: A small simple step</p>
+      </div>
+    </div>
+
+    <button class="btn-explore" onclick="goExplore()">Explore</button>
+  </section>
+
+  <!-- Full toolkit view -->
+  <main class="toolkit-main" id="mainFull" style="display:none">
+
+    <h1 class="toolkit-title" id="toolkitTitle">My toolkit</h1>
 
     <div class="filter-row">
       <button class="filter-pill" onclick="setFilter('doitagain', this)">Do it again</button>
@@ -269,7 +359,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <div class="video-row">
 
         <div class="video-tile" style="background:#d5e9de;">
-          <div class="video-tile-bg"><img src="./components/carousel-01.svg" alt=""></div>
+          <div class="video-tile-bg"><img src="./components/video-thumbnail.jpg" alt="" style="object-fit:cover;"></div>
           <div class="heart-btn" data-vid="v1" onclick="toggleHeart(this)">
             <img src="./components/heart-default.svg" alt="save">
           </div>
@@ -391,6 +481,65 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 </div>
 
 <script>
+// ─── Decide which view to show ────────────────────────────────
+(function() {
+  const params       = new URLSearchParams(location.search);
+  const videoWatched = localStorage.getItem('bp_video_watched') === '1' && params.get('preview') !== 'simple';
+  const exploreMode  = params.get('explore') === '1';
+
+  if (videoWatched || exploreMode) {
+    const mainFull = document.getElementById('mainFull');
+    mainFull.style.display = '';
+
+    if (exploreMode) {
+      // Hide sidebar, show back button, center layout
+      document.querySelector('.today-sidebar').style.display = 'none';
+
+      const backBtn = document.createElement('button');
+      backBtn.className = 'explore-back';
+      backBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15.8334L6.66667 10L12.5 4.16669" stroke="#f2f3e5" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      backBtn.onclick = () => history.back();
+      document.getElementById('device').appendChild(backBtn);
+
+      // Center the main content, start from top
+      mainFull.style.left      = '50%';
+      mainFull.style.top       = '52px';
+      mainFull.style.transform = 'translateX(-50%)';
+      mainFull.style.width     = '994px';
+      mainFull.style.gap       = '48px';
+
+      const title = document.getElementById('toolkitTitle');
+      title.textContent      = 'Explore';
+      title.style.fontSize   = '80px';
+      title.style.letterSpacing = '1.5px';
+      title.style.margin     = '0';
+    }
+  } else {
+    document.getElementById('mainSimple').style.display = '';
+    renderMoodWidget();
+  }
+
+  function renderMoodWidget() {
+    const emotions = JSON.parse(localStorage.getItem('bp_mood_emotions') || '[]');
+    const el = document.getElementById('moodWidget');
+    if (!el) return;
+    if (!emotions.length) { el.style.display = 'none'; return; }
+    el.innerHTML = `
+      <p class="tk-mood-label">Today mood</p>
+      <div class="tk-mood-emotions">
+        ${emotions.slice(0, 3).map(e => `
+          <div class="tk-mood-tile">
+            <img src="./components/emotion-${e.toLowerCase()}.svg" alt="${e}">
+            <span class="tk-mood-name">${e.toUpperCase()}</span>
+          </div>`).join('')}
+      </div>`;
+  }
+})();
+
+function goExplore() {
+  window.location.href = 'my-toolkit.html?explore=1';
+}
+
 function scale() {
   const s = Math.min(innerWidth / 1194, innerHeight / 834) * 0.96;
   document.getElementById('device').style.setProperty('--s', s);
@@ -398,7 +547,7 @@ function scale() {
 scale(); addEventListener('resize', scale);
 
 (function() {
-  const src = localStorage.getItem('bp_avatar_src');
+  const src = localStorage.getItem('bp_avatar');
   const bg  = localStorage.getItem('bp_avatar_bg');
   const el  = document.getElementById('userAvatar');
   if (src && el) {

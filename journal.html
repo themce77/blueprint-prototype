@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint — Journal</title>
+<link rel="stylesheet" href="./foundations/tokens.css">
+<style>
+
+body { background: #0a0a0f; overflow: hidden; margin: 0; }
+.bp-stage { position: fixed; inset: 0; display: grid; place-items: center; }
+.bp-device {
+  width: 1194px; height: 834px; position: relative; overflow: hidden;
+  border-radius: 20px; transform-origin: center center;
+  transform: scale(var(--s,1)); background: #1f1f25;
+}
+
+/* ─── Status bar ────────────────────────────────────────────── */
+.sb {
+  position: absolute; top: 0; left: 0; right: 0; height: 24px; z-index: 30;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.9); pointer-events: none;
+}
+
+/* ─── Sidebar ───────────────────────────────────────────────── */
+.today-sidebar {
+  position: absolute;
+  left: 24px; top: 50%; transform: translateY(-50%);
+  width: 80px; height: 786px;
+  background: #2b2b32; border-radius: 20px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: space-between;
+  padding: 24px 8px; box-sizing: border-box;
+  z-index: 20;
+}
+.sidebar-logo {
+  font-family: var(--font-display); font-size: 16px; color: #8e8b85;
+  text-transform: uppercase; text-align: center; letter-spacing: 0.5px;
+  height: 52px; display: flex; align-items: center; justify-content: center; width: 100%;
+}
+.sidebar-nav { display: flex; flex-direction: column; gap: 12px; }
+.nav-item {
+  width: 64px; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 12px; padding: 8px 0; cursor: pointer;
+  transition: background 140ms;
+}
+.nav-item.active { background: #1f1f25; }
+.nav-item:not(.active):hover { background: rgba(255,255,255,0.05); }
+.nav-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.nav-icon img { width: 24px; height: 24px; display: block; }
+.nav-item.active .nav-icon img { filter: brightness(0) invert(1); }
+.nav-label {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #a4a59f; text-align: center; width: 64px;
+  line-height: 16px;
+}
+.nav-item.active .nav-label { color: #f2f3e5; }
+.sidebar-user { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.user-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #b8c0ed; border: 2px solid #36363f;
+  overflow: hidden; display: grid; place-items: center; font-size: 10px;
+  box-sizing: border-box;
+}
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.user-name {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #a4a59f; text-align: center; width: 64px;
+}
+
+/* ─── Page title ────────────────────────────────────────────── */
+.page-title {
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  top: 51px;
+  font-family: var(--font-display); font-size: 80px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; text-align: center;
+  margin: 0; pointer-events: none;
+}
+
+/* ─── Content layout ────────────────────────────────────────── */
+.journal-content {
+  position: absolute;
+  left: 149px; top: 50%; transform: translateY(-50%);
+  display: flex; gap: 32px; align-items: flex-start;
+}
+
+/* ─── Left column ───────────────────────────────────────────── */
+.col-left { width: 675px; display: flex; flex-direction: column; gap: 20px; }
+#qAnswerCards { display: flex; flex-direction: column; gap: 20px; }
+
+.section-label {
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: rgba(242,243,229,0.4); letter-spacing: -0.1px;
+}
+
+/* Purple CTA card (no entry) */
+.write-cta-card {
+  width: 675px; height: 315px; border-radius: 20px;
+  background: #c4a3ff; position: relative; overflow: hidden;
+  cursor: pointer; transition: opacity 120ms;
+}
+.write-cta-card:active { opacity: 0.9; }
+.write-cta-monster {
+  position: absolute; left: 7.5px; top: 50%; transform: translateY(-50%);
+  width: 291px; height: 291px; overflow: hidden;
+  pointer-events: none;
+}
+.write-cta-monster img {
+  width: 243px; height: 249px;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+.write-cta-box {
+  position: absolute; bottom: 12px; right: 12px;
+  width: 164px; height: 96px;
+  background: #36363f; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 12px;
+}
+.write-cta-spark {
+  display: flex; align-items: center; gap: 4px;
+  font-family: var(--font-body); font-size: 18px; font-weight: 700;
+  color: #f2f3e5; letter-spacing: -0.2px;
+}
+.write-cta-spark img { width: 16px; height: 16px; display: block; }
+.write-cta-label {
+  font-family: var(--font-display); font-size: 24px; line-height: 1.12;
+  color: #f2f3e5; letter-spacing: -0.4px; text-align: center;
+}
+
+/* Note card (with entry) */
+.note-card-today {
+  width: 675px; border-radius: 12px;
+  background: #36363f; border: 1px solid #444450;
+  padding: 24px; box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 24px;
+}
+.note-question {
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #a4a59f; letter-spacing: -0.1px; margin: 0;
+}
+.note-answer {
+  font-family: var(--font-body); font-size: 20px; font-weight: 700;
+  color: #f2f3e5; line-height: 1.1; letter-spacing: -0.4px; margin: 0;
+}
+.note-card-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding-bottom: 12px; border-bottom: 1px solid #737472;
+}
+.note-card-date {
+  font-family: var(--font-body); font-size: 18px; font-weight: 700;
+  color: #737472; letter-spacing: -0.2px;
+}
+.note-card-edit {
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #f2f3e5; letter-spacing: -0.1px; text-decoration: underline;
+  cursor: pointer; background: none; border: none; padding: 0;
+}
+.note-card-text {
+  font-family: var(--font-body); font-size: 20px; font-weight: 700;
+  color: #f2f3e5; line-height: 1.1; letter-spacing: -0.4px;
+  word-break: break-word; margin: 0;
+}
+
+/* Past notes card */
+.past-notes-card {
+  width: 675px; height: 104px; border-radius: 12px;
+  background: #1f1f25; border: 1px solid #36363f;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; box-sizing: border-box;
+  cursor: pointer; transition: background 120ms;
+}
+.past-notes-card:hover { background: #252530; }
+.past-notes-info { display: flex; flex-direction: column; gap: 12px; }
+.past-notes-title {
+  font-family: var(--font-body); font-size: 18px; font-weight: 700;
+  color: #f2f3e5; letter-spacing: -0.2px;
+}
+.past-notes-meta {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #737472; letter-spacing: -0.1px;
+}
+.past-notes-dot {
+  width: 4px; height: 4px; border-radius: 50%; background: #737472; flex-shrink: 0;
+}
+.past-notes-arrow {
+  width: 48px; height: 48px; border-radius: 8px;
+  background: rgba(255,255,255,0.16);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ─── Right column ──────────────────────────────────────────── */
+.col-right { width: 290px; display: flex; flex-direction: column; gap: 20px; }
+
+.col-right .section-label { text-align: center; }
+
+.questions-list { display: flex; flex-direction: column; gap: 12px; padding: 0 35px; }
+
+.question-circle {
+  width: 220px; height: 220px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  padding: 36px; box-sizing: border-box;
+  cursor: pointer; transition: opacity 120ms;
+}
+.question-circle:active { opacity: 0.85; }
+.question-circle-blue { background: #3f50b8; }
+.question-circle-coral { background: #e65800; }
+.question-text {
+  font-family: var(--font-body); font-size: 20px; font-weight: 700;
+  color: #f2f3e5; line-height: 1.1; letter-spacing: -0.4px; text-align: center;
+}
+
+</style>
+</head>
+<body>
+
+<div class="bp-stage">
+<div class="bp-device" id="device">
+
+  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+
+  <!-- Sidebar -->
+  <nav class="today-sidebar">
+    <div class="sidebar-logo">Sparkz</div>
+    <div class="sidebar-nav">
+      <div class="nav-item" onclick="window.location.href='today.html'">
+        <div class="nav-icon"><img src="./components/icon-02.svg" alt="Today"></div>
+        <span class="nav-label">Today</span>
+      </div>
+      <div class="nav-item active">
+        <div class="nav-icon"><img src="./components/icon-01.svg" alt="Journal"></div>
+        <span class="nav-label">Journal</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='my-toolkit.html'">
+        <div class="nav-icon"><img src="./components/icon-03.svg" alt="My toolkit"></div>
+        <span class="nav-label">My toolkit</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
+        <span class="nav-label">Journey</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='grades.html'">
+        <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
+        <span class="nav-label">Grades</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-06.svg" alt="Sparks"></div>
+        <span class="nav-label">Sparks</span>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="userAvatar">😊</div>
+      <span class="user-name">Sophie</span>
+    </div>
+  </nav>
+
+  <h1 class="page-title">Journal</h1>
+
+  <!-- Content -->
+  <div class="journal-content">
+
+    <!-- Left column -->
+    <div class="col-left">
+      <span class="section-label">Notes</span>
+
+      <!-- Question answer cards — shown when questions are answered -->
+      <div id="qAnswerCards"></div>
+
+      <!-- Purple CTA card — shown when no write-it-out entry -->
+      <div class="write-cta-card" id="writeCta" onclick="window.location.href='write-it-out.html?from=journal'">
+        <div class="write-cta-monster">
+          <img src="./components/monster-butterfly.svg" alt="">
+        </div>
+        <div class="write-cta-box">
+          <div class="write-cta-spark">
+            1 <img src="./components/spark.svg" alt="spark">
+          </div>
+          <span class="write-cta-label">Write it out</span>
+        </div>
+      </div>
+
+      <!-- Today's note card — shown when write-it-out is done -->
+      <div class="note-card-today" id="noteCard" style="display:none">
+        <div class="note-card-header">
+          <span class="note-card-date">Today</span>
+          <button class="note-card-edit" onclick="window.location.href='write-it-out.html?from=journal'">Edit</button>
+        </div>
+        <p class="note-card-text" id="noteText"></p>
+      </div>
+
+      <!-- Past notes card (always visible) -->
+      <div class="past-notes-card" onclick="window.location.href='journal-past-notes.html'" style="cursor:pointer;">
+        <div class="past-notes-info">
+          <span class="past-notes-title">Past notes</span>
+          <div class="past-notes-meta">
+            <span>5 entries this month</span>
+            <div class="past-notes-dot"></div>
+            <span>35 all entries</span>
+          </div>
+        </div>
+        <div class="past-notes-arrow">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M7.5 4.16669L13.3333 10L7.5 15.8334" stroke="#f2f3e5" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div class="col-right">
+      <span class="section-label">Topics to write about</span>
+      <div class="questions-list" id="questionsList">
+        <div class="question-circle question-circle-blue" data-qkey="bp_journal_q1" onclick="window.location.href='journal-question.html?q=1'">
+          <p class="question-text">What kinds of moments or things tend to lift your mood — even a little?</p>
+        </div>
+        <div class="question-circle question-circle-coral" data-qkey="bp_journal_q2" onclick="window.location.href='journal-question.html?q=2'">
+          <p class="question-text">What's making you feel this excited?</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<script>
+function scale() {
+  const s = Math.min(innerWidth / 1194, innerHeight / 834) * 0.96;
+  const dev = document.getElementById('device');
+  dev.style.setProperty('--s', s);
+  dev.style.transform = 'scale(' + s + ')';
+}
+scale(); addEventListener('resize', scale);
+
+// Show note or CTA based on write-it-out state
+(function() {
+  const text = localStorage.getItem('bp_write_text');
+  const done = localStorage.getItem('bp_write_done') === '1';
+
+  if (done && text) {
+    document.getElementById('writeCta').style.display = 'none';
+    document.getElementById('noteCard').style.display = '';
+    document.getElementById('noteText').textContent = text;
+  }
+})();
+
+// Order circles + render answer cards
+(function() {
+  var QUESTIONS = [
+    { key: ‘bp_journal_q1’, text: ‘What kinds of moments or things tend to lift your mood — even a little?’ },
+    { key: ‘bp_journal_q2’, text: "What’s making you feel this excited?" }
+  ];
+
+  // Circles: move answered ones to end + dim
+  var list = document.getElementById(‘questionsList’);
+  var circles = list.querySelectorAll(‘.question-circle’);
+  for (var i = 0; i < circles.length; i++) {
+    var el = circles[i];
+    var key = el.getAttribute(‘data-qkey’);
+    if (localStorage.getItem(key)) {
+      el.style.opacity = ‘0.2’;
+      list.appendChild(el);
+    }
+  }
+
+  // Answer cards in left column
+  var container = document.getElementById(‘qAnswerCards’);
+  var hasCards = false;
+  for (var j = 0; j < QUESTIONS.length; j++) {
+    var q = QUESTIONS[j];
+    var answer = localStorage.getItem(q.key);
+    if (!answer) continue;
+    hasCards = true;
+    var card = document.createElement(‘div’);
+    card.className = ‘note-card-today’;
+    card.innerHTML =
+      ‘<div class="note-card-header"><span class="note-card-date">Today</span></div>’ +
+      ‘<p class="note-question">’ + q.text + ‘</p>’ +
+      ‘<p class="note-answer">’ + answer + ‘</p>’;
+    container.appendChild(card);
+  }
+  if (!hasCards) container.style.display = ‘none’;
+})();
+
+// Load avatar
+(function() {
+  const src = localStorage.getItem('bp_avatar');
+  const bg  = localStorage.getItem('bp_avatar_bg');
+  const el  = document.getElementById('userAvatar');
+  if (src && el) {
+    if (bg) el.style.background = bg;
+    el.innerHTML = '<img src="' + src + '" alt="avatar">';
+  }
+})();
+</script>
+</body>
+</html>
