@@ -948,7 +948,7 @@ function whyNext()  {
     : "Showing up in a hard moment counts";
   goTo('s-support');
 }
-function skipVideo() { goTo('s-sleep'); }
+function skipVideo() { localStorage.removeItem('bp_video_watched'); goTo('s-sleep'); }
 function goBackFromSleep() { goTo('wh-0'); }
 
 // ─── Support copy helper ──────────────────────────────────────

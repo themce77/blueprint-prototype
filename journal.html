@@ -84,12 +84,12 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 /* ─── Content layout ────────────────────────────────────────── */
 .journal-content {
   position: absolute;
-  left: 149px; top: 50%; transform: translateY(-50%);
+  left: 163px; top: 201px;
   display: flex; gap: 32px; align-items: flex-start;
 }
 
 /* ─── Left column ───────────────────────────────────────────── */
-.col-left { width: 675px; display: flex; flex-direction: column; gap: 20px; }
+.col-left { width: 658px; display: flex; flex-direction: column; gap: 20px; }
 #qAnswerCards { display: flex; flex-direction: column; gap: 20px; }
 
 .section-label {
@@ -99,7 +99,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* Purple CTA card (no entry) */
 .write-cta-card {
-  width: 675px; height: 315px; border-radius: 20px;
+  width: 658px; height: 315px; border-radius: 20px;
   background: #c4a3ff; position: relative; overflow: hidden;
   cursor: pointer; transition: opacity 120ms;
 }
@@ -133,7 +133,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* Note card (with entry) */
 .note-card-today {
-  width: 675px; border-radius: 12px;
+  width: 658px; border-radius: 12px;
   background: #36363f; border: 1px solid #444450;
   padding: 24px; box-sizing: border-box;
   display: flex; flex-direction: column; gap: 24px;
@@ -167,7 +167,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* Past notes card */
 .past-notes-card {
-  width: 675px; height: 104px; border-radius: 12px;
+  width: 658px; height: 104px; border-radius: 12px;
   background: #1f1f25; border: 1px solid #36363f;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 24px; box-sizing: border-box;
@@ -195,11 +195,11 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 
 /* ─── Right column ──────────────────────────────────────────── */
-.col-right { width: 290px; display: flex; flex-direction: column; gap: 20px; }
+.col-right { width: 282px; display: flex; flex-direction: column; gap: 20px; }
 
 .col-right .section-label { text-align: center; }
 
-.questions-list { display: flex; flex-direction: column; gap: 12px; padding: 0 35px; }
+.questions-list { display: flex; flex-direction: column; gap: 12px; padding: 0 31px; }
 
 .question-circle {
   width: 220px; height: 220px; border-radius: 50%;
@@ -332,11 +332,12 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 <script>
 function scale() {
   const s = Math.min(innerWidth / 1194, innerHeight / 834) * 0.96;
-  const dev = document.getElementById('device');
-  dev.style.setProperty('--s', s);
-  dev.style.transform = 'scale(' + s + ')';
+  document.getElementById('device').style.setProperty('--s', s);
 }
-scale(); addEventListener('resize', scale);
+scale();
+addEventListener('resize', scale);
+addEventListener('pageshow', scale);
+addEventListener('focus', scale);
 
 // Show note or CTA based on write-it-out state
 (function() {

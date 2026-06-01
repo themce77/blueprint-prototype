@@ -289,8 +289,7 @@ function saveSurvey() {
   if (!selectedBtn) return;
   localStorage.setItem('bp_about_emoji', selectedBtn.textContent.trim());
   localStorage.setItem('bp_about_done', '1');
-  goTo('s-done');
-  setTimeout(() => { window.location.href = 'today.html'; }, 2500);
+  setTimeout(() => { window.location.href = 'completed.html?card=about'; }, 400);
 }
 
 // Pre-fill if returning to edit

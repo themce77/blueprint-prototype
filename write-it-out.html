@@ -280,11 +280,11 @@ function onInput() {
 function saveNote() {
   const val = document.getElementById('noteInput').value.trim();
   localStorage.setItem('bp_write_text', val);
-  goTo('s-done');
   localStorage.setItem('bp_write_done', '1');
+  const from = new URLSearchParams(location.search).get('from');
   setTimeout(() => {
-    window.location.href = 'today.html';
-  }, 2500);
+    window.location.href = 'completed.html?card=write' + (from ? '&from=' + from : '');
+  }, 400);
 }
 
 // Pre-fill if editing

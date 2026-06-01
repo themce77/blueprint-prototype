@@ -314,11 +314,10 @@ function saveNote() {
   const val = document.getElementById('noteInput').value.trim();
   localStorage.setItem('bp_wins_note', val);
   localStorage.setItem('bp_wins_question', "What's one small thing that happened this week that made you smile — even briefly?");
-  goTo('s-done');
   localStorage.setItem('bp_wins_done', '1');
   setTimeout(() => {
-    window.location.href = 'today.html';
-  }, 2500);
+    window.location.href = 'completed.html?card=wins';
+  }, 400);
 }
 
 // Edit mode: pre-fill textarea if returning to edit
