@@ -154,11 +154,20 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 
 /* States */
-.t-card.sleepy      { cursor: default; }
+.t-card.sleepy      { cursor: pointer; }
+.t-card.sleepy:hover { transform: scale(1.025); }
 .t-card.recommended { cursor: pointer; }
 .t-card.recommended:hover { transform: scale(1.025); }
 .t-card.done        { cursor: pointer; }
 .t-card.done:hover  { transform: scale(1.025); }
+
+/* Eye overlay — always rendered, ry controls open/close */
+.eye-overlay {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 3;
+}
+.t-card.done .eye-overlay { display: none; }
 
 /* ─── Footer ────────────────────────────────────────────────── */
 .today-footer { display: flex; justify-content: center; }
@@ -336,19 +345,49 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
     <div class="today-cards" id="cardRow">
 
-      <!-- Write it out — sleepy (not yet active) -->
+      <!-- Notice your wins — sleepy -->
+      <div class="t-card sleepy" id="card-wins">
+        <img class="card-img" src="./components/sleepy-1.svg" alt="Notice your wins">
+        <svg class="eye-overlay" viewBox="0 0 237 353" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="cp-wins-L"><ellipse cx="101" cy="112.801" rx="13.4" ry="17.866"/></clipPath>
+            <clipPath id="cp-wins-R"><ellipse cx="137" cy="112.801" rx="13.4" ry="17.866"/></clipPath>
+          </defs>
+          <ellipse id="ew-wins-L" cx="101" cy="112.801" rx="13.4" ry="0" fill="#F2F3E5"/>
+          <circle  id="p-wins-L"  cx="101" cy="119.8"   r="0" fill="#2B2B32" clip-path="url(#cp-wins-L)"/>
+          <ellipse id="ew-wins-R" cx="137" cy="112.801" rx="13.4" ry="0" fill="#F2F3E5"/>
+          <circle  id="p-wins-R"  cx="137" cy="119.8"   r="0" fill="#2B2B32" clip-path="url(#cp-wins-R)"/>
+        </svg>
+      </div>
+
+      <!-- Write it out — sleepy -->
       <div class="t-card sleepy" id="card-write">
-        <img class="card-img" src="./components/Write-i-o-01.svg" alt="Write it out">
+        <img class="card-img" src="./components/sleepy-2.svg" alt="Write it out">
+        <svg class="eye-overlay" viewBox="0 0 237 353" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="cp-write-L"><ellipse cx="101" cy="112.801" rx="13.4" ry="17.866"/></clipPath>
+            <clipPath id="cp-write-R"><ellipse cx="137" cy="112.801" rx="13.4" ry="17.866"/></clipPath>
+          </defs>
+          <ellipse id="ew-write-L" cx="101" cy="112.801" rx="13.4" ry="0" fill="#F2F3E5"/>
+          <circle  id="p-write-L"  cx="101" cy="119.8"   r="0" fill="#2B2B32" clip-path="url(#cp-write-L)"/>
+          <ellipse id="ew-write-R" cx="137" cy="112.801" rx="13.4" ry="0" fill="#F2F3E5"/>
+          <circle  id="p-write-R"  cx="137" cy="119.8"   r="0" fill="#2B2B32" clip-path="url(#cp-write-R)"/>
+        </svg>
       </div>
 
       <!-- All about you — sleepy -->
       <div class="t-card sleepy" id="card-about">
-        <img class="card-img" src="./components/All-a-y-01.svg" alt="All about you">
-      </div>
-
-      <!-- Notice your wins — recommended (first priority) -->
-      <div class="t-card recommended" id="card-wins" onclick="openFlow('notice-wins.html')">
-        <img class="card-img" src="./components/Notice-y-w-02.svg" alt="Notice your wins">
+        <img class="card-img" src="./components/sleepy-3.svg" alt="All about you">
+        <svg class="eye-overlay" viewBox="0 0 237 353" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="cp-about-L"><ellipse cx="101" cy="112.801" rx="13.4" ry="17.866"/></clipPath>
+            <clipPath id="cp-about-R"><ellipse cx="137" cy="112.801" rx="13.4" ry="17.866"/></clipPath>
+          </defs>
+          <ellipse id="ew-about-L" cx="101" cy="112.801" rx="13.4" ry="0" fill="#F2F3E5"/>
+          <circle  id="p-about-L"  cx="101" cy="119.8"   r="0" fill="#2B2B32" clip-path="url(#cp-about-L)"/>
+          <ellipse id="ew-about-R" cx="137" cy="112.801" rx="13.4" ry="0" fill="#F2F3E5"/>
+          <circle  id="p-about-R"  cx="137" cy="119.8"   r="0" fill="#2B2B32" clip-path="url(#cp-about-R)"/>
+        </svg>
       </div>
 
       <!-- Mood check-in — done (completed in mood flow) -->
@@ -513,9 +552,9 @@ document.getElementById('winsOvBack').addEventListener('click', () => {
 
 // ─── Card config ──────────────────────────────────────────────
 const CARD_CFG = {
-  'card-wins':  { svg: 'Notice-y-w',  flow: 'notice-wins.html',  overlay: 'openWinsOverlay()', section: 'wins'  },
-  'card-write': { svg: 'Write-i-o',   flow: 'write-it-out.html',                                section: 'write' },
-  'card-about': { svg: 'All-a-y',     flow: 'all-about-you.html',                               section: 'about' },
+  'card-wins':  { svg: 'Notice-y-w',  sleepySvg: 'sleepy-1', flow: 'notice-wins.html',  overlay: 'openWinsOverlay()', section: 'wins'  },
+  'card-write': { svg: 'Write-i-o',   sleepySvg: 'sleepy-2', flow: 'write-it-out.html',                               section: 'write' },
+  'card-about': { svg: 'All-a-y',     sleepySvg: 'sleepy-3', flow: 'all-about-you.html',                              section: 'about' },
 };
 
 // Priority queue: wins first, then write, then about
@@ -536,17 +575,20 @@ function setCardState(id, state) {
   if (!card || !img || !cfg) return;
 
   card.className = 't-card ' + state;
+  if (state === 'sleepy') {
+    img.src = `./components/${cfg.sleepySvg}.svg`;
+  } else {
+    const suffixMap = { recommended: '02', done: '04' };
+    img.src = `./components/${cfg.svg}-${suffixMap[state]}.svg`;
+  }
 
-  const suffixMap = { sleepy: '01', recommended: '02', done: '04' };
-  img.src = `./components/${cfg.svg}-${suffixMap[state]}.svg`;
-
-  if (state === 'recommended') {
+  if (state === 'sleepy') {
     card.setAttribute('onclick', `openFlow('${cfg.flow}')`);
   } else if (state === 'done') {
     if (cfg.overlay) card.setAttribute('onclick', cfg.overlay);
     else             card.setAttribute('onclick', `openFlow('${cfg.flow}')`);
   } else {
-    card.removeAttribute('onclick');
+    card.setAttribute('onclick', `openFlow('${cfg.flow}')`);
   }
 }
 
@@ -556,31 +598,16 @@ function completeCard(id) {
 
   setCardState(id, 'done');
 
-  // Move done card to end of row
   const row = document.getElementById('cardRow');
   row.appendChild(card);
 
-  // Track in sessionStorage (persists across page navigations in this tab)
   const sd = JSON.parse(sessionStorage.getItem('bp_session_done') || '[]');
   if (!sd.includes(id)) { sd.push(id); sessionStorage.setItem('bp_session_done', JSON.stringify(sd)); }
 
-  // Track for summary.html
   const cfg = CARD_CFG[id];
   if (cfg && cfg.section) {
     const done = JSON.parse(localStorage.getItem('bp_today_sections') || '["mood"]');
     if (!done.includes(cfg.section)) { done.push(cfg.section); localStorage.setItem('bp_today_sections', JSON.stringify(done)); }
-  }
-
-  // Promote next queue card: sleepy → recommended, reposition before first done
-  const idx = queue.indexOf(id);
-  if (idx >= 0 && idx + 1 < queue.length) {
-    const nextId  = queue[idx + 1];
-    const nextCard = document.getElementById(nextId);
-    if (nextCard && !nextCard.classList.contains('done')) {
-      setCardState(nextId, 'recommended');
-      const firstDone = row.querySelector('.t-card.done');
-      if (firstDone) row.insertBefore(nextCard, firstDone);
-    }
   }
 
   checkAllDone();
@@ -590,9 +617,9 @@ function checkAllDone() {
   const cards = document.querySelectorAll('#cardRow .t-card');
   const allDone = [...cards].every(c => c.classList.contains('done'));
   if (!allDone) return;
-  document.getElementById('greetTitle').textContent = 'All collected!';
-  document.getElementById('greetSub').textContent   = 'Today completed';
-  document.getElementById('greetSub').style.color   = '#4ecb9e';
+  document.getElementById('greetTitle').textContent = 'Today completed';
+  document.getElementById('greetSub').textContent   = 'All four are awake. See you tomorrow.';
+  document.getElementById('greetSub').style.color   = '#a4a59f';
 }
 
 // ─── Restore state on page load ───────────────────────────────
@@ -602,14 +629,20 @@ const doneFlags = {
   'bp_about_done': 'card-about',
 };
 
-// If no incoming completion flag → fresh demo run → clear session
-const hasIncomingFlag = Object.keys(doneFlags).some(f => localStorage.getItem(f) === '1');
-if (!hasIncomingFlag) sessionStorage.removeItem('bp_session_done');
+// Wire up onclick for all sleepy cards (HTML has no onclick by default)
+['card-wins', 'card-write', 'card-about'].forEach(id => {
+  const card = document.getElementById(id);
+  if (card && card.classList.contains('sleepy')) setCardState(id, 'sleepy');
+});
 
-// Restore from session (handles navigating back from a flow mid-session)
+// Coming back from mood check-in → fresh start, clear previous session queue
+if (localStorage.getItem('bp_fresh_start') === '1') {
+  localStorage.removeItem('bp_fresh_start');
+  sessionStorage.removeItem('bp_session_done');
+}
+
+// Restore cards done earlier in this tab session (keeps queue order across navigation)
 const sessionDone = JSON.parse(sessionStorage.getItem('bp_session_done') || '[]');
-
-// Apply done states silently (no animation, no queue promotion — state was already set)
 sessionDone.forEach(id => {
   const card = document.getElementById(id);
   const cfg  = CARD_CFG[id];
@@ -618,20 +651,7 @@ sessionDone.forEach(id => {
   document.getElementById('cardRow').appendChild(card);
 });
 
-// After restoring done cards, promote the next pending card to recommended
-const firstPending = queue.find(id => {
-  const c = document.getElementById(id);
-  return c && !c.classList.contains('done');
-});
-if (firstPending) {
-  const firstDone = document.querySelector('#cardRow .t-card.done');
-  setCardState(firstPending, 'recommended');
-  if (firstDone) document.getElementById('cardRow').insertBefore(
-    document.getElementById(firstPending), firstDone
-  );
-}
-
-// Handle returns from flows (localStorage flags set by the flow pages)
+// Process one-time flags set by flow pages, then clear them
 Object.entries(doneFlags).forEach(([flag, cardId]) => {
   if (localStorage.getItem(flag) !== '1') return;
   localStorage.removeItem(flag);
@@ -640,6 +660,98 @@ Object.entries(doneFlags).forEach(([flag, cardId]) => {
 
 checkAllDone();
 updateSparks();
+
+// ─── Eye open/close animation on hover ────────────────────────
+const EYE_REST = {
+  wins:  { L: [101, 119.8], R: [137, 119.8], ry: 17.866 },
+  write: { L: [101, 119.8], R: [137, 119.8], ry: 17.866 },
+  about: { L: [101, 119.8], R: [137, 119.8], ry: 17.866 },
+};
+const WANDER_MAX = 2.2;
+let eyeCx = 0, eyeCy = 0, eyeTx = 0, eyeTy = 0;
+let hoveredSlug = null;
+
+function pickWanderTarget() {
+  const angle = Math.random() * Math.PI * 2;
+  const dist  = Math.random() * WANDER_MAX;
+  eyeTx = Math.cos(angle) * dist;
+  eyeTy = Math.sin(angle) * dist;
+  setTimeout(pickWanderTarget, 1000 + Math.random() * 2200);
+}
+pickWanderTarget();
+
+(function eyeRaf() {
+  if (hoveredSlug) {
+    eyeCx += (eyeTx - eyeCx) * 0.04;
+    eyeCy += (eyeTy - eyeCy) * 0.04;
+    const rest = EYE_REST[hoveredSlug];
+    if (rest) {
+      ['L', 'R'].forEach(side => {
+        const p = document.getElementById(`p-${hoveredSlug}-${side}`);
+        if (p && parseFloat(p.getAttribute('r')) > 5) {
+          p.setAttribute('cx', rest[side][0] + eyeCx);
+          p.setAttribute('cy', rest[side][1] + eyeCy);
+        }
+      });
+    }
+  } else {
+    eyeCx += (0 - eyeCx) * 0.1;
+    eyeCy += (0 - eyeCy) * 0.1;
+  }
+  requestAnimationFrame(eyeRaf);
+})();
+
+function tween(from, to, ms, ease, onUpdate, onDone) {
+  const t0 = performance.now();
+  (function step(now) {
+    const p = Math.min((now - t0) / ms, 1);
+    onUpdate(from + (to - from) * ease(p));
+    if (p < 1) requestAnimationFrame(step);
+    else if (onDone) onDone();
+  })(t0);
+}
+const easeIn  = p => p * p * p;
+const easeOut = p => 1 - Math.pow(1 - p, 3);
+
+function openEyes(slug) {
+  const restRy = EYE_REST[slug].ry;
+  ['L', 'R'].forEach(side => {
+    const ew = document.getElementById(`ew-${slug}-${side}`);
+    const pu = document.getElementById(`p-${slug}-${side}`);
+    if (!ew || !pu) return;
+    const fromRy = parseFloat(ew.getAttribute('ry')) || 0;
+    tween(fromRy, restRy, 480, easeOut, v => {
+      ew.setAttribute('ry', v);
+      pu.setAttribute('r', v > restRy * 0.5 ? 9.38 : 0);
+    });
+  });
+}
+
+function closeEyes(slug) {
+  const restRy = EYE_REST[slug].ry;
+  ['L', 'R'].forEach(side => {
+    const ew = document.getElementById(`ew-${slug}-${side}`);
+    const pu = document.getElementById(`p-${slug}-${side}`);
+    if (!ew || !pu) return;
+    const fromRy = parseFloat(ew.getAttribute('ry')) || restRy;
+    pu.setAttribute('r', 0);
+    tween(fromRy, 0, 320, easeIn, v => ew.setAttribute('ry', v));
+  });
+}
+
+['wins', 'write', 'about'].forEach(slug => {
+  const card = document.getElementById('card-' + slug);
+  if (!card) return;
+  card.addEventListener('mouseenter', () => {
+    if (!card.classList.contains('sleepy')) return;
+    hoveredSlug = slug;
+    openEyes(slug);
+  });
+  card.addEventListener('mouseleave', () => {
+    if (hoveredSlug === slug) hoveredSlug = null;
+    closeEyes(slug);
+  });
+});
 </script>
 </body>
 </html>

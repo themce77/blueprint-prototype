@@ -822,6 +822,7 @@ function finishMoodCheckin() {
   done.classList.add('done-exiting');
   setTimeout(() => {
     localStorage.setItem('bp_mood_done', '1');
+    localStorage.setItem('bp_fresh_start', '1');
     window.location.href = 'today.html';
   }, 700);
 }

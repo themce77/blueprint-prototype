@@ -60,13 +60,28 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* ─── Content area ──────────────────────────────────────────────── */
 .sum-content {
-  position: absolute; top: 166px; left: 100px; width: 994px; bottom: 24px;
+  position: absolute; top: 166px; left: 100px; width: 994px; bottom: 80px;
+  overflow: hidden;
 }
 
 /* ─── Grid ──────────────────────────────────────────────────────── */
 .sum-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px; height: 100%;
 }
+
+/* ─── View collection button ────────────────────────────────────── */
+.sum-collection-btn {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 50;
+  padding: 13px 28px; white-space: nowrap;
+  background: #2b2b32; border: 1px solid #444450;
+  border-radius: 10px; cursor: pointer;
+  font-family: var(--font-body); font-size: 15px; font-weight: 700;
+  color: #f2f3e5; transition: background 140ms;
+}
+.sum-collection-btn:hover { background: #36363f; }
 
 /* ─── Cards ─────────────────────────────────────────────────────── */
 .sum-card {
@@ -257,6 +272,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   <div class="sum-content">
     <div class="sum-grid" id="sumGrid"></div>
   </div>
+
+  <button class="sum-collection-btn" onclick="window.location.href='collection.html'">
+    View cards collection
+  </button>
 
   <!-- Mood detail overlay -->
   <div class="mood-ov" id="moodOv">
@@ -515,14 +534,7 @@ function render() {
   grid.className = 'sum-grid';
   grid.innerHTML = sections.map(k => renderCard(k, day, isToday)).join('');
 
-  // Equalize card heights
-  const cards = grid.querySelectorAll('.sum-card');
-  cards.forEach(c => c.style.height = 'auto');
-  requestAnimationFrame(() => {
-    let max = 0;
-    cards.forEach(c => { max = Math.max(max, c.offsetHeight); });
-    cards.forEach(c => { c.style.height = max + 'px'; });
-  });
+  // Cards stretch to fill grid rows via align-items: stretch
 }
 
 document.getElementById('prevBtn').addEventListener('click', () => { dayIdx--; render(); });
