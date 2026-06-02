@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint — Sparks</title>
+<link rel="stylesheet" href="./foundations/tokens.css">
+<style>
+
+body { background: #0a0a0f; overflow: hidden; margin: 0; }
+.bp-stage { position: fixed; inset: 0; display: grid; place-items: center; }
+.bp-device {
+  width: 1194px; height: 834px; position: relative; overflow: hidden;
+  border-radius: 20px; transform-origin: center center;
+  transform: scale(var(--s,1)); background: #1f1f25;
+}
+
+/* ─── Status bar ────────────────────────────────────────────── */
+.sb {
+  position: absolute; top: 0; left: 0; right: 0; height: 24px; z-index: 30;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.9); pointer-events: none;
+}
+
+/* ─── Sidebar ───────────────────────────────────────────────── */
+.today-sidebar {
+  position: absolute;
+  left: 24px; top: 50%; transform: translateY(-50%);
+  width: 80px; height: 786px;
+  background: #2b2b32; border-radius: 20px;
+  padding: 24px 8px; box-sizing: border-box;
+  display: flex; flex-direction: column;
+  justify-content: space-between; align-items: center;
+  z-index: 10;
+}
+.sidebar-logo {
+  font-family: var(--font-display); font-size: 16px; color: #8e8b85;
+  text-transform: uppercase; text-align: center; letter-spacing: 0.5px;
+  height: 52px; display: flex; align-items: center; justify-content: center; width: 100%;
+}
+.sidebar-nav { display: flex; flex-direction: column; gap: 12px; }
+.nav-item {
+  width: 64px; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 12px; padding: 8px 0; cursor: pointer;
+  transition: background 140ms;
+}
+.nav-item.active { background: #1f1f25; }
+.nav-item:not(.active):hover { background: rgba(255,255,255,0.05); }
+.nav-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.nav-icon img { width: 24px; height: 24px; display: block; }
+.nav-item.active .nav-icon img { filter: brightness(0) invert(1); }
+.nav-label {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #a4a59f; text-align: center; width: 64px; line-height: 16px;
+}
+.nav-item.active .nav-label { color: #f2f3e5; }
+.sidebar-user { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.user-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #b8c0ed; border: 2px solid #36363f;
+  overflow: hidden; display: grid; place-items: center; font-size: 10px;
+  box-sizing: border-box;
+}
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.user-name {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #a4a59f; text-align: center; width: 64px;
+}
+
+/* ─── Lightning bg ──────────────────────────────────────────── */
+.lightning-bg {
+  position: absolute;
+  left: -299px; top: -416px;
+  width: 1865px; height: 1865px;
+  pointer-events: none; z-index: 0; opacity: 1;
+}
+
+/* ─── Main ──────────────────────────────────────────────────── */
+.sparks-main {
+  position: absolute;
+  left: 152px; top: 56px;
+  width: 998px;
+  z-index: 1;
+}
+
+/* ─── Header ────────────────────────────────────────────────── */
+.sparks-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 32px;
+}
+.sparks-header-left { width: 532px; display: flex; flex-direction: column; gap: 16px; }
+.sparks-title {
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0;
+}
+.sparks-subtitle {
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #737472; letter-spacing: -0.1px; margin: 0;
+}
+.sparks-total-box {
+  width: 185px;
+  background: #1f1f25; border: 1px solid #444450; border-radius: 20px;
+  padding: 36px; box-sizing: border-box;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+.sparks-total-label {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #737472; letter-spacing: 0;
+}
+.sparks-total-num {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-display); font-size: 32px; line-height: 40px;
+  letter-spacing: -0.8px; color: #f2f3e5;
+}
+.sparks-total-num img { width: 32px; height: 32px; display: block; }
+
+/* ─── Grid ──────────────────────────────────────────────────── */
+.sparks-grid {
+  display: flex; flex-direction: column; gap: 16px;
+}
+.sparks-row {
+  display: flex; gap: 16px;
+}
+
+/* ─── Art card ──────────────────────────────────────────────── */
+.art-card {
+  flex: 1; height: 241px; border-radius: 16px;
+  border: 1px solid #444450;
+  position: relative; overflow: hidden;
+  cursor: pointer;
+}
+.art-card-dark { background: #1f1f25; }
+.art-card-blue { background: #3f50b8; }
+
+/* lock icon */
+.art-lock {
+  position: absolute; top: 11px; right: 9px;
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+
+/* spark cost badge */
+.art-badge {
+  position: absolute; bottom: 19px; left: 19px;
+  background: #2f2f37; border-radius: 99px;
+  padding: 8px 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.art-badge-num {
+  font-family: var(--font-display); font-size: 20px; line-height: 1.05;
+  color: #f2f3e5; text-transform: uppercase;
+}
+.art-badge img { width: 20px; height: 20px; display: block; }
+
+/* artwork inside unlocked cards */
+.art-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+/* ─── Unlock overlays ───────────────────────────────────────── */
+.unlock-overlay {
+  position: absolute; inset: 0; z-index: 20;
+  background: #1f1f25; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 24px;
+}
+.overlay-bg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+/* confirm */
+.confirm-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: #2f2f37; border-radius: 99px;
+  padding: 8px 16px;
+  position: relative; z-index: 1;
+}
+.confirm-badge-num {
+  font-family: var(--font-display); font-size: 20px; color: #f2f3e5;
+}
+.confirm-badge img { width: 20px; height: 20px; display: block; }
+.confirm-question {
+  font-family: var(--font-display); font-size: 52px; line-height: 1.1;
+  color: #f2f3e5; text-align: center; margin: 0;
+  width: 685px; letter-spacing: 0.5px;
+  position: relative; z-index: 1;
+}
+.confirm-btn {
+  position: absolute; bottom: 45px; left: 50%; transform: translateX(-50%);
+  width: 270px; height: 48px;
+  background: #f2f3e5; border: none; border-radius: 8px;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700; color: #1f1f25;
+  cursor: pointer; z-index: 1;
+}
+
+/* success */
+.success-art {
+  width: 237px; height: 241px; border-radius: 16px;
+  position: relative; z-index: 1; display: block;
+}
+.success-label {
+  font-family: var(--font-display); font-size: 72px; line-height: 1.1;
+  color: #f2f3e5; margin: 0; letter-spacing: 1px;
+  position: relative; z-index: 1;
+}
+
+</style>
+</head>
+<body>
+
+<div class="bp-stage">
+<div class="bp-device" id="device">
+
+  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+
+  <!-- Lightning background -->
+  <svg class="lightning-bg" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M350 50 L200 320 L310 320 L160 550 L420 250 L300 250 L450 50Z" fill="#1f1f25"/>
+  </svg>
+
+  <!-- Sidebar -->
+  <nav class="today-sidebar">
+    <div class="sidebar-logo">Sparkz</div>
+    <div class="sidebar-nav">
+      <div class="nav-item" onclick="window.location.href='today.html'">
+        <div class="nav-icon"><img src="./components/icon-02.svg" alt="Today"></div>
+        <span class="nav-label">Today</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='journal.html'">
+        <div class="nav-icon"><img src="./components/icon-01.svg" alt="Journal"></div>
+        <span class="nav-label">Journal</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='my-toolkit.html'">
+        <div class="nav-icon"><img src="./components/icon-03.svg" alt="My toolkit"></div>
+        <span class="nav-label">My toolkit</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
+        <span class="nav-label">Journey</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='grades.html'">
+        <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
+        <span class="nav-label">Grades</span>
+      </div>
+      <div class="nav-item active">
+        <div class="nav-icon"><img src="./components/icon-06.svg" alt="Sparks"></div>
+        <span class="nav-label">Sparks</span>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="userAvatar">😊</div>
+      <span class="user-name">Sophie</span>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="sparks-main">
+
+    <!-- Header -->
+    <div class="sparks-header">
+      <div class="sparks-header-left">
+        <h1 class="sparks-title">Sparks</h1>
+        <p class="sparks-subtitle">Collect Sparks. Unlock art that's just yours.</p>
+      </div>
+      <div class="sparks-total-box">
+        <span class="sparks-total-label">Total</span>
+        <div class="sparks-total-num">
+          <span id="sparksCount">220</span>
+          <img src="./components/Spark-4.svg" alt="spark">
+        </div>
+      </div>
+    </div>
+
+    <!-- Artwork grid -->
+    <div class="sparks-grid">
+
+      <!-- Row 1 -->
+      <div class="sparks-row">
+
+        <!-- Locked 20 — affordable -->
+        <div class="art-card art-card-dark" onclick="tryUnlock(20, this)" style="cursor:pointer">
+          <div class="art-lock">
+            <img src="./components/lock-2-fill.svg" alt="lock" style="width:48px;height:48px;display:block;">
+          </div>
+          <div class="art-badge">
+            <span class="art-badge-num">20</span>
+            <img src="./components/Spark-4.svg" alt="spark">
+          </div>
+        </div>
+
+        <!-- Unlocked — puzzle 3 -->
+        <div class="art-card art-card-blue">
+          <img class="art-img" src="./components/puzzle-03.svg" alt="Artwork">
+        </div>
+
+        <!-- Unlocked — puzzle 2 -->
+        <div class="art-card art-card-blue">
+          <img class="art-img" src="./components/puzzle-02.svg" alt="Artwork">
+        </div>
+
+        <!-- Locked 200 -->
+        <div class="art-card art-card-dark">
+          <div class="art-lock">
+            <img src="./components/lock-2-fill.svg" alt="lock" style="width:48px;height:48px;display:block;">
+          </div>
+          <div class="art-badge">
+            <span class="art-badge-num">200</span>
+            <img src="./components/Spark-4.svg" alt="spark">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Row 2 -->
+      <div class="sparks-row">
+
+        <div class="art-card art-card-dark">
+          <div class="art-lock">
+            <img src="./components/lock-2-fill.svg" alt="lock" style="width:48px;height:48px;display:block;">
+          </div>
+          <div class="art-badge">
+            <span class="art-badge-num">400</span>
+            <img src="./components/Spark-4.svg" alt="spark">
+          </div>
+        </div>
+
+        <div class="art-card art-card-dark">
+          <div class="art-lock">
+            <img src="./components/lock-2-fill.svg" alt="lock" style="width:48px;height:48px;display:block;">
+          </div>
+          <div class="art-badge">
+            <span class="art-badge-num">600</span>
+            <img src="./components/Spark-4.svg" alt="spark">
+          </div>
+        </div>
+
+        <div class="art-card art-card-dark">
+          <div class="art-lock">
+            <img src="./components/lock-2-fill.svg" alt="lock" style="width:48px;height:48px;display:block;">
+          </div>
+          <div class="art-badge">
+            <span class="art-badge-num">800</span>
+            <img src="./components/Spark-4.svg" alt="spark">
+          </div>
+        </div>
+
+        <div class="art-card art-card-dark">
+          <div class="art-lock">
+            <img src="./components/lock-2-fill.svg" alt="lock" style="width:48px;height:48px;display:block;">
+          </div>
+          <div class="art-badge">
+            <span class="art-badge-num">1000</span>
+            <img src="./components/Spark-4.svg" alt="spark">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Confirm overlay ─────────────────────────────────────── -->
+  <div id="unlock-confirm" class="unlock-overlay" style="display:none;background:#3f50b8;">
+    <img src="./components/Lightning 1.svg" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:3730px;height:6598px;pointer-events:none;">
+    <div class="confirm-badge">
+      <span class="confirm-badge-num" id="confirm-cost">20</span>
+      <img src="./components/Spark-4.svg" alt="spark">
+    </div>
+    <h1 class="confirm-question" id="confirm-question">Ready to unlock this puzzle? It'll cost you 20 Sparks.</h1>
+    <button class="confirm-btn" onclick="doBuy()">Buy a new puzzle</button>
+  </div>
+
+  <!-- ── Success overlay ──────────────────────────────────────── -->
+  <div id="unlock-success" class="unlock-overlay" style="display:none;background:#4CAF82;">
+    <img src="./components/Lightning 1.svg" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-30deg);width:3730px;height:6598px;pointer-events:none;">
+    <img class="success-art" src="./components/puzzle-01.svg" alt="New puzzle">
+    <p class="success-label">New puzzle!</p>
+  </div>
+
+</div>
+</div>
+
+<script>
+function scale() {
+  const s = Math.min(innerWidth / 1194, innerHeight / 834) * 0.96;
+  document.getElementById('device').style.setProperty('--s', s);
+}
+scale(); addEventListener('resize', scale);
+
+// Load avatar
+(function() {
+  const src = localStorage.getItem('bp_avatar') || './foundations/assets/avatars/avatar-3.svg';
+  const bg  = localStorage.getItem('bp_avatar_bg') || '#b8c0ed';
+  const el  = document.getElementById('userAvatar');
+  if (el) { el.style.background = bg; el.innerHTML = '<img src="' + src + '" alt="avatar">'; }
+})();
+
+// Sync spark count from localStorage
+(function() {
+  const total = parseInt(localStorage.getItem('bp_sparks') || '0', 10);
+  if (total > 0) document.getElementById('sparksCount').textContent = total;
+})();
+
+// ─── Unlock flow ───────────────────────────────────────────────
+var _unlockCost = 0;
+var _unlockCard = null;
+
+function tryUnlock(cost, card) {
+  var sparks = parseInt(document.getElementById('sparksCount').textContent, 10);
+  if (sparks < cost) return;
+  _unlockCost = cost;
+  _unlockCard = card;
+  document.getElementById('confirm-cost').textContent = cost;
+  document.getElementById('confirm-question').textContent =
+    'Ready to unlock this puzzle? It\'ll cost you ' + cost + ' Sparks.';
+  document.getElementById('unlock-confirm').style.display = 'flex';
+}
+
+function doBuy() {
+  var sparks = parseInt(document.getElementById('sparksCount').textContent, 10);
+  var newTotal = Math.max(0, sparks - _unlockCost);
+  document.getElementById('sparksCount').textContent = newTotal;
+  localStorage.setItem('bp_sparks', newTotal);
+  document.getElementById('unlock-confirm').style.display = 'none';
+  document.getElementById('unlock-success').style.display = 'flex';
+  setTimeout(closeSuccess, 800);
+}
+
+function closeSuccess() {
+  document.getElementById('unlock-success').style.display = 'none';
+  if (_unlockCard) {
+    _unlockCard.className = 'art-card art-card-blue';
+    _unlockCard.removeAttribute('onclick');
+    _unlockCard.style.cursor = 'default';
+    _unlockCard.innerHTML = '<img class="art-img" src="./components/puzzle-01.svg" alt="Artwork">';
+    _unlockCard = null;
+  }
+}
+</script>
+</body>
+</html>

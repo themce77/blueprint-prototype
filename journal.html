@@ -75,10 +75,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .page-title {
   position: absolute;
   left: 50%; transform: translateX(-50%);
-  top: 51px;
-  font-family: var(--font-display); font-size: 80px; line-height: 1.06;
+  top: 57px;
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
   letter-spacing: 1.5px; color: #f2f3e5; text-align: center;
-  margin: 0; pointer-events: none;
+  margin: 0; pointer-events: none; white-space: nowrap;
 }
 
 /* ─── Content layout ────────────────────────────────────────── */
@@ -110,7 +110,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   pointer-events: none;
 }
 .write-cta-monster img {
-  width: 243px; height: 249px;
+  width: 279px; height: 286px;
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
 }
 .write-cta-box {
@@ -138,9 +138,12 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   padding: 24px; box-sizing: border-box;
   display: flex; flex-direction: column; gap: 24px;
 }
+.note-card-body {
+  display: flex; flex-direction: column; gap: 12px; width: 100%;
+}
 .note-question {
   font-family: var(--font-body); font-size: 16px; font-weight: 700;
-  color: #a4a59f; letter-spacing: -0.1px; margin: 0;
+  color: #a4a59f; letter-spacing: -0.1px; margin: 0; line-height: 1.25;
 }
 .note-answer {
   font-family: var(--font-body); font-size: 20px; font-weight: 700;
@@ -167,10 +170,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* Past notes card */
 .past-notes-card {
-  width: 658px; height: 104px; border-radius: 12px;
+  width: 658px; border-radius: 12px;
   background: #1f1f25; border: 1px solid #36363f;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 24px; box-sizing: border-box;
+  padding: 24px; box-sizing: border-box;
   cursor: pointer; transition: background 120ms;
 }
 .past-notes-card:hover { background: #252530; }
@@ -248,7 +251,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
         <span class="nav-label">Grades</span>
       </div>
-      <div class="nav-item">
+      <div class="nav-item" onclick="window.location.href='sparks.html'">
         <div class="nav-icon"><img src="./components/icon-06.svg" alt="Sparks"></div>
         <span class="nav-label">Sparks</span>
       </div>
@@ -274,7 +277,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <!-- Purple CTA card — shown when no write-it-out entry -->
       <div class="write-cta-card" id="writeCta" onclick="window.location.href='write-it-out.html?from=journal'">
         <div class="write-cta-monster">
-          <img src="./components/monster-butterfly.svg" alt="">
+          <img src="./components/Property 1=M02, Type=Default.svg" alt="">
         </div>
         <div class="write-cta-box">
           <div class="write-cta-spark">
@@ -332,62 +335,86 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 <script>
 function scale() {
   const s = Math.min(innerWidth / 1194, innerHeight / 834) * 0.96;
-  document.getElementById('device').style.setProperty('--s', s);
+  const el = document.getElementById('device') || document.querySelector('.bp-device');
+  if (el) el.style.setProperty('--s', s);
 }
-scale();
+document.addEventListener('DOMContentLoaded', scale);
 addEventListener('resize', scale);
 addEventListener('pageshow', scale);
 addEventListener('focus', scale);
+scale();
 
-// Show note or CTA based on write-it-out state
-(function() {
-  const text = localStorage.getItem('bp_write_text');
-  const done = localStorage.getItem('bp_write_done') === '1';
-
-  if (done && text) {
-    document.getElementById('writeCta').style.display = 'none';
-    document.getElementById('noteCard').style.display = '';
-    document.getElementById('noteText').textContent = text;
-  }
-})();
-
-// Order circles + render answer cards
-(function() {
+// ── Render journal notes ────────────────────────────────────────
+// Reads from localStorage, OR from ?demo= URL param for preview.
+// demo=1: empty, demo=2: write-it-out note, demo=3: question + write-it-out
+function renderJournal() {
   var QUESTIONS = [
-    { key: ‘bp_journal_q1’, text: ‘What kinds of moments or things tend to lift your mood — even a little?’ },
-    { key: ‘bp_journal_q2’, text: "What’s making you feel this excited?" }
+    { key: ‘bp_journal_q1’, text: ‘What kinds of moments or things tend to lift your mood — even a little?’, qnum: ‘1’ },
+    { key: ‘bp_journal_q2’, text: "What’s making you feel this excited?", qnum: ‘2’ }
   ];
+  var WRITE_TEXT = ‘Today my mood was okay. I felt a bit low on energy and not very motivated at times, but nothing too overwhelming. There were small moments when I felt calm and a bit more present, which helped. Overall, it was a pretty average day — not bad, just a bit slow.’;
 
-  // Circles: move answered ones to end + dim
+  var demo = new URLSearchParams(location.search).get(‘demo’);
+
+  var writeText, writeDone, qAnswers;
+
+  if (demo === ‘1’) {
+    writeText = null; writeDone = false; qAnswers = [null, null];
+  } else if (demo === ‘2’) {
+    writeText = WRITE_TEXT; writeDone = true; qAnswers = [null, null];
+  } else if (demo === ‘3’) {
+    writeText = WRITE_TEXT; writeDone = true; qAnswers = [null, ‘Weekend trip.’];
+  } else {
+    writeText = localStorage.getItem(‘bp_write_text’);
+    writeDone  = localStorage.getItem(‘bp_write_done’) === ‘1’;
+    qAnswers   = QUESTIONS.map(function(q) { return localStorage.getItem(q.key); });
+  }
+
+  var hasQCards = qAnswers.some(function(a) { return !!a; });
+  var hasWrite  = writeDone && writeText;
+  var hasAnyNote = hasQCards || hasWrite;
+
+  // CTA card (state 1)
+  document.getElementById(‘writeCta’).style.display = hasAnyNote ? ‘none’ : ‘block’;
+
+  // Write-it-out note card (state 2 + 3)
+  var noteCard = document.getElementById(‘noteCard’);
+  noteCard.style.display = hasWrite ? ‘flex’ : ‘none’;
+  if (hasWrite) document.getElementById(‘noteText’).textContent = writeText;
+
+  // Question answer cards (state 3)
+  var container = document.getElementById(‘qAnswerCards’);
+  container.innerHTML = ‘’;
+  for (var j = 0; j < QUESTIONS.length; j++) {
+    var q = QUESTIONS[j];
+    var answer = qAnswers[j];
+    if (!answer) continue;
+    var card = document.createElement(‘div’);
+    card.className = ‘note-card-today’;
+    card.innerHTML =
+      ‘<div class="note-card-header">’ +
+        ‘<span class="note-card-date">Today</span>’ +
+        ‘<button class="note-card-edit" onclick="window.location.href=\’journal-question.html?q=’ + q.qnum + ‘\’">Edit</button>’ +
+      ‘</div>’ +
+      ‘<div class="note-card-body">’ +
+        ‘<p class="note-question">’ + q.text + ‘</p>’ +
+        ‘<p class="note-answer">’ + answer + ‘</p>’ +
+      ‘</div>’;
+    container.appendChild(card);
+  }
+  container.style.display = hasQCards ? ‘flex’ : ‘none’;
+
+  // Dim answered question circles
   var list = document.getElementById(‘questionsList’);
   var circles = list.querySelectorAll(‘.question-circle’);
   for (var i = 0; i < circles.length; i++) {
     var el = circles[i];
-    var key = el.getAttribute(‘data-qkey’);
-    if (localStorage.getItem(key)) {
-      el.style.opacity = ‘0.2’;
-      list.appendChild(el);
-    }
+    var answered = qAnswers[i] !== null && qAnswers[i] !== undefined;
+    el.style.opacity = answered ? ‘0.2’ : ‘1’;
   }
+}
 
-  // Answer cards in left column
-  var container = document.getElementById(‘qAnswerCards’);
-  var hasCards = false;
-  for (var j = 0; j < QUESTIONS.length; j++) {
-    var q = QUESTIONS[j];
-    var answer = localStorage.getItem(q.key);
-    if (!answer) continue;
-    hasCards = true;
-    var card = document.createElement(‘div’);
-    card.className = ‘note-card-today’;
-    card.innerHTML =
-      ‘<div class="note-card-header"><span class="note-card-date">Today</span></div>’ +
-      ‘<p class="note-question">’ + q.text + ‘</p>’ +
-      ‘<p class="note-answer">’ + answer + ‘</p>’;
-    container.appendChild(card);
-  }
-  if (!hasCards) container.style.display = ‘none’;
-})();
+document.addEventListener(‘DOMContentLoaded’, renderJournal);
 
 // Load avatar
 (function() {

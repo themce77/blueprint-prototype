@@ -290,7 +290,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <div class="nav-icon"><img src="./components/icon-02.svg" alt="Today"></div>
         <span class="nav-label">Today</span>
       </div>
-      <div class="nav-item">
+      <div class="nav-item" onclick="window.location.href='journal.html'">
         <div class="nav-icon"><img src="./components/icon-01.svg" alt="Journal"></div>
         <span class="nav-label">Journal</span>
       </div>
@@ -306,7 +306,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
         <span class="nav-label">Grades</span>
       </div>
-      <div class="nav-item">
+      <div class="nav-item" onclick="window.location.href='sparks.html'">
         <div class="nav-icon"><img src="./components/icon-06.svg" alt="Sparks"></div>
         <span class="nav-label">Sparks</span>
       </div>
@@ -325,7 +325,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     </div>
 
     <div class="tk-featured-video" onclick="window.location.href='toolkit-video.html'">
-      <div class="video-tile-bg"><img src="./components/video-thumbnail.jpg" alt="" style="object-fit:cover;"></div>
+      <div class="video-tile-bg"><img src="./components/carousel-01.svg" alt=""></div>
       <div style="position:absolute;inset:0;background:linear-gradient(182deg,rgba(0,0,0,0) 44%,rgba(0,0,0,0.5) 84%);"></div>
       <div class="heart-btn" data-vid="vfeatured" onclick="event.stopPropagation();toggleHeart(this)" style="z-index:2">
         <img src="./components/heart-default.svg" alt="save">
@@ -348,8 +348,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <h1 class="toolkit-title" id="toolkitTitle">My toolkit</h1>
 
     <div class="filter-row">
-      <button class="filter-pill" onclick="setFilter('doitagain', this)">Do it again</button>
       <button class="filter-pill active" onclick="setFilter('recommended', this)">Recommended</button>
+      <button class="filter-pill" onclick="setFilter('doitagain', this)">Do it again</button>
       <button class="filter-pill" onclick="setFilter('saved', this)">Saved</button>
       <button class="filter-pill" onclick="setFilter('browse', this)">Browse</button>
     </div>
@@ -359,7 +359,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <div class="video-row">
 
         <div class="video-tile" style="background:#d5e9de;">
-          <div class="video-tile-bg"><img src="./components/video-thumbnail.jpg" alt="" style="object-fit:cover;"></div>
+          <div class="video-tile-bg"><img src="./components/carousel-01.svg" alt=""></div>
           <div class="heart-btn" data-vid="v1" onclick="toggleHeart(this)">
             <img src="./components/heart-default.svg" alt="save">
           </div>
@@ -408,7 +408,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <div class="video-row">
 
         <div class="video-tile">
-          <div class="video-tile-bg"><img src="./components/video-thumbnail.jpg" alt="" style="object-fit:cover;"></div>
+          <div class="video-tile-bg"><img src="./components/carousel-01.svg" alt=""></div>
           <div class="heart-btn" data-vid="vwatch" onclick="toggleHeart(this)">
             <img src="./components/heart-default.svg" alt="save">
           </div>
@@ -578,7 +578,7 @@ const VIDEOS = {
   v1:     { bg: '#d5e9de', img: './components/carousel-01.svg',      title: 'Karl Anthony Tawns Overcoming Challenges' },
   v2:     { bg: '#fef5cc', img: './components/carousel-02.svg',      title: 'Aurora Strauss: Calm in the Crash' },
   v3:     { bg: '#f7ddc6', img: './components/carousel-03.svg',      title: 'Jim Kwik: A small simple step' },
-  vwatch: { bg: '#1a1a1a', img: './components/video-thumbnail.jpg',  title: 'Karl Anthony Tawns Overcoming Challenges' },
+  vwatch: { bg: '#1a1a1a', img: './components/carousel-01.svg',  title: 'Karl Anthony Tawns Overcoming Challenges' },
 };
 
 const savedSet = new Set();

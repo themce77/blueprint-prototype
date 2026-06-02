@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint — My Journey</title>
+<link rel="stylesheet" href="./foundations/tokens.css">
+<style>
+
+body { background: #0a0a0f; overflow: hidden; margin: 0; }
+.bp-stage { position: fixed; inset: 0; display: grid; place-items: center; }
+.bp-device {
+  width: 1194px; height: 834px; position: relative; overflow: hidden;
+  border-radius: 20px; transform-origin: center center;
+  transform: scale(var(--s,1)); background: #1f1f25;
+}
+
+/* ─── Status bar ────────────────────────────────────────────── */
+.sb {
+  position: absolute; top: 0; left: 0; right: 0; height: 24px; z-index: 30;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.9); pointer-events: none;
+}
+
+/* ─── Sidebar ───────────────────────────────────────────────── */
+.today-sidebar {
+  position: absolute; left: 24px; top: 50%; transform: translateY(-50%);
+  width: 80px; height: 786px;
+  background: #2b2b32; border-radius: 20px;
+  padding: 24px 8px; box-sizing: border-box;
+  display: flex; flex-direction: column;
+  justify-content: space-between; align-items: center; z-index: 10;
+}
+.sidebar-logo {
+  font-family: var(--font-display); font-size: 16px; color: #8e8b85;
+  text-transform: uppercase; text-align: center; letter-spacing: 0.5px;
+  height: 52px; display: flex; align-items: center; justify-content: center; width: 100%;
+}
+.sidebar-nav { display: flex; flex-direction: column; gap: 12px; }
+.nav-item {
+  width: 64px; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 12px; padding: 8px 0; cursor: pointer;
+  transition: background 140ms;
+}
+.nav-item.active { background: #1f1f25; }
+.nav-item:not(.active):hover { background: rgba(255,255,255,0.05); }
+.nav-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.nav-icon img { width: 24px; height: 24px; display: block; }
+.nav-item.active .nav-icon img { filter: brightness(0) invert(1); }
+.nav-label {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #a4a59f; text-align: center; width: 64px; line-height: 16px;
+}
+.nav-item.active .nav-label { color: #f2f3e5; }
+.sidebar-user { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.user-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #b8c0ed; border: 2px solid #36363f;
+  overflow: hidden; display: grid; place-items: center; font-size: 10px;
+  box-sizing: border-box;
+}
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.user-name {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #a4a59f; text-align: center; width: 64px;
+}
+
+/* ─── Main ──────────────────────────────────────────────────── */
+.journey-main {
+  position: absolute; left: 152px; top: 40px;
+  width: 998px;
+}
+
+/* ─── Header ────────────────────────────────────────────────── */
+.journey-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.journey-title {
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0 0 4px;
+}
+.journey-sub {
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  color: #737472; margin: 0;
+}
+.month-pill {
+  margin-top: 12px;
+  background: #2b2b32; border: 1px solid #444450; border-radius: 99px;
+  padding: 8px 16px;
+  font-family: var(--font-body); font-size: 13px; font-weight: 700;
+  color: #a4a59f; cursor: pointer; white-space: nowrap;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* ─── Wrap banner ───────────────────────────────────────────── */
+.wrap-banner {
+  width: 100%; height: 88px; border-radius: 16px;
+  background: linear-gradient(120deg, #7040c8 0%, #3f50b8 100%);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; box-sizing: border-box;
+  cursor: pointer; margin-bottom: 16px;
+  position: relative; overflow: hidden;
+}
+.wrap-banner::before {
+  content: '✦'; position: absolute; right: 110px; top: -10px;
+  font-size: 80px; color: rgba(255,255,255,0.06); line-height: 1;
+}
+.wrap-banner-left { display: flex; align-items: center; gap: 16px; }
+.wrap-banner-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.wrap-banner-title {
+  font-family: var(--font-display); font-size: 22px; color: #f2f3e5;
+  margin: 0 0 2px; letter-spacing: 0.3px;
+}
+.wrap-banner-desc {
+  font-family: var(--font-body); font-size: 13px; font-weight: 700;
+  color: rgba(242,243,229,0.65); margin: 0;
+}
+.wrap-banner-btn {
+  background: #f2f3e5; border-radius: 8px;
+  padding: 10px 20px;
+  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  color: #1f1f25; white-space: nowrap;
+}
+
+/* ─── Stats grid ────────────────────────────────────────────── */
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-bottom: 16px;
+}
+.stat-card {
+  background: #2b2b32; border-radius: 16px;
+  padding: 20px 24px; box-sizing: border-box;
+  height: 148px; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.stat-label {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #737472; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.stat-big {
+  font-family: var(--font-display); font-size: 52px; line-height: 1;
+  color: #f2f3e5; margin: 0; letter-spacing: -1px;
+}
+.stat-unit {
+  font-family: var(--font-body); font-size: 13px; font-weight: 700;
+  color: #a4a59f; margin: 0;
+}
+
+/* mood card */
+.stat-mood-row { display: flex; align-items: center; gap: 10px; }
+.stat-mood-img { width: 44px; height: 44px; display: block; }
+.stat-mood-name {
+  font-family: var(--font-display); font-size: 36px; color: #f2f3e5;
+  letter-spacing: 0.3px;
+}
+.mood-mini-bars { display: flex; gap: 5px; align-items: flex-end; height: 32px; }
+.mood-mini-bar { width: 16px; border-radius: 4px; }
+
+/* streak card */
+.streak-num-row { display: flex; align-items: baseline; gap: 6px; }
+.streak-fire { font-size: 36px; line-height: 1; }
+
+/* sparks card */
+.sparks-val-row { display: flex; align-items: center; gap: 10px; }
+.spark-icon-lg { width: 40px; height: 40px; display: block; }
+
+/* activities card */
+.act-accent {
+  position: absolute; right: -12px; bottom: -12px;
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(33,150,83,0.2);
+}
+
+/* ─── Timeline ──────────────────────────────────────────────── */
+.timeline-section { }
+.timeline-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.timeline-title {
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #737472; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.timeline-dots {
+  display: flex; gap: 6px; flex-wrap: nowrap; align-items: center;
+}
+.t-dot {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+}
+.t-dot.empty { background: #2b2b32; }
+
+/* ─── Wrap overlay ──────────────────────────────────────────── */
+.wrap-overlay {
+  position: absolute; inset: 0; z-index: 25; overflow: hidden;
+  cursor: pointer;
+}
+.wrap-progress {
+  position: absolute; top: 32px; left: 24px; right: 24px;
+  display: flex; gap: 6px; z-index: 2;
+}
+.wrap-prog-seg {
+  flex: 1; height: 3px; border-radius: 2px;
+  background: rgba(255,255,255,0.25);
+}
+.wrap-prog-seg.done { background: rgba(255,255,255,0.9); }
+.wrap-prog-seg.active {
+  background: rgba(255,255,255,0.9);
+  transform-origin: left;
+  animation: prog linear forwards;
+}
+@keyframes prog { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+.wrap-slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px;
+}
+.wrap-slide-label {
+  font-family: var(--font-body); font-size: 13px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: rgba(255,255,255,0.6); margin: 0;
+}
+.wrap-slide-num {
+  font-family: var(--font-display); font-size: 120px; line-height: 1;
+  color: #f2f3e5; margin: 0; letter-spacing: -2px;
+}
+.wrap-slide-text {
+  font-family: var(--font-display); font-size: 52px; line-height: 1.1;
+  color: #f2f3e5; margin: 0; text-align: center; max-width: 700px;
+  letter-spacing: 0.5px;
+}
+.wrap-slide-sub {
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: rgba(255,255,255,0.65); margin: 0; text-align: center;
+}
+.wrap-close-btn {
+  margin-top: 8px;
+  background: #f2f3e5; border: none; border-radius: 8px;
+  padding: 14px 40px; cursor: pointer;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #1f1f25;
+}
+.wrap-mood-img { width: 96px; height: 96px; display: block; }
+.wrap-sparks-row { display: flex; align-items: center; gap: 16px; }
+.wrap-spark-icon { width: 72px; height: 72px; display: block; }
+
+</style>
+</head>
+<body>
+
+<div class="bp-stage">
+<div class="bp-device" id="device">
+
+  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+
+  <!-- Sidebar -->
+  <nav class="today-sidebar">
+    <div class="sidebar-logo">Sparkz</div>
+    <div class="sidebar-nav">
+      <div class="nav-item" onclick="window.location.href='today.html'">
+        <div class="nav-icon"><img src="./components/icon-02.svg" alt="Today"></div>
+        <span class="nav-label">Today</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='journal.html'">
+        <div class="nav-icon"><img src="./components/icon-01.svg" alt="Journal"></div>
+        <span class="nav-label">Journal</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='my-toolkit.html'">
+        <div class="nav-icon"><img src="./components/icon-03.svg" alt="My toolkit"></div>
+        <span class="nav-label">My toolkit</span>
+      </div>
+      <div class="nav-item active">
+        <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
+        <span class="nav-label">Journey</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='grades.html'">
+        <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
+        <span class="nav-label">Grades</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='sparks.html'">
+        <div class="nav-icon"><img src="./components/icon-06.svg" alt="Sparks"></div>
+        <span class="nav-label">Sparks</span>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="userAvatar">😊</div>
+      <span class="user-name">Sophie</span>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="journey-main">
+
+    <!-- Header -->
+    <div class="journey-header">
+      <div>
+        <h1 class="journey-title">My Journey</h1>
+        <p class="journey-sub">You're doing great, Sophie.</p>
+      </div>
+      <div class="month-pill">May 2026 ▾</div>
+    </div>
+
+    <!-- Wrap banner -->
+    <div class="wrap-banner" onclick="openWrap()">
+      <div class="wrap-banner-left">
+        <div class="wrap-banner-icon">✦</div>
+        <div>
+          <p class="wrap-banner-title">May Wrap</p>
+          <p class="wrap-banner-desc">Your month, highlighted</p>
+        </div>
+      </div>
+      <div class="wrap-banner-btn">View wrap →</div>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="stats-grid">
+
+      <!-- Mood card -->
+      <div class="stat-card">
+        <p class="stat-label">Top mood</p>
+        <div class="stat-mood-row">
+          <img class="stat-mood-img" src="./components/emotion-happy.svg" alt="happy">
+          <span class="stat-mood-name">Happy</span>
+        </div>
+        <div class="mood-mini-bars">
+          <div class="mood-mini-bar" style="background:#f2c94c;height:32px;"></div>
+          <div class="mood-mini-bar" style="background:#f08b31;height:22px;"></div>
+          <div class="mood-mini-bar" style="background:#49aee1;height:14px;"></div>
+          <div class="mood-mini-bar" style="background:#a4a59f;height:8px;"></div>
+          <div class="mood-mini-bar" style="background:#3f50b8;height:6px;"></div>
+        </div>
+      </div>
+
+      <!-- Streak card -->
+      <div class="stat-card">
+        <p class="stat-label">Current streak</p>
+        <div class="streak-num-row">
+          <span class="stat-big">5</span>
+          <span class="streak-fire">🔥</span>
+        </div>
+        <p class="stat-unit">days in a row</p>
+      </div>
+
+      <!-- Sparks card -->
+      <div class="stat-card">
+        <p class="stat-label">Sparks earned</p>
+        <div class="sparks-val-row">
+          <span class="stat-big" id="journeySparks">220</span>
+          <img class="spark-icon-lg" src="./components/Spark-4.svg" alt="spark">
+        </div>
+        <p class="stat-unit">this month</p>
+      </div>
+
+      <!-- Activities card -->
+      <div class="stat-card">
+        <div class="act-accent"></div>
+        <p class="stat-label">Activities done</p>
+        <span class="stat-big">7</span>
+        <p class="stat-unit">from My Toolkit</p>
+      </div>
+
+    </div>
+
+    <!-- Mood timeline -->
+    <div class="timeline-section">
+      <div class="timeline-header">
+        <span class="timeline-title">Mood this month</span>
+        <span class="timeline-title">May</span>
+      </div>
+      <div class="timeline-dots" id="timelineDots"></div>
+    </div>
+
+  </div>
+
+  <!-- ── Wrap overlay ──────────────────────────────────────────── -->
+  <div id="wrap-overlay" class="wrap-overlay" style="display:none" onclick="nextSlide()">
+
+    <!-- Progress bar -->
+    <div class="wrap-progress" id="wrapProgress"></div>
+
+    <!-- Slide 1: Intro -->
+    <div class="wrap-slide" id="ws-0" style="background:linear-gradient(135deg,#7040c8 0%,#3f50b8 100%);">
+      <p class="wrap-slide-label">May 2026</p>
+      <h2 class="wrap-slide-text">Your month,<br>recapped.</h2>
+      <p class="wrap-slide-sub">Tap anywhere to continue</p>
+    </div>
+
+    <!-- Slide 2: Check-ins -->
+    <div class="wrap-slide" id="ws-1" style="background:#3f50b8;display:none;">
+      <p class="wrap-slide-label">You showed up</p>
+      <p class="wrap-slide-num">18</p>
+      <p class="wrap-slide-text" style="font-size:32px;">days out of 31</p>
+      <p class="wrap-slide-sub">That's more than half the month. 💪</p>
+    </div>
+
+    <!-- Slide 3: Top mood -->
+    <div class="wrap-slide" id="ws-2" style="background:#e65800;display:none;">
+      <p class="wrap-slide-label">Your top mood was</p>
+      <img class="wrap-mood-img" src="./components/emotion-happy.svg" alt="happy">
+      <h2 class="wrap-slide-text">Happy</h2>
+      <p class="wrap-slide-sub">You felt this way on 12 days ✨</p>
+    </div>
+
+    <!-- Slide 4: Sparks -->
+    <div class="wrap-slide" id="ws-3" style="background:#1f1f25;display:none;">
+      <img src="./components/Lightning 1.svg" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-15deg);width:2400px;height:4248px;pointer-events:none;opacity:0.18;">
+      <p class="wrap-slide-label" style="position:relative;z-index:1;">You collected</p>
+      <div class="wrap-sparks-row" style="position:relative;z-index:1;">
+        <p class="wrap-slide-num" id="wrapSparks">220</p>
+        <img class="wrap-spark-icon" src="./components/Spark-4.svg" alt="spark">
+      </div>
+      <p class="wrap-slide-text" style="font-size:28px;position:relative;z-index:1;">Sparks this month</p>
+    </div>
+
+    <!-- Slide 5: Close -->
+    <div class="wrap-slide" id="ws-4" style="background:#219653;display:none;">
+      <p class="wrap-slide-label">Keep going</p>
+      <h2 class="wrap-slide-text">Every day<br>counts.</h2>
+      <p class="wrap-slide-sub">See you in June 👋</p>
+      <button class="wrap-close-btn" onclick="closeWrap(event)">Back to Journey</button>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<script>
+function scale() {
+  const s = Math.min(innerWidth / 1194, innerHeight / 834) * 0.96;
+  document.getElementById('device').style.setProperty('--s', s);
+}
+scale(); addEventListener('resize', scale);
+
+// Avatar
+(function() {
+  const src = localStorage.getItem('bp_avatar') || './foundations/assets/avatars/avatar-3.svg';
+  const bg  = localStorage.getItem('bp_avatar_bg') || '#b8c0ed';
+  const el  = document.getElementById('userAvatar');
+  if (el) { el.style.background = bg; el.innerHTML = '<img src="' + src + '" alt="avatar">'; }
+})();
+
+// Sparks
+(function() {
+  const n = parseInt(localStorage.getItem('bp_sparks') || '220', 10);
+  document.getElementById('journeySparks').textContent = n;
+  document.getElementById('wrapSparks').textContent = n;
+})();
+
+// Timeline dots — demo mood data for May (31 days)
+(function() {
+  var moods = [
+    '#f2c94c','#f2c94c','#49aee1','#f08b31','#f2c94c',
+    '#a4a59f','#f2c94c','#f08b31','#f08b31','#f2c94c',
+    '#49aee1','#3f50b8','#a4a59f','#f2c94c','#f2c94c',
+    '#f08b31','#f2c94c','#f2c94c','#49aee1','#f2c94c',
+    '#f2c94c','#f08b31','#a4a59f','#f2c94c','#f2c94c',
+    '#f08b31','#f2c94c','#f2c94c','#f2c94c','#49aee1',
+    null
+  ];
+  var container = document.getElementById('timelineDots');
+  moods.forEach(function(c) {
+    var d = document.createElement('div');
+    d.className = 't-dot' + (c ? '' : ' empty');
+    if (c) d.style.background = c;
+    container.appendChild(d);
+  });
+})();
+
+// ─── Wrap ────────────────────────────────────────────────────
+var SLIDE_COUNT = 5;
+var _slide = 0;
+var _slideTimer = null;
+var SLIDE_DURATION = 3000;
+
+function openWrap() {
+  _slide = 0;
+  showSlide(0);
+  document.getElementById('wrap-overlay').style.display = 'block';
+}
+
+function buildProgress() {
+  var bar = document.getElementById('wrapProgress');
+  bar.innerHTML = '';
+  for (var i = 0; i < SLIDE_COUNT; i++) {
+    var seg = document.createElement('div');
+    seg.className = 'wrap-prog-seg' + (i < _slide ? ' done' : i === _slide ? ' active' : '');
+    if (i === _slide) seg.style.animationDuration = SLIDE_DURATION + 'ms';
+    bar.appendChild(seg);
+  }
+}
+
+function showSlide(n) {
+  for (var i = 0; i < SLIDE_COUNT; i++) {
+    document.getElementById('ws-' + i).style.display = i === n ? 'flex' : 'none';
+  }
+  buildProgress();
+  clearTimeout(_slideTimer);
+  if (n < SLIDE_COUNT - 1) {
+    _slideTimer = setTimeout(nextSlide, SLIDE_DURATION);
+  }
+}
+
+function nextSlide() {
+  if (_slide >= SLIDE_COUNT - 1) return;
+  _slide++;
+  showSlide(_slide);
+}
+
+function closeWrap(e) {
+  if (e) e.stopPropagation();
+  clearTimeout(_slideTimer);
+  document.getElementById('wrap-overlay').style.display = 'none';
+}
+</script>
+</body>
+</html>
