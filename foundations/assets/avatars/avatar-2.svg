@@ -8,7 +8,7 @@
 <circle cx="86.6152" cy="66" r="14" fill="#F2F3E5"/>
 <circle cx="86.9087" cy="68.7548" r="8.90909" fill="#36363F"/>
 </g>
-<rect x="5" y="5" width="130" height="130" rx="65" stroke="#444450" stroke-width="10"/>
+<rect x="5" y="5" width="130" height="130" rx="65" stroke="#36363f" stroke-width="10"/>
 <defs>
 <clipPath id="clip0_54_80949">
 <rect x="10" y="10" width="120" height="120" rx="60" fill="white"/>
