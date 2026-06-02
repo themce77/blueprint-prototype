@@ -490,11 +490,13 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .fc-row {
   display: flex; gap: 12px;
   margin-top: 100px;
-  justify-content: center;
+  max-width: 1067px;
+  margin-left: auto; margin-right: auto;
+  overflow: hidden;
 }
 
 .fc {
-  width: 171px; height: 211px; flex-shrink: 0;
+  flex: 1; height: 211px; min-width: 0;
   background: #36363f; border-radius: 28px;
   position: relative; cursor: pointer;
   overflow: hidden;
@@ -1206,43 +1208,6 @@ function pickAvatar(el) {
 // ─── Feel-good card toggle ───────────────────────────────────
 function toggleFc(el) { el.classList.toggle('sel'); }
 
-// ─── Carousel drag-to-scroll with momentum ───────────────────
-(function() {
-  const row = document.querySelector('.fc-row');
-  let down = false, startX, scrollLeft, velX = 0, lastX, lastT, rafId;
-
-  function momentum() {
-    cancelAnimationFrame(rafId);
-    velX *= 0.92;
-    row.scrollLeft -= velX;
-    if (Math.abs(velX) > 0.5) rafId = requestAnimationFrame(momentum);
-    else row.style.scrollSnapType = '';
-  }
-
-  row.addEventListener('mousedown', e => {
-    cancelAnimationFrame(rafId);
-    down = true; row.classList.add('is-dragging');
-    row.style.scrollSnapType = 'none';
-    startX = e.pageX; scrollLeft = row.scrollLeft;
-    lastX = e.pageX; lastT = Date.now();
-    velX = 0;
-    e.preventDefault();
-  });
-
-  window.addEventListener('mousemove', e => {
-    if (!down) return;
-    const now = Date.now(), dt = Math.max(now - lastT, 1);
-    velX = (lastX - e.pageX) / dt * 16;
-    lastX = e.pageX; lastT = now;
-    row.scrollLeft = scrollLeft + (startX - e.pageX);
-  });
-
-  window.addEventListener('mouseup', () => {
-    if (!down) return;
-    down = false; row.classList.remove('is-dragging');
-    rafId = requestAnimationFrame(momentum);
-  });
-})();
 
 // ─── Person toggle ───────────────────────────────────────────
 function togglePb(el) { el.classList.toggle('sel'); }
