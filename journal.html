@@ -391,11 +391,11 @@ addEventListener('focus', scale);
 
 // Load avatar
 (function() {
-  const src = localStorage.getItem('bp_avatar');
-  const bg  = localStorage.getItem('bp_avatar_bg');
+  const src = localStorage.getItem('bp_avatar') || './foundations/assets/avatars/avatar-3.svg';
+  const bg  = localStorage.getItem('bp_avatar_bg') || '#b8c0ed';
   const el  = document.getElementById('userAvatar');
-  if (src && el) {
-    if (bg) el.style.background = bg;
+  if (el) {
+    el.style.background = bg;
     el.innerHTML = '<img src="' + src + '" alt="avatar">';
   }
 })();
