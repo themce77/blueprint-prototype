@@ -490,18 +490,11 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .fc-row {
   display: flex; gap: 12px;
   margin-top: 100px;
-  overflow-x: auto; overflow-y: visible;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  cursor: grab;
-  padding-bottom: 4px;
+  justify-content: center;
 }
-.fc-row::-webkit-scrollbar { display: none; }
-.fc-row.is-dragging { cursor: grabbing; }
-.fc { scroll-snap-align: start; }
 
 .fc {
-  width: 195px; height: 245px; flex-shrink: 0;
+  width: 171px; height: 211px; flex-shrink: 0;
   background: #36363f; border-radius: 28px;
   position: relative; cursor: pointer;
   overflow: hidden;
