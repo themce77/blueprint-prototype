@@ -243,7 +243,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <div class="nav-icon"><img src="./components/icon-03.svg" alt="My toolkit"></div>
         <span class="nav-label">My toolkit</span>
       </div>
-      <div class="nav-item">
+      <div class="nav-item" onclick="window.location.href='journey.html'">
         <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
         <span class="nav-label">Journey</span>
       </div>
@@ -356,22 +356,21 @@ function renderJournal() {
 
   var demo = new URLSearchParams(location.search).get(‘demo’);
 
-  var writeText, writeDone, qAnswers;
+  var writeText, qAnswers;
 
   if (demo === ‘1’) {
     writeText = null; writeDone = false; qAnswers = [null, null];
   } else if (demo === ‘2’) {
-    writeText = WRITE_TEXT; writeDone = true; qAnswers = [null, null];
+    writeText = WRITE_TEXT; qAnswers = [null, null];
   } else if (demo === ‘3’) {
-    writeText = WRITE_TEXT; writeDone = true; qAnswers = [null, ‘Weekend trip.’];
+    writeText = WRITE_TEXT; qAnswers = [null, ‘Weekend trip.’];
   } else {
     writeText = localStorage.getItem(‘bp_write_text’);
-    writeDone  = localStorage.getItem(‘bp_write_done’) === ‘1’;
     qAnswers   = QUESTIONS.map(function(q) { return localStorage.getItem(q.key); });
   }
 
   var hasQCards = qAnswers.some(function(a) { return !!a; });
-  var hasWrite  = writeDone && writeText;
+  var hasWrite  = !!writeText;
   var hasAnyNote = hasQCards || hasWrite;
 
   // CTA card (state 1)
