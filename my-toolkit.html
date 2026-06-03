@@ -34,6 +34,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   padding: 24px 8px; box-sizing: border-box;
   display: flex; flex-direction: column;
   justify-content: space-between; align-items: center;
+  z-index: 10;
 }
 .sidebar-logo {
   font-family: var(--font-display); font-size: 16px; color: #8e8b85;
@@ -59,11 +60,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .sidebar-user { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .user-avatar {
   width: 32px; height: 32px; border-radius: 50%;
-  background: #b8c0ed; border: 2px solid #36363f;
-  overflow: hidden; display: grid; place-items: center; font-size: 10px;
-  box-sizing: border-box;
+  background: #b8c0ed no-repeat center / cover;
+  border: 2px solid #36363f;
+  overflow: hidden; box-sizing: border-box;
 }
-.user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .user-name {
   font-family: var(--font-body); font-size: 12px; font-weight: 700;
   color: #a4a59f; text-align: center; width: 64px;
@@ -313,7 +313,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
     </div>
     <div class="sidebar-user">
-      <div class="user-avatar" id="userAvatar">😊</div>
+      <div class="user-avatar" id="userAvatar"></div>
       <span class="user-name">Sophie</span>
     </div>
   </nav>
@@ -547,14 +547,11 @@ function scale() {
 }
 scale(); addEventListener('resize', scale);
 
-(function() {
-  const src = localStorage.getItem('bp_avatar') || './foundations/assets/avatars/avatar-3.svg';
-  const bg  = localStorage.getItem('bp_avatar_bg') || '#b8c0ed';
-  const el  = document.getElementById('userAvatar');
-  if (el) {
-    el.style.background = bg;
-    el.innerHTML = '<img src="' + src + '" alt="avatar">';
-  }
+(function(){
+  var src = localStorage.getItem('bp_avatar') || './foundations/assets/avatars/avatar-3.svg';
+  var bg  = localStorage.getItem('bp_avatar_bg') || '#b8c0ed';
+  var el  = document.getElementById('userAvatar');
+  if (el) el.style.background = bg + ' url("' + src + '") no-repeat center / cover';
 })();
 
 const tabMap = {
