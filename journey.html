@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blueprint — My Journey</title>
+<title>Blueprint — Journey</title>
 <script>(function(){document.documentElement.style.setProperty('--s',Math.min(innerWidth/1194,innerHeight/834)*0.96);})()</script>
 <link rel="stylesheet" href="./foundations/tokens.css">
 <style>
@@ -368,8 +368,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <span class="nav-label">My toolkit</span>
       </div>
       <div class="nav-item active">
-        <div class="nav-icon"><img src="./components/icon-04.svg" alt="My journey"></div>
-        <span class="nav-label">My journey</span>
+        <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
+        <span class="nav-label">Journey</span>
       </div>
       <div class="nav-item" onclick="window.location.href='grades.html'">
         <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
@@ -391,7 +391,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
     <!-- 1. Title + description -->
     <div>
-      <h1 class="journey-title">My journey</h1>
+      <h1 class="journey-title">Journey</h1>
       <p class="journey-sub">Every feeling you noticed made you a little wiser.</p>
     </div>
 
@@ -503,20 +503,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   </div>
 
-  <!-- ── Wrap intro overlay ──────────────────────────────────── -->
-  <div id="wrap-intro" class="wi-overlay" style="display:none">
-    <img src="./components/grupka.svg" alt="" class="wi-bg">
-    <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
-    <button class="wi-skip" onclick="skipIntro()">Skip</button>
-    <div class="wi-center">
-      <p class="wi-period">May 2026</p>
-      <h2 class="wi-title">Open your monthly recap</h2>
-    </div>
-    <button class="wi-start" onclick="startWrap()">Start</button>
-  </div>
-
   <!-- ── Wrap illustration (right panel) ─────────────────────── -->
-  <div class="wrap-illustration" onclick="onWrapClick()">
+  <div class="wrap-illustration" onclick="openWrap()">
     <img src="./components/wrap.svg" alt="May Wrap">
   </div>
 
@@ -728,32 +716,12 @@ function closeWrap(e) {
   applyWrapDone();
 }
 
-function onWrapClick() {
-  if (localStorage.getItem('bp_wrap_done')) {
-    openWrap();
-  } else {
-    document.getElementById('wrap-intro').style.display = 'block';
-  }
-}
-
-function skipIntro() {
-  document.getElementById('wrap-intro').style.display = 'none';
-}
-
-function startWrap() {
-  document.getElementById('wrap-intro').style.display = 'none';
-  openWrap();
-}
-
 function applyWrapDone() {
   document.querySelector('.journey-main').classList.add('wrap-done');
   var illus = document.querySelector('.wrap-illustration');
   if (illus) illus.style.display = 'none';
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  if (localStorage.getItem('bp_wrap_done')) applyWrapDone();
-});
 </script>
 </body>
 </html>
