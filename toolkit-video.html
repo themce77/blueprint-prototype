@@ -216,6 +216,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     </svg>
   </button>
   <p class="vid-hint">Tap to play (prototype)</p>
+  <button id="btn-skip-video" onclick="skipVideo()" style="display:none; position:absolute; bottom:28px; right:28px; background:rgba(255,255,255,0.14); border:none; border-radius:8px; padding:10px 20px; color:#fff; font-family:var(--font-body); font-size:14px; font-weight:700; cursor:pointer;">Skip</button>
 </div>
 
 <!-- ═══ S-DID-TRY ════════════════════════════════════════════ -->
@@ -321,7 +322,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <span class="fb-notif-label">Your feedback helps us make<br>things better for you.</span>
   </div>
 
-  <button class="fb-btn" style="top:721px;" onclick="finish()">Go to My toolkit</button>
+  <button class="fb-btn" style="top:721px;" onclick="finish()">Done</button>
 </div>
 
 </div>
@@ -333,6 +334,13 @@ function scale() {
   document.getElementById('device').style.setProperty('--s', s);
 }
 scale(); addEventListener('resize', scale);
+
+const urlParams = new URLSearchParams(location.search);
+const fromWrite = urlParams.get('from') === 'write';
+const destAfter = fromWrite ? 'today.html' : 'my-toolkit.html';
+
+// Show skip button when coming from write-it-out
+if (fromWrite) document.getElementById('btn-skip-video').style.display = 'block';
 
 let cur = 's-video';
 let didTryNext = 's-thanks';
@@ -347,6 +355,11 @@ function onPlay() {
   goTo('s-did-try');
 }
 
+function skipVideo() {
+  if (fromWrite) sessionStorage.setItem('bp_enter_anim', '1');
+  window.location.href = destAfter;
+}
+
 function selectBlock(btn, group) {
   btn.closest('.fb-blocks').querySelectorAll('.fb-block').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
@@ -354,7 +367,8 @@ function selectBlock(btn, group) {
 
 function finish() {
   localStorage.setItem('bp_video_watched', '1');
-  window.location.href = 'my-toolkit.html';
+  if (fromWrite) sessionStorage.setItem('bp_enter_anim', '1');
+  window.location.href = destAfter;
 }
 </script>
 </body>

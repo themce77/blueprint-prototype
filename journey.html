@@ -70,146 +70,144 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* ─── Main ──────────────────────────────────────────────────── */
 .journey-main {
-  position: absolute; left: 152px; top: 40px;
-  width: 998px;
+  position: absolute; left: 152px; top: 60px;
+  width: 449px;
+  display: flex; flex-direction: column; gap: 32px;
 }
 
 /* ─── Header ────────────────────────────────────────────────── */
-.journey-header {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  margin-bottom: 20px;
-}
 .journey-title {
-  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
-  letter-spacing: 1.5px; color: #f2f3e5; margin: 0 0 4px;
+  font-family: var(--font-display); font-size: var(--title-medium-size); line-height: var(--title-medium-lh);
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0 0 8px;
 }
 .journey-sub {
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  font-family: var(--font-body); font-size: 14px; font-weight: 400;
   color: #737472; margin: 0;
 }
-.month-pill {
-  margin-top: 12px;
-  background: #2b2b32; border: 1px solid #444450; border-radius: 99px;
-  padding: 8px 16px;
-  font-family: var(--font-body); font-size: 13px; font-weight: 700;
-  color: #a4a59f; cursor: pointer; white-space: nowrap;
-  display: flex; align-items: center; gap: 6px;
-}
-
-/* ─── Wrap banner ───────────────────────────────────────────── */
-.wrap-banner {
-  width: 100%; height: 88px; border-radius: 16px;
-  background: linear-gradient(120deg, #7040c8 0%, #3f50b8 100%);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 24px; box-sizing: border-box;
-  cursor: pointer; margin-bottom: 16px;
-  position: relative; overflow: hidden;
-}
-.wrap-banner::before {
-  content: '✦'; position: absolute; right: 110px; top: -10px;
-  font-size: 80px; color: rgba(255,255,255,0.06); line-height: 1;
-}
-.wrap-banner-left { display: flex; align-items: center; gap: 16px; }
-.wrap-banner-icon {
-  width: 48px; height: 48px; border-radius: 12px;
-  background: rgba(255,255,255,0.15);
+.tab-pills { display: flex; gap: 8px; }
+.tab-pill {
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
+  padding: 11px 14px; border-radius: 14px;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  cursor: pointer; border: none; transition: background 150ms, color 150ms;
 }
-.wrap-banner-title {
-  font-family: var(--font-display); font-size: 22px; color: #f2f3e5;
-  margin: 0 0 2px; letter-spacing: 0.3px;
+.tab-pill-active   { background: #f2f3e5; color: #2b2b35; }
+.tab-pill-inactive { background: #2b2b35; color: rgba(242,243,229,0.5); }
+
+/* ─── Wrap illustration (right panel) ──────────────────────── */
+.wrap-illustration {
+  position: absolute; right: 0; top: 0;
+  width: 545px; height: 834px;
+  cursor: pointer; overflow: hidden;
 }
-.wrap-banner-desc {
-  font-family: var(--font-body); font-size: 13px; font-weight: 700;
-  color: rgba(242,243,229,0.65); margin: 0;
+.wrap-illustration img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.wrap-notif-card {
+  position: absolute; bottom: 36px; right: 28px;
+  background: rgba(20,20,26,0.88); backdrop-filter: blur(12px);
+  border-radius: 18px; padding: 16px 18px;
+  display: flex; align-items: center; gap: 14px;
+  min-width: 240px; pointer-events: none;
 }
-.wrap-banner-btn {
-  background: #f2f3e5; border-radius: 8px;
-  padding: 10px 20px;
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
-  color: #1f1f25; white-space: nowrap;
+.wrap-notif-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: #3f50b8; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.wrap-notif-icon svg { width: 22px; height: 22px; }
+.wrap-notif-text { flex: 1; }
+.wrap-notif-title {
+  font-family: var(--font-body); font-size: 15px; font-weight: 700;
+  color: #f2f3e5; margin: 0 0 2px;
+}
+.wrap-notif-sub {
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.5); margin: 0;
+}
+.wrap-notif-badge {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #3f50b8; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  color: #f2f3e5; flex-shrink: 0;
 }
 
 /* ─── Stats grid ────────────────────────────────────────────── */
 .stats-grid {
   display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; margin-bottom: 16px;
+  gap: 12px;
 }
 .stat-card {
-  background: #2b2b32; border-radius: 16px;
+  background: transparent; border-radius: 16px;
+  border: 1px solid var(--colors-gray-400);
   padding: 20px 24px; box-sizing: border-box;
-  height: 148px; position: relative; overflow: hidden;
+  height: 200px; position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: space-between;
 }
 .stat-label {
   font-family: var(--font-body); font-size: 12px; font-weight: 700;
-  color: #737472; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;
+  color: #737472; margin: 0; letter-spacing: 0.3px;
 }
 .stat-big {
-  font-family: var(--font-display); font-size: 52px; line-height: 1;
+  font-family: var(--font-display); font-size: var(--title-small-size); line-height: var(--title-small-lh);
   color: #f2f3e5; margin: 0; letter-spacing: -1px;
 }
-.stat-unit {
-  font-family: var(--font-body); font-size: 13px; font-weight: 700;
-  color: #a4a59f; margin: 0;
-}
 
-/* mood card */
-.stat-mood-row { display: flex; align-items: center; gap: 10px; }
-.stat-mood-img { width: 44px; height: 44px; display: block; }
-.stat-mood-name {
-  font-family: var(--font-display); font-size: 36px; color: #f2f3e5;
-  letter-spacing: 0.3px;
-}
-.mood-mini-bars { display: flex; gap: 5px; align-items: flex-end; height: 32px; }
-.mood-mini-bar { width: 16px; border-radius: 4px; }
+/* ─── Tab panels ────────────────────────────────────────────── */
+.period-panel { display: none; flex-direction: column; gap: 32px; }
+.period-panel.active { display: flex; }
 
-/* streak card */
-.streak-num-row { display: flex; align-items: baseline; gap: 6px; }
-.streak-fire { font-size: 36px; line-height: 1; }
+/* ─── All-times timeline ────────────────────────────────────── */
+.tl-container {
+  position: relative;
+  display: flex; flex-direction: column; gap: 30px;
+}
+.tl-line {
+  position: absolute; left: 51px; top: 8px; bottom: 8px;
+  width: 1px; background: #36363f;
+}
+.tl-entry { position: relative; min-height: 70px; }
+.tl-meta {
+  display: flex; gap: 21px; align-items: center;
+  font-family: var(--font-body); font-size: var(--body-medium-size); line-height: var(--body-medium-lh); font-weight: 500;
+  color: var(--colors-gray-100);
+}
+.tl-date { width: 44px; flex-shrink: 0; }
+.tl-icon-wrap {
+  position: absolute; left: 63px; top: 25px;
+  border: 1px solid var(--colors-gray-400); border-radius: 4px;
+  padding: 6px; display: flex;
+}
+.tl-icon-wrap img { width: 32px; height: 32px; display: block; object-fit: contain; }
+.tl-icon-bare {
+  position: absolute; left: 63px; top: 25px;
+}
+.tl-icon-bare img { display: block; }
 
-/* sparks card */
-.sparks-val-row { display: flex; align-items: center; gap: 10px; }
-.spark-icon-lg { width: 40px; height: 40px; display: block; }
-
-/* activities card */
-.act-accent {
-  position: absolute; right: -12px; bottom: -12px;
-  width: 80px; height: 80px; border-radius: 50%;
-  background: rgba(33,150,83,0.2);
+/* ─── Quote card ────────────────────────────────────────────── */
+.quote-card {
+  background: #36363f;
+  display: flex; align-items: center; overflow: hidden;
 }
-
-/* ─── Timeline ──────────────────────────────────────────────── */
-.timeline-section { }
-.timeline-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 10px;
+.quote-icon {
+  width: 52px; height: 52px; flex-shrink: 0;
+  object-fit: none; object-position: 0 0;
 }
-.timeline-title {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
-  color: #737472; text-transform: uppercase; letter-spacing: 0.5px;
+.quote-text {
+  font-family: var(--font-body); font-size: var(--label-medium-size);
+  line-height: var(--label-medium-lh); font-weight: 700;
+  color: #f2f3e5; margin: 0; padding: 12px 16px 12px 10px;
 }
-.timeline-dots {
-  display: flex; gap: 6px; flex-wrap: nowrap; align-items: center;
-}
-.t-dot {
-  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
-}
-.t-dot.empty { background: #2b2b32; }
 
 /* ─── Wrap overlay ──────────────────────────────────────────── */
 .wrap-overlay {
   position: absolute; inset: 0; z-index: 25; overflow: hidden;
-  cursor: pointer;
 }
 .wrap-progress {
-  position: absolute; top: 32px; left: 24px; right: 24px;
-  display: flex; gap: 6px; z-index: 2;
+  position: absolute; top: 32px; left: 119px; right: 119px;
+  display: flex; gap: 6px; z-index: 3; pointer-events: none;
 }
 .wrap-prog-seg {
-  flex: 1; height: 3px; border-radius: 2px;
-  background: rgba(255,255,255,0.25);
+  flex: 1; height: 4px; border-radius: 99px;
+  background: var(--colors-gray-300);
 }
 .wrap-prog-seg.done { background: rgba(255,255,255,0.9); }
 .wrap-prog-seg.active {
@@ -219,40 +217,130 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 @keyframes prog { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
+/* Slide shell */
 .wrap-slide {
   position: absolute; inset: 0;
+  display: none;
+}
+.wrap-slide.ws-active { display: block; }
+
+/* Cloud blob */
+.ws-blob {
+  position: absolute; left: -315px; top: -33px;
+  width: 1771px; height: 1107px;
+  pointer-events: none; z-index: 0;
+}
+.ws-blob svg { width: 100%; height: 100%; display: block; }
+
+/* Emotion shape decoration */
+.ws-emotion {
+  position: absolute; pointer-events: none; z-index: 0;
+  left: 50%; top: 50%; transform: translate(-50%, -50%);
+}
+.ws-emotion img { display: block; filter: brightness(0) invert(1) brightness(0.12); transform: scale(2); transform-origin: center center; }
+
+/* Text content — spans full height so buttons animate with text */
+.ws-content {
+  position: absolute; z-index: 1;
+  left: 50%; transform: translateX(-50%);
+  top: 0; bottom: 0; width: 661px;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 16px;
+  align-items: center; text-align: center;
 }
-.wrap-slide-label {
-  font-family: var(--font-body); font-size: 13px; font-weight: 700;
-  letter-spacing: 1px; text-transform: uppercase;
-  color: rgba(255,255,255,0.6); margin: 0;
+.ws-text-group {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 24px;
+  padding-top: 120px;
 }
-.wrap-slide-num {
-  font-family: var(--font-display); font-size: 120px; line-height: 1;
-  color: #f2f3e5; margin: 0; letter-spacing: -2px;
+.ws-label {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #f2f3e5; letter-spacing: -0.1px; margin: 0; line-height: 1.25;
 }
-.wrap-slide-text {
-  font-family: var(--font-display); font-size: 52px; line-height: 1.1;
-  color: #f2f3e5; margin: 0; text-align: center; max-width: 700px;
-  letter-spacing: 0.5px;
+.ws-title {
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0;
 }
-.wrap-slide-sub {
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
-  color: rgba(255,255,255,0.65); margin: 0; text-align: center;
+
+/* ─── Wrap intro screen ─────────────────────────────────────── */
+.wi-overlay {
+  position: absolute; inset: 0; z-index: 20; overflow: hidden;
+  background: #1f1f25;
 }
-.wrap-close-btn {
-  margin-top: 8px;
-  background: #f2f3e5; border: none; border-radius: 8px;
-  padding: 14px 40px; cursor: pointer;
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
-  color: #1f1f25;
+.wi-bg {
+  position: absolute; left: -85px; top: -109px;
+  width: 1347px; height: 783px;
+  pointer-events: none; z-index: 0; display: block;
 }
-.wrap-mood-img { width: 96px; height: 96px; display: block; }
-.wrap-sparks-row { display: flex; align-items: center; gap: 16px; }
-.wrap-spark-icon { width: 72px; height: 72px; display: block; }
+.wi-center {
+  position: absolute; left: 50%; top: 50%; z-index: 1;
+  transform: translate(-50%, -50%);
+  width: 661px; text-align: center;
+  display: flex; flex-direction: column; gap: 24px; align-items: center;
+}
+.wi-period {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #f2f3e5; letter-spacing: -0.1px; margin: 0;
+}
+.wi-title {
+  font-family: var(--font-display); font-size: 80px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0;
+}
+.wi-skip {
+  position: absolute; top: 60px; right: 24px; z-index: 1;
+  height: 48px; padding: 0 16px; border-radius: 8px;
+  background: rgba(255,255,255,0.16); border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #ededed; letter-spacing: -0.1px;
+}
+.wi-start {
+  position: absolute; bottom: 65px; left: 50%; transform: translateX(-50%); z-index: 1;
+  width: 270px; height: 48px; border-radius: 8px;
+  background: #f2f3e5; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #1f1f25; letter-spacing: -0.1px;
+}
+
+/* ─── Post-wrap done state ───────────────────────────────────── */
+.journey-main.wrap-done { width: 977px; }
+.journey-main.wrap-done .stats-grid { gap: 16px; }
+.stat-card-bg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: none; object-fit: cover; z-index: 0; border-radius: 16px;
+}
+.stat-label { position: relative; z-index: 1; }
+.stat-big   { position: relative; z-index: 1; }
+.wrap-done .stat-card-bg  { display: block; }
+.wrap-done .stat-card     { border-color: transparent; }
+.wrap-done .stat-label    { color: rgba(242,243,229,0.7); }
+.open-recap-btn {
+  display: none; align-self: center;
+  height: 48px; padding: 0 28px; border-radius: 8px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.16);
+  cursor: pointer; font-family: var(--font-body); font-size: 16px;
+  font-weight: 500; color: #f5f5f5; letter-spacing: -0.1px;
+  transition: background 150ms;
+}
+.open-recap-btn:hover { background: rgba(255,255,255,0.06); }
+.wrap-done .open-recap-btn { display: block; }
+.wrap-done .quote-card     { display: none; }
+
+/* Actions — now inside ws-content, animate together */
+.ws-actions {
+  display: flex; gap: 12px; align-items: center;
+  padding-bottom: 65px; flex-shrink: 0;
+}
+.ws-btn-back {
+  width: 48px; height: 48px; border-radius: 8px; border: none;
+  background: rgba(255,255,255,0.16); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ws-btn-back svg { display: block; }
+.ws-btn-next {
+  height: 48px; min-width: 200px; padding: 0 24px;
+  border-radius: 8px; border: none; background: #f2f3e5; cursor: pointer;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #1f1f25; letter-spacing: -0.1px; white-space: nowrap;
+}
 
 </style>
 </head>
@@ -280,8 +368,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <span class="nav-label">My toolkit</span>
       </div>
       <div class="nav-item active">
-        <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
-        <span class="nav-label">Journey</span>
+        <div class="nav-icon"><img src="./components/icon-04.svg" alt="My journey"></div>
+        <span class="nav-label">My journey</span>
       </div>
       <div class="nav-item" onclick="window.location.href='grades.html'">
         <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
@@ -301,133 +389,215 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   <!-- Main content -->
   <div class="journey-main">
 
-    <!-- Header -->
-    <div class="journey-header">
-      <div>
-        <h1 class="journey-title">My Journey</h1>
-        <p class="journey-sub">You're doing great, Sophie.</p>
-      </div>
-      <div class="month-pill">May 2026 ▾</div>
+    <!-- 1. Title + description -->
+    <div>
+      <h1 class="journey-title">My journey</h1>
+      <p class="journey-sub">Every feeling you noticed made you a little wiser.</p>
     </div>
 
-    <!-- Wrap banner -->
-    <div class="wrap-banner" onclick="openWrap()">
-      <div class="wrap-banner-left">
-        <div class="wrap-banner-icon">✦</div>
-        <div>
-          <p class="wrap-banner-title">May Wrap</p>
-          <p class="wrap-banner-desc">Your month, highlighted</p>
-        </div>
-      </div>
-      <div class="wrap-banner-btn">View wrap →</div>
+    <!-- 2. Tabs -->
+    <div class="tab-pills">
+      <button class="tab-pill tab-pill-active"   onclick="switchPeriod(this)">This month</button>
+      <button class="tab-pill tab-pill-inactive" onclick="switchPeriod(this)">All times</button>
     </div>
 
-    <!-- Stats grid -->
-    <div class="stats-grid">
+    <!-- 3. This month panel -->
+    <div class="period-panel active" id="panel-thismonth">
 
-      <!-- Mood card -->
-      <div class="stat-card">
-        <p class="stat-label">Top mood</p>
-        <div class="stat-mood-row">
-          <img class="stat-mood-img" src="./components/emotion-happy.svg" alt="happy">
-          <span class="stat-mood-name">Happy</span>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <img class="stat-card-bg" src="./components/Frame 1484.svg" alt="">
+          <p class="stat-label">Named feelings</p>
+          <span class="stat-big">15</span>
         </div>
-        <div class="mood-mini-bars">
-          <div class="mood-mini-bar" style="background:#f2c94c;height:32px;"></div>
-          <div class="mood-mini-bar" style="background:#f08b31;height:22px;"></div>
-          <div class="mood-mini-bar" style="background:#49aee1;height:14px;"></div>
-          <div class="mood-mini-bar" style="background:#a4a59f;height:8px;"></div>
-          <div class="mood-mini-bar" style="background:#3f50b8;height:6px;"></div>
+        <div class="stat-card">
+          <img class="stat-card-bg" src="./components/Frame 1485.svg" alt="">
+          <p class="stat-label">Completed check-ins</p>
+          <span class="stat-big">15</span>
+        </div>
+        <div class="stat-card">
+          <img class="stat-card-bg" src="./components/Frame 1489.svg" alt="">
+          <p class="stat-label">Earned Sparks</p>
+          <span class="stat-big" id="journeySparks">200</span>
+        </div>
+        <div class="stat-card">
+          <img class="stat-card-bg" src="./components/Frame 1485-1.svg" alt="">
+          <p class="stat-label">Activities done</p>
+          <span class="stat-big">30</span>
         </div>
       </div>
 
-      <!-- Streak card -->
-      <div class="stat-card">
-        <p class="stat-label">Current streak</p>
-        <div class="streak-num-row">
-          <span class="stat-big">5</span>
-          <span class="streak-fire">🔥</span>
-        </div>
-        <p class="stat-unit">days in a row</p>
-      </div>
+      <button class="open-recap-btn" onclick="openWrap()">Open monthly recap</button>
 
-      <!-- Sparks card -->
-      <div class="stat-card">
-        <p class="stat-label">Sparks earned</p>
-        <div class="sparks-val-row">
-          <span class="stat-big" id="journeySparks">220</span>
-          <img class="spark-icon-lg" src="./components/Spark-4.svg" alt="spark">
-        </div>
-        <p class="stat-unit">this month</p>
-      </div>
-
-      <!-- Activities card -->
-      <div class="stat-card">
-        <div class="act-accent"></div>
-        <p class="stat-label">Activities done</p>
-        <span class="stat-big">7</span>
-        <p class="stat-unit">from My Toolkit</p>
+      <div class="quote-card">
+        <img class="quote-icon" src="./components/Message-a.svg" alt="">
+        <p class="quote-text">Every single check-in was a choice to know yourself better. That's something to be proud of.</p>
       </div>
 
     </div>
 
-    <!-- Mood timeline -->
-    <div class="timeline-section">
-      <div class="timeline-header">
-        <span class="timeline-title">Mood this month</span>
-        <span class="timeline-title">May</span>
+    <!-- 3b. All times panel -->
+    <div class="period-panel" id="panel-alltime">
+      <div class="tl-container">
+        <div class="tl-line"></div>
+
+        <div class="tl-entry">
+          <div class="tl-meta">
+            <span class="tl-date">Today</span>
+            <span>May Wrapped</span>
+          </div>
+          <div class="tl-icon-wrap">
+            <img src="./components/timeline-05.svg" alt="">
+          </div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-meta">
+            <span class="tl-date">12.04.24</span>
+            <span>20 journal notes written</span>
+          </div>
+          <div class="tl-icon-wrap">
+            <img src="./components/timeline-04.svg" alt="">
+          </div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-meta">
+            <span class="tl-date">16.03.24</span>
+            <span>Handled hard emotions connected to grade</span>
+          </div>
+          <div class="tl-icon-wrap">
+            <img src="./components/timeline-03.svg" alt="">
+          </div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-meta">
+            <span class="tl-date">16.01.24</span>
+            <span>Learned about Emotional Regulation</span>
+          </div>
+          <div class="tl-icon-wrap">
+            <img src="./components/timeline-02.svg" alt="">
+          </div>
+        </div>
+
+        <div class="tl-entry" style="min-height:57px;">
+          <div class="tl-meta">
+            <span class="tl-date">12.01.24</span>
+            <span>First check-in</span>
+          </div>
+          <div class="tl-icon-wrap">
+            <img src="./components/timeline-01.svg" alt="" style="width:auto;height:auto;">
+          </div>
+        </div>
+
+        <div class="tl-entry" style="min-height:auto;">
+          <div class="tl-meta">
+            <span class="tl-date">12.01.24</span>
+            <span>Started</span>
+          </div>
+        </div>
+
       </div>
-      <div class="timeline-dots" id="timelineDots"></div>
     </div>
 
   </div>
 
+  <!-- ── Wrap intro overlay ──────────────────────────────────── -->
+  <div id="wrap-intro" class="wi-overlay" style="display:none">
+    <img src="./components/grupka.svg" alt="" class="wi-bg">
+    <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+    <button class="wi-skip" onclick="skipIntro()">Skip</button>
+    <div class="wi-center">
+      <p class="wi-period">May 2026</p>
+      <h2 class="wi-title">Open your monthly recap</h2>
+    </div>
+    <button class="wi-start" onclick="startWrap()">Start</button>
+  </div>
+
+  <!-- ── Wrap illustration (right panel) ─────────────────────── -->
+  <div class="wrap-illustration" onclick="onWrapClick()">
+    <img src="./components/wrap.svg" alt="May Wrap">
+  </div>
+
   <!-- ── Wrap overlay ──────────────────────────────────────────── -->
-  <div id="wrap-overlay" class="wrap-overlay" style="display:none" onclick="nextSlide()">
+  <div id="wrap-overlay" class="wrap-overlay" style="display:none">
 
     <!-- Progress bar -->
     <div class="wrap-progress" id="wrapProgress"></div>
 
     <!-- Slide 1: Intro -->
-    <div class="wrap-slide" id="ws-0" style="background:linear-gradient(135deg,#7040c8 0%,#3f50b8 100%);">
-      <p class="wrap-slide-label">May 2026</p>
-      <h2 class="wrap-slide-text">Your month,<br>recapped.</h2>
-      <p class="wrap-slide-sub">Tap anywhere to continue</p>
-    </div>
-
-    <!-- Slide 2: Check-ins -->
-    <div class="wrap-slide" id="ws-1" style="background:#3f50b8;display:none;">
-      <p class="wrap-slide-label">You showed up</p>
-      <p class="wrap-slide-num">18</p>
-      <p class="wrap-slide-text" style="font-size:32px;">days out of 31</p>
-      <p class="wrap-slide-sub">That's more than half the month. 💪</p>
-    </div>
-
-    <!-- Slide 3: Top mood -->
-    <div class="wrap-slide" id="ws-2" style="background:#e65800;display:none;">
-      <p class="wrap-slide-label">Your top mood was</p>
-      <img class="wrap-mood-img" src="./components/emotion-happy.svg" alt="happy">
-      <h2 class="wrap-slide-text">Happy</h2>
-      <p class="wrap-slide-sub">You felt this way on 12 days ✨</p>
-    </div>
-
-    <!-- Slide 4: Sparks -->
-    <div class="wrap-slide" id="ws-3" style="background:#1f1f25;display:none;">
-      <img src="./components/Lightning 1.svg" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-15deg);width:2400px;height:4248px;pointer-events:none;opacity:0.18;">
-      <p class="wrap-slide-label" style="position:relative;z-index:1;">You collected</p>
-      <div class="wrap-sparks-row" style="position:relative;z-index:1;">
-        <p class="wrap-slide-num" id="wrapSparks">220</p>
-        <img class="wrap-spark-icon" src="./components/Spark-4.svg" alt="spark">
+    <div class="wrap-slide ws-active" id="ws-0" style="background:linear-gradient(135deg,#7040c8 0%,#3f50b8 100%);">
+      <div class="ws-blob" style="top:-93px;"><svg viewBox="0 0 1771 1107" preserveAspectRatio="none" fill="none"><path d="M0,1107 L0,500 Q200,150 450,350 Q600,200 750,380 Q900,150 1150,350 Q1400,200 1771,450 L1771,1107 Z" fill="#1f1f25"/></svg></div>
+      <div class="ws-content">
+        <div class="ws-text-group">
+          <p class="ws-label">May 2026</p>
+          <h2 class="ws-title">Your month,<br>recapped.</h2>
+        </div>
+        <div class="ws-actions">
+          <button class="ws-btn-next" onclick="nextSlide()">Start</button>
+        </div>
       </div>
-      <p class="wrap-slide-text" style="font-size:28px;position:relative;z-index:1;">Sparks this month</p>
     </div>
 
-    <!-- Slide 5: Close -->
-    <div class="wrap-slide" id="ws-4" style="background:#219653;display:none;">
-      <p class="wrap-slide-label">Keep going</p>
-      <h2 class="wrap-slide-text">Every day<br>counts.</h2>
-      <p class="wrap-slide-sub">See you in June 👋</p>
-      <button class="wrap-close-btn" onclick="closeWrap(event)">Back to Journey</button>
+    <!-- Slide 2: Emotion + reason -->
+    <div class="wrap-slide" id="ws-1" style="background:#3f50b8;">
+      <div class="ws-blob" style="top:-93px;"><svg viewBox="0 0 1771 1107" preserveAspectRatio="none" fill="none"><path d="M0,1107 L0,600 Q885,60 1771,600 L1771,1107 Z" fill="#1f1f25"/></svg></div>
+      <div class="ws-content">
+        <div class="ws-text-group">
+          <p class="ws-label">You checked in 18 times</p>
+          <h2 class="ws-title">Stressed about school — but you showed up anyway.</h2>
+        </div>
+        <div class="ws-actions">
+          <button class="ws-btn-back" onclick="prevSlide(event)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="ws-btn-next" onclick="nextSlide()">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Sleep + mood correlation -->
+    <div class="wrap-slide" id="ws-2" style="background:#49aee1;">
+      <div class="ws-emotion"><img src="./components/emotion-happy.svg" width="2550" height="2550" alt=""></div>
+      <div class="ws-content">
+        <div class="ws-text-group">
+          <p class="ws-label">You noticed a pattern</p>
+          <h2 class="ws-title">On good sleep nights, you felt happy 3× more often.</h2>
+        </div>
+        <div class="ws-actions">
+          <button class="ws-btn-back" onclick="prevSlide(event)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="ws-btn-next" onclick="nextSlide()">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Journal quote -->
+    <div class="wrap-slide" id="ws-3" style="background:#b38aff;">
+      <div class="ws-emotion"><img src="./components/emotion-stressed.svg" width="2100" height="2100" alt=""></div>
+      <div class="ws-content">
+        <div class="ws-text-group">
+          <p class="ws-label">You wrote something important in the journal</p>
+          <h2 class="ws-title">"Today was hard but I got through it."</h2>
+        </div>
+        <div class="ws-actions">
+          <button class="ws-btn-back" onclick="prevSlide(event)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="ws-btn-next" onclick="nextSlide()">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Win -->
+    <div class="wrap-slide" id="ws-4" style="background:#58b880;">
+      <div class="ws-emotion"><img src="./components/emotion-excited.svg" width="2325" height="2325" alt=""></div>
+      <div class="ws-content">
+        <div class="ws-text-group">
+          <p class="ws-label">Your win of the month</p>
+          <h2 class="ws-title">"Finished my project on time."</h2>
+        </div>
+        <div class="ws-actions">
+          <button class="ws-btn-back" onclick="prevSlide(event)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="ws-btn-next" onclick="closeWrap(event)">Back to Journey</button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -446,7 +616,7 @@ scale(); addEventListener('resize', scale);
 (function(){
   var src = localStorage.getItem('bp_avatar') || './foundations/assets/avatars/avatar-3.svg';
   var bg  = localStorage.getItem('bp_avatar_bg') || '#b8c0ed';
-  var el  = document.getElementById('userAvatar');
+  var el = document.getElementById('userAvatar');
   if (el) el.style.background = bg + ' url("' + src + '") no-repeat center / cover';
 })();
 
@@ -454,38 +624,32 @@ scale(); addEventListener('resize', scale);
 (function() {
   const n = parseInt(localStorage.getItem('bp_sparks') || '220', 10);
   document.getElementById('journeySparks').textContent = n;
-  document.getElementById('wrapSparks').textContent = n;
 })();
 
-// Timeline dots — demo mood data for May (31 days)
-(function() {
-  var moods = [
-    '#f2c94c','#f2c94c','#49aee1','#f08b31','#f2c94c',
-    '#a4a59f','#f2c94c','#f08b31','#f08b31','#f2c94c',
-    '#49aee1','#3f50b8','#a4a59f','#f2c94c','#f2c94c',
-    '#f08b31','#f2c94c','#f2c94c','#49aee1','#f2c94c',
-    '#f2c94c','#f08b31','#a4a59f','#f2c94c','#f2c94c',
-    '#f08b31','#f2c94c','#f2c94c','#f2c94c','#49aee1',
-    null
-  ];
-  var container = document.getElementById('timelineDots');
-  moods.forEach(function(c) {
-    var d = document.createElement('div');
-    d.className = 't-dot' + (c ? '' : ' empty');
-    if (c) d.style.background = c;
-    container.appendChild(d);
-  });
-})();
+
+// ─── Period tabs ─────────────────────────────────────────────
+function switchPeriod(btn) {
+  var pills = btn.closest('.tab-pills').querySelectorAll('.tab-pill');
+  var idx = Array.prototype.indexOf.call(pills, btn);
+  pills.forEach(function(b) { b.className = 'tab-pill tab-pill-inactive'; });
+  btn.className = 'tab-pill tab-pill-active';
+  document.getElementById('panel-thismonth').classList.toggle('active', idx === 0);
+  document.getElementById('panel-alltime').classList.toggle('active', idx === 1);
+}
 
 // ─── Wrap ────────────────────────────────────────────────────
 var SLIDE_COUNT = 5;
 var _slide = 0;
-var _slideTimer = null;
-var SLIDE_DURATION = 3000;
+var _wrapAnimating = false;
+var WRAP_BEZ = 'cubic-bezier(0.73,-0.01,0.2,0.98)';
+var WRAP_DUR = 800;
 
 function openWrap() {
   _slide = 0;
-  showSlide(0);
+  for (var i = 0; i < SLIDE_COUNT; i++) {
+    document.getElementById('ws-' + i).classList.toggle('ws-active', i === 0);
+  }
+  buildProgress();
   document.getElementById('wrap-overlay').style.display = 'block';
 }
 
@@ -495,33 +659,101 @@ function buildProgress() {
   for (var i = 0; i < SLIDE_COUNT; i++) {
     var seg = document.createElement('div');
     seg.className = 'wrap-prog-seg' + (i < _slide ? ' done' : i === _slide ? ' active' : '');
-    if (i === _slide) seg.style.animationDuration = SLIDE_DURATION + 'ms';
     bar.appendChild(seg);
   }
 }
 
-function showSlide(n) {
-  for (var i = 0; i < SLIDE_COUNT; i++) {
-    document.getElementById('ws-' + i).style.display = i === n ? 'flex' : 'none';
-  }
-  buildProgress();
-  clearTimeout(_slideTimer);
-  if (n < SLIDE_COUNT - 1) {
-    _slideTimer = setTimeout(nextSlide, SLIDE_DURATION);
-  }
+function animateWrap(fromIdx, toIdx) {
+  if (_wrapAnimating) return;
+  _wrapAnimating = true;
+
+  var overlay = document.getElementById('wrap-overlay');
+  overlay.style.pointerEvents = 'none';
+
+  var dir = toIdx > fromIdx ? 1 : -1;
+  var fromSlide = document.getElementById('ws-' + fromIdx);
+  var toSlide   = document.getElementById('ws-' + toIdx);
+  var fromC = fromSlide.querySelector('.ws-content');
+  var toC   = toSlide.querySelector('.ws-content');
+
+  var exitX  = 'calc(-50% + ' + (dir * -1300) + 'px)';
+  var enterX = 'calc(-50% + ' + (dir *  1300) + 'px)';
+
+  toC.style.transition = 'none';
+  toC.style.transform  = enterX;
+
+  toSlide.classList.add('ws-active');
+  toSlide.style.zIndex = '2';
+  fromSlide.style.zIndex = '1';
+
+  toC.offsetWidth;
+
+  var t = 'transform ' + WRAP_DUR + 'ms ' + WRAP_BEZ;
+  fromC.style.transition = t;
+  fromC.style.transform  = exitX;
+  toC.style.transition   = t;
+  toC.style.transform    = 'translateX(-50%)';
+
+  setTimeout(function() {
+    fromSlide.classList.remove('ws-active');
+    fromSlide.style.zIndex = '';
+    toSlide.style.zIndex   = '';
+    fromC.style.transition = fromC.style.transform = '';
+    toC.style.transition   = toC.style.transform   = '';
+    overlay.style.pointerEvents = '';
+    _wrapAnimating = false;
+  }, WRAP_DUR);
 }
 
 function nextSlide() {
-  if (_slide >= SLIDE_COUNT - 1) return;
-  _slide++;
-  showSlide(_slide);
+  if (_slide >= SLIDE_COUNT - 1 || _wrapAnimating) return;
+  var prev = _slide++;
+  buildProgress();
+  animateWrap(prev, _slide);
+}
+
+function prevSlide(e) {
+  if (e) e.stopPropagation();
+  if (_slide <= 0 || _wrapAnimating) return;
+  var prev = _slide--;
+  buildProgress();
+  animateWrap(prev, _slide);
 }
 
 function closeWrap(e) {
   if (e) e.stopPropagation();
-  clearTimeout(_slideTimer);
   document.getElementById('wrap-overlay').style.display = 'none';
+  _wrapAnimating = false;
+  localStorage.setItem('bp_wrap_done', '1');
+  applyWrapDone();
 }
+
+function onWrapClick() {
+  if (localStorage.getItem('bp_wrap_done')) {
+    openWrap();
+  } else {
+    document.getElementById('wrap-intro').style.display = 'block';
+  }
+}
+
+function skipIntro() {
+  document.getElementById('wrap-intro').style.display = 'none';
+}
+
+function startWrap() {
+  document.getElementById('wrap-intro').style.display = 'none';
+  openWrap();
+}
+
+function applyWrapDone() {
+  document.querySelector('.journey-main').classList.add('wrap-done');
+  var illus = document.querySelector('.wrap-illustration');
+  if (illus) illus.style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (localStorage.getItem('bp_wrap_done')) applyWrapDone();
+});
 </script>
 </body>
 </html>

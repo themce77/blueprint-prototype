@@ -281,6 +281,18 @@ function saveNote() {
   const val = document.getElementById('noteInput').value.trim();
   localStorage.setItem('bp_write_text', val);
   localStorage.setItem('bp_write_done', '1');
+
+  // Append to journal notes history (or update today's entry)
+  const notes = JSON.parse(localStorage.getItem('bp_journal_notes') || '[]');
+  const today = new Date().toISOString().split('T')[0];
+  const todayIdx = notes.findIndex(function(n) { return n.date === today; });
+  if (todayIdx >= 0) {
+    notes[todayIdx].text = val;
+  } else {
+    notes.push({ date: today, text: val });
+  }
+  localStorage.setItem('bp_journal_notes', JSON.stringify(notes));
+
   const from = new URLSearchParams(location.search).get('from');
   setTimeout(() => {
     window.location.href = 'completed.html?card=write' + (from ? '&from=' + from : '');

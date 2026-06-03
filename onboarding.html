@@ -513,10 +513,17 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 .fc-art {
   position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
 }
 .fc-art img {
-  width: 100%; height: 100%; display: block;
+  width: 90%; height: 90%; display: block;
+  object-fit: contain;
+  transform: translateY(-18px);
+}
+.fc--full .fc-art img {
+  width: 100%; height: 100%;
   object-fit: fill;
+  transform: none;
 }
 
 .fc-bar {
@@ -892,16 +899,16 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <p class="t-lg">Select your<br>avatar</p>
 
     <div class="avatar-row">
-      <button class="av-btn" style="background:#b38aff" onclick="pickAvatar(this)">
+      <button class="av-btn" style="background:#b38aff" data-bg="#b38aff" onclick="pickAvatar(this)">
         <img src="./foundations/assets/avatars/avatar-1.svg" alt="avatar 1">
       </button>
-      <button class="av-btn" style="background:#f3beaf" onclick="pickAvatar(this)">
+      <button class="av-btn" style="background:#f3beaf" data-bg="#f3beaf" onclick="pickAvatar(this)">
         <img src="./foundations/assets/avatars/avatar-2.svg" alt="avatar 2">
       </button>
-      <button class="av-btn" style="background:#b8c0ed" onclick="pickAvatar(this)">
+      <button class="av-btn" style="background:#b8c0ed" data-bg="#b8c0ed" onclick="pickAvatar(this)">
         <img src="./foundations/assets/avatars/avatar-3.svg" alt="avatar 3">
       </button>
-      <button class="av-btn" style="background:#58b880" onclick="pickAvatar(this)">
+      <button class="av-btn" style="background:#58b880" data-bg="#58b880" onclick="pickAvatar(this)">
         <img src="./foundations/assets/avatars/avatar-4.svg" alt="avatar 4">
       </button>
     </div>
@@ -1176,6 +1183,7 @@ function goTo(n) {
     const inEl  = document.getElementById('s' + n);
     inEl.style.zIndex = '10';
     inEl.classList.add('active');
+    if (n === 5) updateCardTheme();
     setTimeout(() => {
       // Hide outgoing instantly (no fade) so it doesn't bleed over incoming
       outEl.style.transition = 'none';
@@ -1202,7 +1210,28 @@ function pickAvatar(el) {
   el.classList.add('sel');
   const img = el.querySelector('img');
   if (img) localStorage.setItem('bp_avatar', img.getAttribute('src'));
-  localStorage.setItem('bp_avatar_bg', el.style.background || '');
+  localStorage.setItem('bp_avatar_bg', el.dataset.bg || '');
+  updateCardTheme();
+}
+
+// ─── Card theme swap ─────────────────────────────────────────
+const CARD_THEMES = {
+  '#b38aff': { bg: '#b38aff', src: n => `./components/Potworek-0${[6,5,4,3,2,1][n-1]}.svg` },
+  '#f3beaf': { bg: '#f0aa8c', src: n => `./components/Property%201=0${n}.svg` },
+  '#b8c0ed': { bg: '#36363f', src: n => `./components/card-ilu-0${n}.svg` },
+  '#58b880': { bg: '#219653', src: n => `./components/Potworek-2-0${n}.svg` },
+};
+function updateCardTheme() {
+  const avatarBg = localStorage.getItem('bp_avatar_bg') || '#b8c0ed';
+  const theme = CARD_THEMES[avatarBg] || CARD_THEMES['#b8c0ed'];
+  const isDefault = avatarBg === '#b8c0ed';
+  document.querySelectorAll('.fc').forEach((card, i) => {
+    card.style.background = theme.bg;
+    card.style.setProperty('--fc-bg', theme.bg);
+    card.classList.toggle('fc--full', isDefault);
+    const img = card.querySelector('.fc-art img');
+    if (img) img.src = theme.src(i + 1);
+  });
 }
 
 // ─── Feel-good card toggle ───────────────────────────────────

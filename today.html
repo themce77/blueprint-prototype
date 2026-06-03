@@ -154,7 +154,7 @@ html[data-entry] .today-footer   { transform: translateY(120px) !important;  opa
   width: 237px; height: 353px;
   position: relative; border-radius: 19px; overflow: hidden;
   flex-shrink: 0;
-  transition: transform 140ms cubic-bezier(0.34,1.56,0.64,1);
+  transition: transform 140ms cubic-bezier(0.34,1.56,0.64,1), opacity 200ms ease;
 }
 .card-img {
   width: 100%; height: 100%;
@@ -162,8 +162,10 @@ html[data-entry] .today-footer   { transform: translateY(120px) !important;  opa
 }
 
 /* States */
-.t-card.sleepy      { cursor: pointer; }
-.t-card.sleepy:hover { transform: scale(1.025); }
+.t-card.sleepy           { cursor: pointer; opacity: 0.45; }
+.t-card.sleepy:hover     { transform: scale(1.025); opacity: 1; }
+.t-card.sleepy.hero      { opacity: 1; }
+.t-card.sleepy.hero:hover{ transform: scale(1.025); opacity: 1; }
 .t-card.recommended { cursor: pointer; }
 .t-card.recommended:hover { transform: scale(1.025); }
 .t-card.done        { cursor: pointer; }
@@ -342,8 +344,8 @@ html[data-entry] .today-footer   { transform: translateY(120px) !important;  opa
         <span class="nav-label">My toolkit</span>
       </div>
       <div class="nav-item" onclick="window.location.href='journey.html'">
-        <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
-        <span class="nav-label">Journey</span>
+        <div class="nav-icon"><img src="./components/icon-04.svg" alt="My journey"></div>
+        <span class="nav-label">My journey</span>
       </div>
       <div class="nav-item" onclick="window.location.href='grades.html'">
         <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
@@ -377,6 +379,21 @@ html[data-entry] .today-footer   { transform: translateY(120px) !important;  opa
 
     <div class="today-cards" id="cardRow">
 
+      <!-- Write it out — hero (recommended) -->
+      <div class="t-card sleepy hero" id="card-write">
+        <img class="card-img" src="./components/sleepy-2.svg" alt="Write it out">
+        <svg class="eye-overlay" viewBox="0 0 237 353" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="cp-write-L"><ellipse cx="101" cy="112.801" rx="13.4" ry="17.866"/></clipPath>
+            <clipPath id="cp-write-R"><ellipse cx="137" cy="112.801" rx="13.4" ry="17.866"/></clipPath>
+          </defs>
+          <ellipse id="ew-write-L" cx="101" cy="112.801" rx="13.4" ry="17.866" fill="#F2F3E5"/>
+          <circle  id="p-write-L"  cx="101" cy="119.8"   r="9.38" fill="#2B2B32" clip-path="url(#cp-write-L)"/>
+          <ellipse id="ew-write-R" cx="137" cy="112.801" rx="13.4" ry="17.866" fill="#F2F3E5"/>
+          <circle  id="p-write-R"  cx="137" cy="119.8"   r="9.38" fill="#2B2B32" clip-path="url(#cp-write-R)"/>
+        </svg>
+      </div>
+
       <!-- Notice your wins — sleepy -->
       <div class="t-card sleepy" id="card-wins">
         <img class="card-img" src="./components/sleepy-1.svg" alt="Notice your wins">
@@ -389,21 +406,6 @@ html[data-entry] .today-footer   { transform: translateY(120px) !important;  opa
           <circle  id="p-wins-L"  cx="101" cy="119.8"   r="0" fill="#2B2B32" clip-path="url(#cp-wins-L)"/>
           <ellipse id="ew-wins-R" cx="137" cy="112.801" rx="13.4" ry="0" fill="#F2F3E5"/>
           <circle  id="p-wins-R"  cx="137" cy="119.8"   r="0" fill="#2B2B32" clip-path="url(#cp-wins-R)"/>
-        </svg>
-      </div>
-
-      <!-- Write it out — sleepy -->
-      <div class="t-card sleepy" id="card-write">
-        <img class="card-img" src="./components/sleepy-2.svg" alt="Write it out">
-        <svg class="eye-overlay" viewBox="0 0 237 353" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <clipPath id="cp-write-L"><ellipse cx="101" cy="112.801" rx="13.4" ry="17.866"/></clipPath>
-            <clipPath id="cp-write-R"><ellipse cx="137" cy="112.801" rx="13.4" ry="17.866"/></clipPath>
-          </defs>
-          <ellipse id="ew-write-L" cx="101" cy="112.801" rx="13.4" ry="0" fill="#F2F3E5"/>
-          <circle  id="p-write-L"  cx="101" cy="119.8"   r="0" fill="#2B2B32" clip-path="url(#cp-write-L)"/>
-          <ellipse id="ew-write-R" cx="137" cy="112.801" rx="13.4" ry="0" fill="#F2F3E5"/>
-          <circle  id="p-write-R"  cx="137" cy="119.8"   r="0" fill="#2B2B32" clip-path="url(#cp-write-R)"/>
         </svg>
       </div>
 
@@ -626,7 +628,8 @@ function setCardState(id, state) {
   const cfg  = CARD_CFG[id];
   if (!card || !img || !cfg) return;
 
-  card.className = 't-card ' + state;
+  const wasHero = card.classList.contains('hero');
+  card.className = 't-card ' + state + (wasHero && state !== 'done' ? ' hero' : '');
   if (state === 'sleepy') {
     img.src = `./components/${cfg.sleepySvg}.svg`;
   } else {
@@ -644,10 +647,21 @@ function setCardState(id, state) {
   }
 }
 
+function promoteNextHero() {
+  document.querySelectorAll('#cardRow .t-card.hero').forEach(c => c.classList.remove('hero'));
+  const next = document.querySelector('#cardRow .t-card.sleepy');
+  if (!next) { heroSlug = null; return; }
+  next.classList.add('hero');
+  heroSlug = next.id.replace('card-', '');
+  heroCx = 0; heroCy = 0;
+  openEyes(heroSlug);
+}
+
 function completeCard(id) {
   const card = document.getElementById(id);
   if (!card || card.classList.contains('done')) return;
 
+  const wasHero = card.classList.contains('hero');
   setCardState(id, 'done');
 
   const row = document.getElementById('cardRow');
@@ -662,6 +676,7 @@ function completeCard(id) {
     if (!done.includes(cfg.section)) { done.push(cfg.section); localStorage.setItem('bp_today_sections', JSON.stringify(done)); }
   }
 
+  if (wasHero) promoteNextHero();
   checkAllDone();
 }
 
@@ -765,6 +780,13 @@ function animateToDrawer(cardId, afterDone) {
   }, 1600);
 }
 
+// ─── Eye rest positions (needed before restore so openEyes works) ─
+const EYE_REST = {
+  wins:  { L: [101, 119.8], R: [137, 119.8], ry: 17.866 },
+  write: { L: [101, 119.8], R: [137, 119.8], ry: 17.866 },
+  about: { L: [101, 119.8], R: [137, 119.8], ry: 17.866 },
+};
+
 // ─── Restore state on page load ───────────────────────────────
 const doneFlags = {
   'bp_wins_done':  'card-wins',
@@ -804,15 +826,15 @@ Object.entries(doneFlags).forEach(([flag, cardId]) => {
 checkAllDone();
 updateSparks();
 
+
 // ─── Eye open/close animation on hover ────────────────────────
-const EYE_REST = {
-  wins:  { L: [101, 119.8], R: [137, 119.8], ry: 17.866 },
-  write: { L: [101, 119.8], R: [137, 119.8], ry: 17.866 },
-  about: { L: [101, 119.8], R: [137, 119.8], ry: 17.866 },
-};
-const WANDER_MAX = 2.2;
+const WANDER_MAX = 4;
 let eyeCx = 0, eyeCy = 0, eyeTx = 0, eyeTy = 0;
 let hoveredSlug = null;
+
+// Separate wander state for hero card (always animating)
+let heroCx = 0, heroCy = 0, heroTx = 0, heroTy = 0;
+let heroSlug = 'write';
 
 function pickWanderTarget() {
   const angle = Math.random() * Math.PI * 2;
@@ -823,7 +845,32 @@ function pickWanderTarget() {
 }
 pickWanderTarget();
 
+function pickHeroTarget() {
+  const angle = Math.random() * Math.PI * 2;
+  const dist  = 2.5 + Math.random() * (WANDER_MAX - 2.5);
+  heroTx = Math.cos(angle) * dist;
+  heroTy = Math.sin(angle) * dist;
+  setTimeout(pickHeroTarget, 500 + Math.random() * 1200);
+}
+pickHeroTarget();
+
 (function eyeRaf() {
+  // Hero card pupils always wander (hover takes over when hovered)
+  if (heroSlug && hoveredSlug !== heroSlug) {
+    heroCx += (heroTx - heroCx) * 0.09;
+    heroCy += (heroTy - heroCy) * 0.09;
+    const rest = EYE_REST[heroSlug];
+    if (rest) {
+      ['L', 'R'].forEach(side => {
+        const p = document.getElementById(`p-${heroSlug}-${side}`);
+        if (p && parseFloat(p.getAttribute('r')) > 5) {
+          p.setAttribute('cx', rest[side][0] + heroCx);
+          p.setAttribute('cy', rest[side][1] + heroCy);
+        }
+      });
+    }
+  }
+
   if (hoveredSlug) {
     eyeCx += (eyeTx - eyeCx) * 0.04;
     eyeCy += (eyeTy - eyeCy) * 0.04;
@@ -888,13 +935,33 @@ function closeEyes(slug) {
   card.addEventListener('mouseenter', () => {
     if (!card.classList.contains('sleepy')) return;
     hoveredSlug = slug;
-    openEyes(slug);
+    if (!card.classList.contains('hero')) openEyes(slug);
   });
   card.addEventListener('mouseleave', () => {
     if (hoveredSlug === slug) hoveredSlug = null;
-    closeEyes(slug);
+    if (!card.classList.contains('hero')) closeEyes(slug);
   });
 });
+
+// Sync hero to first sleepy card — runs after EYE_REST and all helpers are defined
+(function syncHeroState() {
+  document.querySelectorAll('#cardRow .t-card.hero').forEach(c => c.classList.remove('hero'));
+  heroSlug = null;
+  const next = document.querySelector('#cardRow .t-card.sleepy');
+  if (!next) return;
+  next.classList.add('hero');
+  heroSlug = next.id.replace('card-', '');
+  heroCx = 0; heroCy = 0;
+  const restRy = EYE_REST[heroSlug] && EYE_REST[heroSlug].ry;
+  if (restRy) {
+    ['L', 'R'].forEach(side => {
+      const ew = document.getElementById(`ew-${heroSlug}-${side}`);
+      const pu = document.getElementById(`p-${heroSlug}-${side}`);
+      if (ew) ew.setAttribute('ry', restRy);
+      if (pu) pu.setAttribute('r', 9.38);
+    });
+  }
+})();
 </script>
 </body>
 </html>

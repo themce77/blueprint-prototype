@@ -338,6 +338,81 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .btn-maybe:active, .btn-show:active { opacity: 0.75; }
 
 /* ══════════════════════════════════════════════════════════════
+   Help / Support screens — blue Pillow design
+   ══════════════════════════════════════════════════════════════ */
+.help-back {
+  position: absolute; left: 24px; top: 48px;
+  width: 48px; height: 48px;
+  background: rgba(255,255,255,0.16);
+  border: none; border-radius: 8px; cursor: pointer;
+  display: grid; place-items: center; z-index: 20;
+}
+.help-content {
+  position: absolute; top: 293px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; gap: 16px; align-items: center;
+  z-index: 5; text-align: center;
+}
+.help-sub {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #f2f3e5; letter-spacing: -0.1px; margin: 0; width: 357px;
+}
+.help-heading {
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0; width: 613px;
+}
+.help-btns {
+  position: absolute; bottom: 65px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 24px; z-index: 20;
+}
+.btn-help-secondary {
+  width: 270px; height: 48px; border-radius: 8px; border: none; cursor: pointer;
+  background: rgba(255,255,255,0.16);
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #ededed; transition: opacity 120ms;
+}
+.btn-help-primary {
+  width: 270px; height: 48px; border-radius: 8px; border: none; cursor: pointer;
+  background: #f2f3e5; color: #1f1f25;
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  box-shadow: 0 1px 1px rgba(20,21,26,0.03); transition: opacity 120ms;
+}
+.btn-help-secondary:active, .btn-help-primary:active { opacity: 0.8; }
+
+/* Showing up counts screen */
+.scounts-spark {
+  position: absolute; top: 274px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 12px; align-items: center; z-index: 5;
+}
+.scounts-plus {
+  font-family: var(--font-display); font-size: 32px;
+  line-height: 40px; letter-spacing: -0.8px; color: #f2f3e5;
+}
+.scounts-title {
+  position: absolute; top: 326px; left: 50%; transform: translateX(-50%);
+  font-family: var(--font-display); font-size: 80px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; text-align: center;
+  width: 406px; margin: 0; z-index: 5;
+}
+.scounts-bubble {
+  position: absolute; top: 512px; left: 50%; transform: translateX(-50%);
+  width: 439px; padding: 10px;
+  background: #58b880;
+  display: flex; align-items: flex-start; gap: 12px;
+  z-index: 5;
+}
+.scounts-bubble-avatar {
+  width: 48px; height: 48px; flex-shrink: 0;
+  background: #f2f3e5; overflow: hidden;
+  display: grid; place-items: center;
+}
+.scounts-bubble-avatar img { width: 40px; height: 40px; display: block; object-fit: cover; }
+.scounts-bubble-text {
+  font-family: var(--font-body); font-size: 20px; font-weight: 500;
+  color: #2f2f37; line-height: 1.1; letter-spacing: -0.4px;
+  flex: 1; padding-top: 4px;
+}
+
+/* ══════════════════════════════════════════════════════════════
    Video player screen
    ══════════════════════════════════════════════════════════════ */
 .video-play-wrap {
@@ -549,7 +624,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <div class="mc-wrap">
     <h1 class="mc-title">How do you feel?</h1>
-    <p class="mc-sub">Pick maximum 3 emotions</p>
+    <p class="mc-sub">Pick 3 emotions max</p>
     <div class="em-grid" id="emGrid">
 
       <button class="em-btn" data-key="curious" onclick="toggleEm(this)">
@@ -636,7 +711,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
   <div class="prog"><div class="prog-fill" style="width:726px"></div></div>
 
-  <p class="sleep-sub">Almost done! The last question for today.</p>
+  <p class="sleep-sub">Almost done! Last question for today.</p>
   <h2 class="sleep-title">How was<br>your sleep?</h2>
 
   <div class="sleep-slider-wrap">
@@ -663,59 +738,6 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <button class="btn-next-em" onclick="goToDone()">Next</button>
-  </div>
-</div>
-
-
-<!-- ════════════════════════════════════════════════════════════
-     S-VIDEO — Video player (static prototype)
-     ════════════════════════════════════════════════════════════ -->
-<div class="screen" id="s-video" style="background:#000;">
-  <div class="sb" style="color:rgba(255,255,255,0.7)"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
-  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:994px;height:485px;border-radius:20px;overflow:hidden;">
-    <img src="./components/video-thumbnail.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
-    <div style="position:absolute;top:12px;right:12px;">
-      <img src="./components/heart-default.svg" alt="save" style="width:48px;height:48px;display:block;cursor:pointer;">
-    </div>
-    <button class="video-play-btn" onclick="localStorage.setItem('bp_video_watched','1'); goTo('s-video-fb')" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
-      <svg width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="36" fill="rgba(0,0,0,0.45)"/><polygon points="30,22 54,36 30,50" fill="#f2f3e5"/></svg>
-    </button>
-    <p class="video-tap-hint" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);margin:0;">Tap to play (prototype)</p>
-  </div>
-</div>
-
-
-<!-- ════════════════════════════════════════════════════════════
-     S-VIDEO-FB — Post-video feedback
-     ════════════════════════════════════════════════════════════ -->
-<div class="screen" id="s-video-fb" style="background:#3f50b8;">
-  <div class="vfb-ellipse"></div>
-  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
-
-  <!-- Green bubble — centered, feedback question -->
-  <div class="vfb-bubble vfb-bubble-green">
-    <div class="vfb-bubble-avatar"><img src="./components/monster-01.svg" alt=""></div>
-    <p class="vfb-bubble-text">In your opinion, was the exercise helpful?</p>
-  </div>
-
-  <!-- Main content: reward + title -->
-  <div class="vfb-main-content">
-    <div class="reward-row">
-      <span class="reward-plus">+1</span>
-      <div class="spark-badge">
-        <img src="./components/Spark-4.svg" alt="">
-        <img src="./components/Spark-01.svg" alt="">
-        <img src="./components/Spark-02.svg" alt="">
-        <img src="./components/Spark-03.svg" alt="">
-      </div>
-    </div>
-    <h2 class="vfb-title" id="vfbTitle">Showing up in a hard moment counts</h2>
-  </div>
-
-  <!-- Answer buttons -->
-  <div class="vfb-cta-wrap">
-    <button class="vfb-btn-no" onclick="goTo('s-sleep')">Not really</button>
-    <button class="vfb-btn-yes" onclick="goTo('s-sleep')">Yes, a bit!</button>
   </div>
 </div>
 
@@ -773,21 +795,21 @@ if (new URLSearchParams(location.search).get('edit') === '1') {
 
 // ─── Emotion data ─────────────────────────────────────────────
 const EMOTIONS = {
-  curious:   { name:'Curious',      color:'#FDDA3C', emoji:'🤔', levels:['Interested','Curious','Have to know!'],          chips:['Interested','Intrigued','Fascinated','Nosy','Wonder-Filled'],  shape:{ size:1454, left:-130, top:-460 } },
-  happy:     { name:'Happy',        color:'#f4a021', emoji:'😊', levels:['Good','Happy','Joyful'],                          chips:['Joyful','Content','Pleased','Cheerful','Elated'],              shape:{ size:1495, left:-151, top:-331 } },
-  excited:   { name:'Excited',      color:'#e84326', emoji:'🤩', levels:['Looking forward to it','Excited','Pumped'],       chips:['Enthusiastic','Eager','Thrilled','Energised','Pumped'],         shape:{ size:1495, left:-151, top:-331 } },
-  okay:      { name:'Okay',         color:'#68DCC6', emoji:'🙂', levels:['Fine','Okay','Pretty good'],                      chips:['Fine','Comfortable','Satisfied','Steady','Relieved'],           shape:{ size:1511, left:-159, top:-339 } },
-  grateful:  { name:'Grateful',     color:'#4ecb71', emoji:'🙏', levels:['Warm inside','Grateful','Thankful'],              chips:['Appreciative','Thankful','Touched','Lucky','Warm Inside'],       shape:{ size:1405, left:-106, top:-286 } },
-  hopeful:   { name:'Hopeful',      color:'#c5e000', emoji:'😇', levels:['A little hopeful','Hopeful','Optimistic'],        chips:['Optimistic','Encouraged','Wishing','Inspired','Looking forward'], shape:{ size:1495, left:-151, top:-331 } },
-  meh:       { name:'Meh',          color:'#b8b8a8', emoji:'😑', levels:['Blah','Meh','Over it'],                           chips:['Unimpressed','Bored','Flat','Disengaged','Apathetic'],           shape:{ size:1108, left:43,   top:-262 } },
-  neutral:   { name:'Neutral',      color:'#a0a09a', emoji:'😐', levels:['Just okay','Neutral','Normal'],                   chips:['Indifferent','Detached','Composed','Shoulder Shrug','Neither'],  shape:{ size:1244, left:-25,  top:-205 } },
-  idontknow: { name:"I Don't Know", color:'#888880', emoji:'🤷', levels:['Unsure','Not sure','Confused'],                   chips:['Confused','Uncertain','Overwhelmed','Numb','Conflicted'],        shape:{ size:1555, left:-181, top:-361 } },
-  sad:       { name:'Sad',          color:'#5abfea', emoji:'😢', levels:['Down','Sad','Hurt'],                              chips:['Sorrowful','Left Out','Let Down','Disappointed','Heartbroken'],  shape:{ size:1281, left:-44,  top:-74  } },
-  tired:     { name:'Tired',        color:'#4a67f5', emoji:'😴', levels:['Low energy','Tired','Exhausted'],                 chips:['Exhausted','Drained','Fatigued','Sleepy','Checked Out'],         shape:{ size:1495, left:-151, top:-286 } },
-  lonely:    { name:'Lonely',       color:'#a070d4', emoji:'😔', levels:['A little alone','Lonely','Isolated'],             chips:['Isolated','Disconnected','Left Out','Longing','Forgotten'],      shape:{ size:1495, left:-151, top:-331 } },
-  angry:     { name:'Angry',        color:'#e84326', emoji:'😠', levels:['Annoyed','Angry','Furious'],                      chips:['Frustrated','Irritated','Furious','Annoyed','Jealous'],          shape:{ size:1615, left:-211, top:-591 } },
-  stressed:  { name:'Stressed',     color:'#be2f6e', emoji:'😤', levels:['Tense','Stressed','Overwhelmed'],                 chips:['Overwhelmed','Pressured','Tense','Rushed','Snappy'],             shape:{ size:1495, left:-151, top:-131 } },
-  anxious:   { name:'Anxious',      color:'#b38aff', emoji:'😰', levels:['Uneasy','Anxious','Panicked'],                    chips:['Worried','Nervous','Scared','Fearful','Panicked'],               shape:{ size:1495, left:-151, top:-331 } },
+  curious:   { name:'Curious',      color:'#FDDA3C', emoji:'🤔', emojis:['🤔','🧐','😲'], levels:['Interested','Curious','Have to know!'],          chips:['Interested','Intrigued','Fascinated','Nosy','Wonder-Filled'],  shape:{ size:1454, left:-130, top:-460 } },
+  happy:     { name:'Happy',        color:'#f4a021', emoji:'😊', emojis:['🙂','😊','😄'], levels:['Good','Happy','Joyful'],                          chips:['Joyful','Content','Pleased','Cheerful','Elated'],              shape:{ size:1495, left:-151, top:-331 } },
+  excited:   { name:'Excited',      color:'#e84326', emoji:'🤩', emojis:['😌','🤩','🎉'], levels:['Looking forward to it','Excited','Pumped'],       chips:['Enthusiastic','Eager','Thrilled','Energised','Pumped'],         shape:{ size:1495, left:-151, top:-331 } },
+  okay:      { name:'Okay',         color:'#68DCC6', emoji:'🙂', emojis:['😌','🙂','😀'], levels:['Fine','Okay','Pretty good'],                      chips:['Fine','Comfortable','Satisfied','Steady','Relieved'],           shape:{ size:1511, left:-159, top:-339 } },
+  grateful:  { name:'Grateful',     color:'#4ecb71', emoji:'🙏', emojis:['🥰','🙏','💝'], levels:['Warm inside','Grateful','Thankful'],              chips:['Appreciative','Thankful','Touched','Lucky','Warm Inside'],       shape:{ size:1405, left:-106, top:-286 } },
+  hopeful:   { name:'Hopeful',      color:'#c5e000', emoji:'😇', emojis:['🌱','😇','✨'], levels:['A little hopeful','Hopeful','Optimistic'],        chips:['Optimistic','Encouraged','Wishing','Inspired','Looking forward'], shape:{ size:1495, left:-151, top:-331 } },
+  meh:       { name:'Meh',          color:'#b8b8a8', emoji:'😑', emojis:['😑','🙄','😒'], levels:['Blah','Meh','Over it'],                           chips:['Unimpressed','Bored','Flat','Disengaged','Apathetic'],           shape:{ size:1108, left:43,   top:-262 } },
+  neutral:   { name:'Neutral',      color:'#a0a09a', emoji:'😐', emojis:['😐','😶','🫤'], levels:['Just okay','Neutral','Normal'],                   chips:['Indifferent','Detached','Composed','Shoulder Shrug','Neither'],  shape:{ size:1244, left:-25,  top:-205 } },
+  idontknow: { name:"I Don't Know", color:'#888880', emoji:'🤷', emojis:['😕','🤷','😵'], levels:['Unsure','Not sure','Confused'],                   chips:['Confused','Uncertain','Overwhelmed','Numb','Conflicted'],        shape:{ size:1555, left:-181, top:-361 } },
+  sad:       { name:'Sad',          color:'#5abfea', emoji:'😢', emojis:['😔','😢','💔'], levels:['Down','Sad','Hurt'],                              chips:['Sorrowful','Left Out','Let Down','Disappointed','Heartbroken'],  shape:{ size:1281, left:-44,  top:-74  } },
+  tired:     { name:'Tired',        color:'#4a67f5', emoji:'😴', emojis:['🥱','😴','😪'], levels:['Low energy','Tired','Exhausted'],                 chips:['Exhausted','Drained','Fatigued','Sleepy','Checked Out'],         shape:{ size:1495, left:-151, top:-286 } },
+  lonely:    { name:'Lonely',       color:'#a070d4', emoji:'😔', emojis:['😔','🥺','😿'], levels:['A little alone','Lonely','Isolated'],             chips:['Isolated','Disconnected','Left Out','Longing','Forgotten'],      shape:{ size:1495, left:-151, top:-331 } },
+  angry:     { name:'Angry',        color:'#e84326', emoji:'😠', emojis:['😒','😠','🤬'], levels:['Annoyed','Angry','Furious'],                      chips:['Frustrated','Irritated','Furious','Annoyed','Jealous'],          shape:{ size:1615, left:-211, top:-591 } },
+  stressed:  { name:'Stressed',     color:'#be2f6e', emoji:'😤', emojis:['😬','😤','🤯'], levels:['Tense','Stressed','Overwhelmed'],                 chips:['Overwhelmed','Pressured','Tense','Rushed','Snappy'],             shape:{ size:1495, left:-151, top:-131 } },
+  anxious:   { name:'Anxious',      color:'#b38aff', emoji:'😰', emojis:['😟','😰','😱'], levels:['Uneasy','Anxious','Panicked'],                    chips:['Worried','Nervous','Scared','Fearful','Panicked'],               shape:{ size:1495, left:-151, top:-331 } },
 };
 
 // ─── Screen nav ───────────────────────────────────────────────
@@ -863,11 +885,6 @@ function startDetailFlow() {
   });
   // Build one why screen with all selected emotions as background
   device.appendChild(buildWhyScreen(selected));
-  // Build support screen (inserted between WHY and sleep)
-  // Remove any previously built support screen first
-  const prevSupport = document.getElementById('s-support');
-  if (prevSupport) prevSupport.remove();
-  device.appendChild(buildSupportScreen());
   goTo('ed-0');
 }
 
@@ -937,69 +954,8 @@ function edNext(idx, total) {
   if (idx < total - 1) { goTo(`ed-${idx + 1}`); } else { goTo('wh-0'); }
 }
 function whyBack()  { goTo(`ed-${detailOrder.length - 1}`); }
-function whyNext()  {
-  const copy = getSupportCopy();
-  document.getElementById('supportSub').textContent = copy.subtitle;
-  document.getElementById('supportHeading').textContent = copy.heading;
-  const goodMoods = ['happy', 'excited', 'okay'];
-  const isGood = detailOrder.every(k => goodMoods.includes(k));
-  document.getElementById('vfbTitle').textContent = isGood
-    ? "You're already doing something great"
-    : "Showing up in a hard moment counts";
-  goTo('s-support');
-}
-function skipVideo() { localStorage.removeItem('bp_video_watched'); goTo('s-sleep'); }
+function whyNext()  { goTo('s-sleep'); }
 function goBackFromSleep() { goTo('wh-0'); }
-
-// ─── Support copy helper ──────────────────────────────────────
-function getSupportCopy() {
-  const goodMoods = ['happy', 'excited', 'okay'];
-  const isGood = detailOrder.every(k => goodMoods.includes(k));
-
-  // Get selected why reasons (read from wh-0 screen's .sel buttons)
-  const selReasons = [...document.querySelectorAll('#wh-0 .why-block.sel')]
-    .map(b => b.querySelector('.why-label').textContent.trim());
-
-  // Subtitle context
-  const reasonContext = {
-    'Home life': 'at home', 'School life': 'at school', 'Exams': 'about exams',
-    'Friends': 'with friends', 'No friends': 'feeling lonely',
-    'Saw something online': 'online', 'Activities': 'with activities', 'Hungry': 'when tired',
-  };
-  const ctx = selReasons.length ? (reasonContext[selReasons[0]] || 'this way') : 'this way';
-
-  if (isGood) {
-    return {
-      subtitle: `Others your age feel this way too — ${ctx}.`,
-      heading: "Want to see how some of them keep the good feeling going?"
-    };
-  } else {
-    return {
-      subtitle: `A lot of people your age feel this way ${ctx}.`,
-      heading: "Would you like to see how some of them handle it?"
-    };
-  }
-}
-
-// ─── Support screen builder ───────────────────────────────────
-function buildSupportScreen() {
-  const div = document.createElement('div');
-  div.className = 'screen';
-  div.id = 's-support';
-  div.innerHTML = `
-    <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
-    <div class="prog"><div class="prog-fill" style="width:680px"></div></div>
-    <div class="support-content">
-      <p class="support-sub" id="supportSub"></p>
-      <h2 class="support-heading" id="supportHeading"></h2>
-    </div>
-    <div class="support-btns">
-      <button class="btn-maybe" onclick="skipVideo()">Maybe later</button>
-      <button class="btn-show" onclick="goTo('s-video')">Yes, show me</button>
-    </div>
-  `;
-  return div;
-}
 
 // ─── Why screen builder ───────────────────────────────────────
 const WHY_BLOCKS = [
@@ -1107,6 +1063,7 @@ function initArc(key) {
     thumb.style.left = tx + 'px'; thumb.style.top = ty + 'px';
     const nearIdx = stops3.reduce((b, sa, i) => Math.abs(a-sa) < Math.abs(a-stops3[b]) ? i : b, 0);
     document.getElementById(`arcLabel-${key}`).textContent = em.levels[nearIdx];
+    document.getElementById(`arcEmoji-${key}`).textContent = em.emojis[nearIdx];
     dotEls.forEach((c, i) => c.setAttribute('fill', i === nearIdx ? 'transparent' : '#18181f'));
   }
 

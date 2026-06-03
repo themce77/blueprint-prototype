@@ -300,8 +300,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <span class="nav-label">My toolkit</span>
       </div>
       <div class="nav-item" onclick="window.location.href='journey.html'">
-        <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
-        <span class="nav-label">Journey</span>
+        <div class="nav-icon"><img src="./components/icon-04.svg" alt="My journey"></div>
+        <span class="nav-label">My journey</span>
       </div>
       <div class="nav-item" onclick="window.location.href='grades.html'">
         <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
@@ -321,12 +321,12 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   <!-- Simplified view (no video watched) -->
   <section class="toolkit-simple" id="mainSimple" style="display:none">
     <div class="tk-header-row">
-      <h1 class="tk-title-big">My toolkit</h1>
+      <h2 class="tk-title-big">My toolkit</h2>
       <div class="tk-mood-widget" id="moodWidget"></div>
     </div>
 
     <div class="tk-featured-video" onclick="window.location.href='toolkit-video.html'">
-      <div class="video-tile-bg"><img src="./components/carousel-01.svg" alt=""></div>
+      <div class="video-tile-bg"><img src="./components/video-thumbnail.jpg" alt=""></div>
       <div style="position:absolute;inset:0;background:linear-gradient(182deg,rgba(0,0,0,0) 44%,rgba(0,0,0,0.5) 84%);"></div>
       <div class="heart-btn" data-vid="vfeatured" onclick="event.stopPropagation();toggleHeart(this)" style="z-index:2">
         <img src="./components/heart-default.svg" alt="save">
@@ -346,7 +346,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   <!-- Full toolkit view -->
   <main class="toolkit-main" id="mainFull" style="display:none">
 
-    <h1 class="toolkit-title" id="toolkitTitle">My toolkit</h1>
+    <h2 class="toolkit-title" id="toolkitTitle">My toolkit</h2>
 
     <div class="filter-row">
       <button class="filter-pill active" onclick="setFilter('recommended', this)">Recommended</button>
