@@ -60,8 +60,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .user-avatar {
   width: 32px; height: 32px; border-radius: 50%;
   background: #b8c0ed no-repeat center / cover;
-  border: 2px solid #36363f;
-  overflow: hidden; box-sizing: border-box;
+  border: 2px solid #36363f; overflow: hidden; box-sizing: border-box;
 }
 .user-name {
   font-family: var(--font-body); font-size: 12px; font-weight: 700;
@@ -70,8 +69,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* ─── Main ──────────────────────────────────────────────────── */
 .journey-main {
-  position: absolute; left: 152px; top: 60px;
-  width: 449px;
+  position: absolute; left: 152px; top: 72px; bottom: 0;
+  width: 977px;
   display: flex; flex-direction: column; gap: 32px;
 }
 
@@ -81,9 +80,11 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   letter-spacing: 1.5px; color: #f2f3e5; margin: 0 0 8px;
 }
 .journey-sub {
-  font-family: var(--font-body); font-size: 14px; font-weight: 400;
-  color: #737472; margin: 0;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #737472; letter-spacing: -0.1px; margin: 0;
 }
+
+/* ─── Tab pills ─────────────────────────────────────────────── */
 .tab-pills { display: flex; gap: 8px; }
 .tab-pill {
   display: flex; align-items: center; justify-content: center;
@@ -94,108 +95,105 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .tab-pill-active   { background: #f2f3e5; color: #2b2b35; }
 .tab-pill-inactive { background: #2b2b35; color: rgba(242,243,229,0.5); }
 
-/* ─── Wrap illustration (right panel) ──────────────────────── */
-.wrap-illustration {
-  position: absolute; right: 0; top: 0;
-  width: 545px; height: 834px;
-  cursor: pointer; overflow: hidden;
-}
-.wrap-illustration img { width: 100%; height: 100%; display: block; object-fit: cover; }
-.wrap-notif-card {
-  position: absolute; bottom: 36px; right: 28px;
-  background: rgba(20,20,26,0.88); backdrop-filter: blur(12px);
-  border-radius: 18px; padding: 16px 18px;
-  display: flex; align-items: center; gap: 14px;
-  min-width: 240px; pointer-events: none;
-}
-.wrap-notif-icon {
-  width: 40px; height: 40px; border-radius: 10px;
-  background: #3f50b8; display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.wrap-notif-icon svg { width: 22px; height: 22px; }
-.wrap-notif-text { flex: 1; }
-.wrap-notif-title {
-  font-family: var(--font-body); font-size: 15px; font-weight: 700;
-  color: #f2f3e5; margin: 0 0 2px;
-}
-.wrap-notif-sub {
-  font-family: var(--font-body); font-size: 12px; font-weight: 500;
-  color: rgba(255,255,255,0.5); margin: 0;
-}
-.wrap-notif-badge {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: #3f50b8; display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
-  color: #f2f3e5; flex-shrink: 0;
-}
-
-/* ─── Stats grid ────────────────────────────────────────────── */
-.stats-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-.stat-card {
-  background: transparent; border-radius: 16px;
-  border: 1px solid var(--colors-gray-400);
-  padding: 20px 24px; box-sizing: border-box;
-  height: 200px; position: relative; overflow: hidden;
-  display: flex; flex-direction: column; justify-content: space-between;
-}
-.stat-label {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
-  color: #737472; margin: 0; letter-spacing: 0.3px;
-}
-.stat-big {
-  font-family: var(--font-display); font-size: var(--title-small-size); line-height: var(--title-small-lh);
-  color: #f2f3e5; margin: 0; letter-spacing: -1px;
-}
-
 /* ─── Tab panels ────────────────────────────────────────────── */
 .period-panel { display: none; flex-direction: column; gap: 32px; }
 .period-panel.active { display: flex; }
 
-/* ─── All-times timeline ────────────────────────────────────── */
-.tl-container {
-  position: relative;
-  display: flex; flex-direction: column; gap: 30px;
+/* ─── Stat cards grid (This month) ─────────────────────────── */
+.stats-grid {
+  display: grid; grid-template-columns: 480.5px 480.5px;
+  gap: 16px;
 }
-.tl-line {
-  position: absolute; left: 51px; top: 8px; bottom: 8px;
-  width: 1px; background: #36363f;
+.stat-card {
+  height: 200px; border-radius: 16px;
+  border: 1px solid #36363f; background: #1f1f25;
+  padding: 24px; box-sizing: border-box;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between;
 }
-.tl-entry { position: relative; min-height: 70px; }
-.tl-meta {
-  display: flex; gap: 21px; align-items: center;
-  font-family: var(--font-body); font-size: var(--body-medium-size); line-height: var(--body-medium-lh); font-weight: 500;
-  color: var(--colors-gray-100);
+.stat-label {
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
+  color: #a4a59f; margin: 0; letter-spacing: -0.1px; line-height: 20px;
+  width: 168px; position: relative; z-index: 1;
 }
-.tl-date { width: 44px; flex-shrink: 0; }
-.tl-icon-wrap {
-  position: absolute; left: 63px; top: 25px;
-  border: 1px solid var(--colors-gray-400); border-radius: 4px;
-  padding: 6px; display: flex;
+.stat-big {
+  font-family: var(--font-display); font-size: 48px; line-height: 48px;
+  color: #f2f3e5; margin: 0; letter-spacing: 1.5px;
+  position: relative; z-index: 1;
 }
-.tl-icon-wrap img { width: 32px; height: 32px; display: block; object-fit: contain; }
-.tl-icon-bare {
-  position: absolute; left: 63px; top: 25px;
+.stat-wzor {
+  position: absolute; left: 279px; top: 20px;
+  width: 300px; height: 300px; overflow: hidden; pointer-events: none;
 }
-.tl-icon-bare img { display: block; }
+.stat-wzor img { width: 300px; height: 300px; display: block; }
 
-/* ─── Quote card ────────────────────────────────────────────── */
-.quote-card {
-  background: #36363f;
-  display: flex; align-items: center; overflow: hidden;
+/* ─── Open recap button ─────────────────────────────────────── */
+.open-recap-btn {
+  position: absolute; bottom: 63px; left: 50%; transform: translateX(-50%);
+  height: 48px; width: 200px; padding: 0; border-radius: 8px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.16);
+  cursor: pointer; font-family: var(--font-body); font-size: 16px;
+  font-weight: 500; color: #f5f5f5; letter-spacing: -0.1px;
+  transition: background 150ms;
 }
-.quote-icon {
-  width: 52px; height: 52px; flex-shrink: 0;
-  object-fit: none; object-position: 0 0;
+.open-recap-btn:hover { background: rgba(255,255,255,0.06); }
+
+/* ─── All times horizontal cards ───────────────────────────── */
+.alltime-clip {
+  position: absolute; left: 152px; top: 274px;
+  width: 977px; height: 400px;
+  overflow: hidden;
+  cursor: grab; user-select: none;
 }
-.quote-text {
-  font-family: var(--font-body); font-size: var(--label-medium-size);
-  line-height: var(--label-medium-lh); font-weight: 700;
-  color: #f2f3e5; margin: 0; padding: 12px 16px 12px 10px;
+.alltime-clip.dragging { cursor: grabbing; }
+.alltime-row {
+  display: flex; align-items: center;
+  position: absolute; left: 0; top: 0;
+  transition: transform 800ms cubic-bezier(0.73,-0.01,0.2,0.98);
 }
+.activity-card {
+  width: 318px; height: 376px; border-radius: 16px;
+  border: 1px solid #36363f; background: #1f1f25;
+  padding: 24px; box-sizing: border-box;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between;
+  flex-shrink: 0;
+}
+.activity-title {
+  font-family: var(--font-body); font-size: 20px; font-weight: 500;
+  color: #f2f3e5; margin: 0; line-height: 1.1; letter-spacing: -0.4px;
+  width: 187px; position: relative; z-index: 1;
+}
+.activity-date {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #737472; margin: 0; letter-spacing: -0.1px;
+  position: relative; z-index: 1;
+}
+.activity-wzor {
+  position: absolute; left: 118px; top: 150px;
+  width: 300px; height: 300px; pointer-events: none;
+}
+.activity-wzor img { width: 300px; height: 300px; display: block; }
+.alltime-connector {
+  width: 142px; height: 113px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.alltime-connector img { width: 142px; height: 113px; display: block; }
+
+/* ─── Pagination arrows ─────────────────────────────────────── */
+.alltime-nav {
+  position: absolute; right: 182px; bottom: 70px;
+  display: none; gap: 13px; align-items: center; z-index: 5;
+}
+.alltime-nav.visible { display: flex; }
+.nav-arrow {
+  width: 24px; height: 24px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.16); background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 120ms;
+}
+.nav-arrow:hover { background: rgba(255,255,255,0.08); }
+.nav-arrow svg { display: block; }
 
 /* ─── Wrap overlay ──────────────────────────────────────────── */
 .wrap-overlay {
@@ -217,14 +215,9 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 @keyframes prog { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-/* Slide shell */
-.wrap-slide {
-  position: absolute; inset: 0;
-  display: none;
-}
+.wrap-slide { position: absolute; inset: 0; display: none; }
 .wrap-slide.ws-active { display: block; }
 
-/* Cloud blob */
 .ws-blob {
   position: absolute; left: -315px; top: -33px;
   width: 1771px; height: 1107px;
@@ -232,14 +225,12 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .ws-blob svg { width: 100%; height: 100%; display: block; }
 
-/* Emotion shape decoration */
 .ws-emotion {
   position: absolute; pointer-events: none; z-index: 0;
   left: 50%; top: 50%; transform: translate(-50%, -50%);
 }
 .ws-emotion img { display: block; filter: brightness(0) invert(1) brightness(0.12); transform: scale(2); transform-origin: center center; }
 
-/* Text content — spans full height so buttons animate with text */
 .ws-content {
   position: absolute; z-index: 1;
   left: 50%; transform: translateX(-50%);
@@ -260,71 +251,6 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   font-family: var(--font-display); font-size: 64px; line-height: 1.06;
   letter-spacing: 1.5px; color: #f2f3e5; margin: 0;
 }
-
-/* ─── Wrap intro screen ─────────────────────────────────────── */
-.wi-overlay {
-  position: absolute; inset: 0; z-index: 20; overflow: hidden;
-  background: #1f1f25;
-}
-.wi-bg {
-  position: absolute; left: -85px; top: -109px;
-  width: 1347px; height: 783px;
-  pointer-events: none; z-index: 0; display: block;
-}
-.wi-center {
-  position: absolute; left: 50%; top: 50%; z-index: 1;
-  transform: translate(-50%, -50%);
-  width: 661px; text-align: center;
-  display: flex; flex-direction: column; gap: 24px; align-items: center;
-}
-.wi-period {
-  font-family: var(--font-body); font-size: 16px; font-weight: 500;
-  color: #f2f3e5; letter-spacing: -0.1px; margin: 0;
-}
-.wi-title {
-  font-family: var(--font-display); font-size: 80px; line-height: 1.06;
-  letter-spacing: 1.5px; color: #f2f3e5; margin: 0;
-}
-.wi-skip {
-  position: absolute; top: 60px; right: 24px; z-index: 1;
-  height: 48px; padding: 0 16px; border-radius: 8px;
-  background: rgba(255,255,255,0.16); border: none; cursor: pointer;
-  font-family: var(--font-body); font-size: 16px; font-weight: 500;
-  color: #ededed; letter-spacing: -0.1px;
-}
-.wi-start {
-  position: absolute; bottom: 65px; left: 50%; transform: translateX(-50%); z-index: 1;
-  width: 270px; height: 48px; border-radius: 8px;
-  background: #f2f3e5; border: none; cursor: pointer;
-  font-family: var(--font-body); font-size: 16px; font-weight: 500;
-  color: #1f1f25; letter-spacing: -0.1px;
-}
-
-/* ─── Post-wrap done state ───────────────────────────────────── */
-.journey-main.wrap-done { width: 977px; }
-.journey-main.wrap-done .stats-grid { gap: 16px; }
-.stat-card-bg {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  display: none; object-fit: cover; z-index: 0; border-radius: 16px;
-}
-.stat-label { position: relative; z-index: 1; }
-.stat-big   { position: relative; z-index: 1; }
-.wrap-done .stat-card-bg  { display: block; }
-.wrap-done .stat-card     { border-color: transparent; }
-.wrap-done .stat-label    { color: rgba(242,243,229,0.7); }
-.open-recap-btn {
-  display: none; align-self: center;
-  height: 48px; padding: 0 28px; border-radius: 8px;
-  background: transparent; border: 1px solid rgba(255,255,255,0.16);
-  cursor: pointer; font-family: var(--font-body); font-size: 16px;
-  font-weight: 500; color: #f5f5f5; letter-spacing: -0.1px;
-  transition: background 150ms;
-}
-.open-recap-btn:hover { background: rgba(255,255,255,0.06); }
-.wrap-done .open-recap-btn { display: block; }
-.wrap-done .quote-card     { display: none; }
-
-/* Actions — now inside ws-content, animate together */
 .ws-actions {
   display: flex; gap: 12px; align-items: center;
   padding-bottom: 65px; flex-shrink: 0;
@@ -341,6 +267,93 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   font-family: var(--font-body); font-size: 16px; font-weight: 500;
   color: #1f1f25; letter-spacing: -0.1px; white-space: nowrap;
 }
+.ws-skip {
+  position: absolute; top: 24px; right: 48px; z-index: 5;
+  background: transparent; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
+  color: rgba(255,255,255,0.6); padding: 8px 16px; border-radius: 8px;
+  letter-spacing: -0.1px;
+}
+.ws-bg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: block; pointer-events: none; z-index: 0;
+}
+.ws-btn-wide {
+  height: 48px; width: 270px;
+  border-radius: 8px; border: none; background: #f2f3e5; cursor: pointer;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #1f1f25; letter-spacing: -0.1px;
+}
+.ws-btn-share {
+  height: 48px; width: 270px;
+  border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.45);
+  background: transparent; cursor: pointer;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #f2f3e5; letter-spacing: -0.1px;
+}
+
+/* ── Support handle + panel ──────────────────────────────────── */
+.support-handle {
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  width: 28px; height: 80px; z-index: 15;
+  background: #2b2b32; border: 1px solid #444450; border-right: none;
+  border-radius: 10px 0 0 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: width 150ms, background 150ms;
+}
+.support-handle:hover { width: 33px; background: #36363f; }
+.support-handle-label {
+  font-family: var(--font-body); font-size: 11px; font-weight: 700;
+  color: rgba(242,243,229,0.55); writing-mode: vertical-rl;
+  transform: rotate(180deg); letter-spacing: 0.6px; user-select: none;
+}
+.sp-backdrop {
+  position: absolute; inset: 0; z-index: 34;
+  background: rgba(0,0,0,0.45); opacity: 0; pointer-events: none;
+  transition: opacity 500ms ease;
+}
+.sp-backdrop.sp-open { opacity: 1; pointer-events: all; }
+.support-panel {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 380px; z-index: 35;
+  background: #2b2b32; border-left: 1px solid #36363f;
+  transform: translateX(100%); transition: transform 1200ms cubic-bezier(0.73, -0.01, 0.2, 0.98);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.support-panel.sp-open { transform: translateX(0); }
+.sp-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 52px 24px 20px; border-bottom: 1px solid #36363f; flex-shrink: 0;
+}
+.sp-title {
+  font-family: var(--font-display); font-size: 24px; line-height: 1.1;
+  letter-spacing: 0.5px; color: #f2f3e5; margin: 0;
+}
+.sp-close {
+  width: 40px; height: 40px; border-radius: 8px; flex-shrink: 0;
+  background: rgba(255,255,255,0.08); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 120ms;
+}
+.sp-close:hover { background: rgba(255,255,255,0.14); }
+.sp-items { display: flex; flex-direction: column; padding: 8px 0; flex: 1; }
+.sp-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 24px; cursor: pointer; transition: background 120ms;
+}
+.sp-item:hover { background: rgba(255,255,255,0.04); }
+.sp-item-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: #36363f; display: flex; align-items: center; justify-content: center;
+}
+.sp-item-title {
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #f2f3e5; margin: 0 0 3px; letter-spacing: -0.1px;
+}
+.sp-item-sub {
+  font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  color: #737472; margin: 0;
+}
+.sp-divider { height: 1px; background: #36363f; margin: 4px 0; }
 
 </style>
 </head>
@@ -389,167 +402,167 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   <!-- Main content -->
   <div class="journey-main">
 
-    <!-- 1. Title + description -->
+    <!-- Header -->
     <div>
       <h1 class="journey-title">Journey</h1>
-      <p class="journey-sub">Every feeling you noticed made you a little wiser.</p>
+      <p class="journey-sub">Knowing yourself — that's something to be proud of.</p>
     </div>
 
-    <!-- 2. Tabs -->
+    <!-- Tabs -->
     <div class="tab-pills">
-      <button class="tab-pill tab-pill-active"   onclick="switchPeriod(this)">This month</button>
-      <button class="tab-pill tab-pill-inactive" onclick="switchPeriod(this)">All times</button>
+      <button class="tab-pill tab-pill-active"   onclick="switchPeriod(this, 0)">This month</button>
+      <button class="tab-pill tab-pill-inactive" onclick="switchPeriod(this, 1)">All times</button>
     </div>
 
-    <!-- 3. This month panel -->
+    <!-- This month panel -->
     <div class="period-panel active" id="panel-thismonth">
 
       <div class="stats-grid">
         <div class="stat-card">
-          <img class="stat-card-bg" src="./components/Frame 1484.svg" alt="">
           <p class="stat-label">Named feelings</p>
           <span class="stat-big">15</span>
+          <div class="stat-wzor"><img src="./components/wzor-02.svg" alt=""></div>
         </div>
         <div class="stat-card">
-          <img class="stat-card-bg" src="./components/Frame 1485.svg" alt="">
           <p class="stat-label">Completed check-ins</p>
           <span class="stat-big">15</span>
+          <div class="stat-wzor"><img src="./components/wzor-06.svg" alt=""></div>
         </div>
         <div class="stat-card">
-          <img class="stat-card-bg" src="./components/Frame 1489.svg" alt="">
           <p class="stat-label">Earned Sparks</p>
           <span class="stat-big" id="journeySparks">200</span>
+          <div class="stat-wzor"><img src="./components/wzor-04.svg" alt=""></div>
         </div>
         <div class="stat-card">
-          <img class="stat-card-bg" src="./components/Frame 1485-1.svg" alt="">
           <p class="stat-label">Activities done</p>
           <span class="stat-big">30</span>
+          <div class="stat-wzor"><img src="./components/wzor-05.svg" alt=""></div>
         </div>
       </div>
 
       <button class="open-recap-btn" onclick="openWrap()">Open monthly recap</button>
 
-      <div class="quote-card">
-        <img class="quote-icon" src="./components/Message-a.svg" alt="">
-        <p class="quote-text">Every single check-in was a choice to know yourself better. That's something to be proud of.</p>
-      </div>
-
     </div>
 
-    <!-- 3b. All times panel -->
-    <div class="period-panel" id="panel-alltime">
-      <div class="tl-container">
-        <div class="tl-line"></div>
-
-        <div class="tl-entry">
-          <div class="tl-meta">
-            <span class="tl-date">Today</span>
-            <span>May Wrapped</span>
-          </div>
-          <div class="tl-icon-wrap">
-            <img src="./components/timeline-05.svg" alt="">
-          </div>
-        </div>
-
-        <div class="tl-entry">
-          <div class="tl-meta">
-            <span class="tl-date">12.04.24</span>
-            <span>20 journal notes written</span>
-          </div>
-          <div class="tl-icon-wrap">
-            <img src="./components/timeline-04.svg" alt="">
-          </div>
-        </div>
-
-        <div class="tl-entry">
-          <div class="tl-meta">
-            <span class="tl-date">16.03.24</span>
-            <span>Handled hard emotions connected to grade</span>
-          </div>
-          <div class="tl-icon-wrap">
-            <img src="./components/timeline-03.svg" alt="">
-          </div>
-        </div>
-
-        <div class="tl-entry">
-          <div class="tl-meta">
-            <span class="tl-date">16.01.24</span>
-            <span>Learned about Emotional Regulation</span>
-          </div>
-          <div class="tl-icon-wrap">
-            <img src="./components/timeline-02.svg" alt="">
-          </div>
-        </div>
-
-        <div class="tl-entry" style="min-height:57px;">
-          <div class="tl-meta">
-            <span class="tl-date">12.01.24</span>
-            <span>First check-in</span>
-          </div>
-          <div class="tl-icon-wrap">
-            <img src="./components/timeline-01.svg" alt="" style="width:auto;height:auto;">
-          </div>
-        </div>
-
-        <div class="tl-entry" style="min-height:auto;">
-          <div class="tl-meta">
-            <span class="tl-date">12.01.24</span>
-            <span>Started</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
+    <!-- All times panel (header only — cards are positioned absolutely) -->
+    <div class="period-panel" id="panel-alltime" style="gap:0"></div>
 
   </div>
 
-  <!-- ── Wrap illustration (right panel) ─────────────────────── -->
-  <div class="wrap-illustration" onclick="openWrap()">
-    <img src="./components/wrap.svg" alt="May Wrap">
+  <!-- All times horizontal cards (absolutely positioned for overflow clip) -->
+  <div class="alltime-clip" id="alltimeClip" style="display:none">
+    <div class="alltime-row" id="alltimeRow">
+
+      <div class="activity-card">
+        <p class="activity-title">Handled hard emotions connected to grade</p>
+        <p class="activity-date">Today</p>
+        <div class="activity-wzor"><img src="./components/wzor-03.svg" alt=""></div>
+      </div>
+
+      <div class="alltime-connector">
+        <img src="./components/wzor-y.svg" alt="">
+      </div>
+
+      <div class="activity-card">
+        <p class="activity-title">Learned about Emotional Regulation</p>
+        <p class="activity-date">12.04.24</p>
+        <div class="activity-wzor"><img src="./components/wzor-07.svg" alt=""></div>
+      </div>
+
+      <div class="alltime-connector">
+        <img src="./components/wzor-y.svg" alt="">
+      </div>
+
+      <div class="activity-card">
+        <p class="activity-title">Wrote 20 notes in Journal</p>
+        <p class="activity-date">01.04.24</p>
+        <div class="activity-wzor"><img src="./components/wzor-01.svg" alt=""></div>
+      </div>
+
+      <div class="alltime-connector">
+        <img src="./components/wzor-y.svg" alt="">
+      </div>
+
+      <div class="activity-card">
+        <p class="activity-title">Completed your first Monthly Recap</p>
+        <p class="activity-date">28.03.24</p>
+        <div class="activity-wzor"><img src="./components/wzor-02.svg" alt=""></div>
+      </div>
+
+      <div class="alltime-connector">
+        <img src="./components/wzor-y.svg" alt="">
+      </div>
+
+      <div class="activity-card">
+        <p class="activity-title">Reached 100 Sparks milestone</p>
+        <p class="activity-date">15.03.24</p>
+        <div class="activity-wzor"><img src="./components/wzor-04.svg" alt=""></div>
+      </div>
+
+      <div class="alltime-connector">
+        <img src="./components/wzor-y.svg" alt="">
+      </div>
+
+      <div class="activity-card">
+        <p class="activity-title">Tried your first breathing exercise</p>
+        <p class="activity-date">02.02.24</p>
+        <div class="activity-wzor"><img src="./components/wzor-06.svg" alt=""></div>
+      </div>
+
+      <div class="alltime-connector">
+        <img src="./components/wzor-y.svg" alt="">
+      </div>
+
+      <div class="activity-card">
+        <p class="activity-title">Started</p>
+        <p class="activity-date">12.01.24</p>
+        <div class="activity-wzor"><img src="./components/wzor-05.svg" alt=""></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Pagination arrows (All times) -->
+  <div class="alltime-nav" id="alltimeNav">
+    <button class="nav-arrow" onclick="navCards(-1)" id="navPrev">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 12L6 8L10 4" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="nav-arrow" onclick="navCards(1)" id="navNext">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M6 4L10 8L6 12" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
   </div>
 
   <!-- ── Wrap overlay ──────────────────────────────────────────── -->
   <div id="wrap-overlay" class="wrap-overlay" style="display:none">
 
-    <!-- Progress bar -->
     <div class="wrap-progress" id="wrapProgress"></div>
 
-    <!-- Slide 1: Intro -->
-    <div class="wrap-slide ws-active" id="ws-0" style="background:linear-gradient(135deg,#7040c8 0%,#3f50b8 100%);">
-      <div class="ws-blob" style="top:-93px;"><svg viewBox="0 0 1771 1107" preserveAspectRatio="none" fill="none"><path d="M0,1107 L0,500 Q200,150 450,350 Q600,200 750,380 Q900,150 1150,350 Q1400,200 1771,450 L1771,1107 Z" fill="#1f1f25"/></svg></div>
+    <!-- Slide 1: Your Monthly Recap -->
+    <div class="wrap-slide ws-active" id="ws-0">
+      <img class="ws-bg" src="./components/tlo-01.svg" alt="">
+      <button class="ws-skip" onclick="closeWrap(event)">Skip</button>
       <div class="ws-content">
-        <div class="ws-text-group">
-          <p class="ws-label">May 2026</p>
-          <h2 class="ws-title">Your month,<br>recapped.</h2>
+        <div class="ws-text-group" style="padding-top:265px;">
+          <p class="ws-label" style="color:rgba(255,255,255,0.6);">May 2026</p>
+          <h2 class="ws-title" style="font-size:80px;">Your Monthly<br>Recap</h2>
         </div>
         <div class="ws-actions">
-          <button class="ws-btn-next" onclick="nextSlide()">Start</button>
+          <button class="ws-btn-wide" onclick="nextSlide()">Start</button>
         </div>
       </div>
     </div>
 
-    <!-- Slide 2: Emotion + reason -->
-    <div class="wrap-slide" id="ws-1" style="background:#3f50b8;">
-      <div class="ws-blob" style="top:-93px;"><svg viewBox="0 0 1771 1107" preserveAspectRatio="none" fill="none"><path d="M0,1107 L0,600 Q885,60 1771,600 L1771,1107 Z" fill="#1f1f25"/></svg></div>
+    <!-- Slide 2: Sleep & mood -->
+    <div class="wrap-slide" id="ws-1">
+      <img class="ws-bg" src="./components/tlo-02.svg" alt="">
       <div class="ws-content">
         <div class="ws-text-group">
-          <p class="ws-label">You checked in 18 times</p>
-          <h2 class="ws-title">Stressed about school — but you showed up anyway.</h2>
-        </div>
-        <div class="ws-actions">
-          <button class="ws-btn-back" onclick="prevSlide(event)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <button class="ws-btn-next" onclick="nextSlide()">Next</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 3: Sleep + mood correlation -->
-    <div class="wrap-slide" id="ws-2" style="background:#49aee1;">
-      <div class="ws-emotion"><img src="./components/emotion-happy.svg" width="2550" height="2550" alt=""></div>
-      <div class="ws-content">
-        <div class="ws-text-group">
-          <p class="ws-label">You noticed a pattern</p>
-          <h2 class="ws-title">On good sleep nights, you felt happy 3× more often.</h2>
+          <p class="ws-label" style="color:rgba(255,255,255,0.6);">Sleep &amp; mood</p>
+          <h2 class="ws-title">On the days you slept well, you were more likely to feel happy. Your body is talking — you're listening.</h2>
         </div>
         <div class="ws-actions">
           <button class="ws-btn-back" onclick="prevSlide(event)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -558,13 +571,13 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
     </div>
 
-    <!-- Slide 4: Journal quote -->
-    <div class="wrap-slide" id="ws-3" style="background:#b38aff;">
-      <div class="ws-emotion"><img src="./components/emotion-stressed.svg" width="2100" height="2100" alt=""></div>
+    <!-- Slide 3: Journal quote -->
+    <div class="wrap-slide" id="ws-2">
+      <img class="ws-bg" src="./components/tlo-05.svg" alt="">
       <div class="ws-content">
         <div class="ws-text-group">
-          <p class="ws-label">You wrote something important in the journal</p>
-          <h2 class="ws-title">"Today was hard but I got through it."</h2>
+          <p class="ws-label" style="color:rgba(255,255,255,0.6);">You wrote something very important in the journal</p>
+          <h2 class="ws-title">"I just needed someone to understand."</h2>
         </div>
         <div class="ws-actions">
           <button class="ws-btn-back" onclick="prevSlide(event)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -573,21 +586,106 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
     </div>
 
-    <!-- Slide 5: Win -->
-    <div class="wrap-slide" id="ws-4" style="background:#58b880;">
-      <div class="ws-emotion"><img src="./components/emotion-excited.svg" width="2325" height="2325" alt=""></div>
+    <!-- Slide 4: Progress & shifts -->
+    <div class="wrap-slide" id="ws-3">
+      <img class="ws-bg" src="./components/tlo-04.svg" alt="">
       <div class="ws-content">
         <div class="ws-text-group">
-          <p class="ws-label">Your win of the month</p>
-          <h2 class="ws-title">"Finished my project on time."</h2>
+          <p class="ws-label" style="color:rgba(255,255,255,0.6);">Progress &amp; shifts</p>
+          <h2 class="ws-title">The second half of May had more good days than the first. Things shifted — and you were there for it.</h2>
         </div>
         <div class="ws-actions">
           <button class="ws-btn-back" onclick="prevSlide(event)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <button class="ws-btn-next" onclick="closeWrap(event)">Back to Journey</button>
+          <button class="ws-btn-next" onclick="nextSlide()">Next</button>
         </div>
       </div>
     </div>
 
+    <!-- Slide 5: Win of the month -->
+    <div class="wrap-slide" id="ws-4">
+      <img class="ws-bg" src="./components/tlo-03.svg" alt="">
+      <div class="ws-content">
+        <div class="ws-text-group">
+          <p class="ws-label" style="color:rgba(255,255,255,0.6);">Win of the month</p>
+          <h2 class="ws-title">This month you wrote: "I finished my project on time." That's not small.</h2>
+        </div>
+        <div class="ws-actions">
+          <button class="ws-btn-back" onclick="prevSlide(event)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="ws-btn-next" onclick="nextSlide()">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: Final — proud of you -->
+    <div class="wrap-slide" id="ws-5">
+      <img class="ws-bg" src="./components/tlo-06.svg" alt="">
+      <div class="ws-content">
+        <div class="ws-text-group">
+          <p class="ws-label" style="color:rgba(255,255,255,0.6);">There is a lot to be proud of!</p>
+          <h2 class="ws-title">You got to know yourself better this month.</h2>
+        </div>
+        <div class="ws-actions">
+          <button class="ws-btn-share" onclick="">Share</button>
+          <button class="ws-btn-wide" onclick="closeWrap(event)">Back to Journey</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Support handle ──────────────────────────────────────── -->
+  <div class="support-handle" onclick="openSupport()">
+    <span class="support-handle-label">support</span>
+  </div>
+  <div class="sp-backdrop" id="spBackdrop" onclick="closeSupport()"></div>
+  <div class="support-panel" id="supportPanel">
+    <div class="sp-header">
+      <h2 class="sp-title">Need someone to talk to?</h2>
+      <button class="sp-close" onclick="closeSupport()">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M15 5L5 15M5 5L15 15" stroke="#f2f3e5" stroke-width="1.67" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="sp-items">
+      <div class="sp-item">
+        <div class="sp-item-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M11 2C6.03 2 2 6.03 2 11c0 1.6.4 3.1 1.1 4.4L2 20l4.6-1.1A9 9 0 1 0 11 2Z" stroke="#f2f3e5" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="sp-item-title">Talk to someone right now</p>
+          <p class="sp-item-sub">Free to call, any time — day or night</p>
+        </div>
+      </div>
+      <div class="sp-divider"></div>
+      <div class="sp-item">
+        <div class="sp-item-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="2" y="5" width="18" height="13" rx="2" stroke="#f2f3e5" stroke-width="1.5"/>
+            <path d="M2 8l9 6 9-6" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="sp-item-title">Rather text than talk?</p>
+          <p class="sp-item-sub">Sometimes it's easier to write it down</p>
+        </div>
+      </div>
+      <div class="sp-divider"></div>
+      <div class="sp-item">
+        <div class="sp-item-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="7" r="3.5" stroke="#f2f3e5" stroke-width="1.5"/>
+            <path d="M4 19c0-3.87 3.13-7 7-7h0c3.87 0 7 3.13 7 7" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="sp-item-title">Tell someone at school</p>
+          <p class="sp-item-sub">Your counsellor is always on your side</p>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -610,23 +708,86 @@ scale(); addEventListener('resize', scale);
 
 // Sparks
 (function() {
-  const n = parseInt(localStorage.getItem('bp_sparks') || '220', 10);
+  var n = parseInt(localStorage.getItem('bp_sparks') || '220', 10);
   document.getElementById('journeySparks').textContent = n;
 })();
 
-
 // ─── Period tabs ─────────────────────────────────────────────
-function switchPeriod(btn) {
+function switchPeriod(btn, idx) {
   var pills = btn.closest('.tab-pills').querySelectorAll('.tab-pill');
-  var idx = Array.prototype.indexOf.call(pills, btn);
   pills.forEach(function(b) { b.className = 'tab-pill tab-pill-inactive'; });
   btn.className = 'tab-pill tab-pill-active';
   document.getElementById('panel-thismonth').classList.toggle('active', idx === 0);
   document.getElementById('panel-alltime').classList.toggle('active', idx === 1);
+  document.getElementById('alltimeClip').style.display = idx === 1 ? 'block' : 'none';
+  document.getElementById('alltimeNav').classList.toggle('visible', idx === 1);
 }
 
+// ─── All times carousel ───────────────────────────────────────
+var _cardOffset = 0;
+var CARD_STEP = 460; // 318 card + 142 connector
+var MAX_OFFSET = CARD_STEP * 6;
+
+function navCards(dir) {
+  _cardOffset = Math.max(0, Math.min(_cardOffset + dir * CARD_STEP, MAX_OFFSET));
+  document.getElementById('alltimeRow').style.transform = 'translateX(-' + _cardOffset + 'px)';
+  document.getElementById('navPrev').style.opacity = _cardOffset > 0 ? '1' : '0.3';
+  document.getElementById('navNext').style.opacity = _cardOffset < MAX_OFFSET ? '1' : '0.3';
+}
+
+// Init arrow opacity
+document.getElementById('navPrev').style.opacity = '0.3';
+
+// ─── Carousel drag ───────────────────────────────────────────
+(function() {
+  var clip = document.getElementById('alltimeClip');
+  var row  = document.getElementById('alltimeRow');
+  var startX = 0, startOffset = 0, dragging = false;
+
+  function updateArrows() {
+    document.getElementById('navPrev').style.opacity = _cardOffset > 0 ? '1' : '0.3';
+    document.getElementById('navNext').style.opacity = _cardOffset < MAX_OFFSET ? '1' : '0.3';
+  }
+
+  function onStart(x) {
+    dragging = true;
+    startX = x;
+    startOffset = _cardOffset;
+    row.style.transition = 'none';
+    clip.classList.add('dragging');
+  }
+
+  function onMove(x) {
+    if (!dragging) return;
+    var delta = startOffset + (startX - x);
+    // light rubber-band beyond edges
+    if (delta < 0) delta = delta * 0.3;
+    if (delta > MAX_OFFSET) delta = MAX_OFFSET + (delta - MAX_OFFSET) * 0.3;
+    row.style.transform = 'translateX(-' + delta + 'px)';
+  }
+
+  function onEnd(x) {
+    if (!dragging) return;
+    dragging = false;
+    clip.classList.remove('dragging');
+    var delta = startOffset + (startX - x);
+    var snapped = Math.round(delta / CARD_STEP) * CARD_STEP;
+    _cardOffset = Math.max(0, Math.min(snapped, MAX_OFFSET));
+    row.style.transition = 'transform 600ms cubic-bezier(0.73,-0.01,0.2,0.98)';
+    row.style.transform = 'translateX(-' + _cardOffset + 'px)';
+    updateArrows();
+  }
+
+  clip.addEventListener('mousedown',  function(e) { onStart(e.clientX); e.preventDefault(); });
+  window.addEventListener('mousemove', function(e) { onMove(e.clientX); });
+  window.addEventListener('mouseup',   function(e) { onEnd(e.clientX); });
+  clip.addEventListener('touchstart',  function(e) { onStart(e.touches[0].clientX); }, { passive: true });
+  clip.addEventListener('touchmove',   function(e) { onMove(e.touches[0].clientX); }, { passive: true });
+  clip.addEventListener('touchend',    function(e) { onEnd(e.changedTouches[0].clientX); });
+})();
+
 // ─── Wrap ────────────────────────────────────────────────────
-var SLIDE_COUNT = 5;
+var SLIDE_COUNT = 6;
 var _slide = 0;
 var _wrapAnimating = false;
 var WRAP_BEZ = 'cubic-bezier(0.73,-0.01,0.2,0.98)';
@@ -654,43 +815,47 @@ function buildProgress() {
 function animateWrap(fromIdx, toIdx) {
   if (_wrapAnimating) return;
   _wrapAnimating = true;
-
   var overlay = document.getElementById('wrap-overlay');
   overlay.style.pointerEvents = 'none';
-
   var dir = toIdx > fromIdx ? 1 : -1;
   var fromSlide = document.getElementById('ws-' + fromIdx);
   var toSlide   = document.getElementById('ws-' + toIdx);
   var fromC = fromSlide.querySelector('.ws-content');
   var toC   = toSlide.querySelector('.ws-content');
-
   var exitX  = 'calc(-50% + ' + (dir * -1300) + 'px)';
   var enterX = 'calc(-50% + ' + (dir *  1300) + 'px)';
-
   toC.style.transition = 'none';
   toC.style.transform  = enterX;
-
   toSlide.classList.add('ws-active');
   toSlide.style.zIndex = '2';
   fromSlide.style.zIndex = '1';
-
   toC.offsetWidth;
-
   var t = 'transform ' + WRAP_DUR + 'ms ' + WRAP_BEZ;
   fromC.style.transition = t;
   fromC.style.transform  = exitX;
   toC.style.transition   = t;
   toC.style.transform    = 'translateX(-50%)';
-
-  setTimeout(function() {
+  var cleaned = false;
+  function cleanup() {
+    if (cleaned) return;
+    cleaned = true;
+    toC.removeEventListener('transitionend', cleanup);
     fromSlide.classList.remove('ws-active');
     fromSlide.style.zIndex = '';
     toSlide.style.zIndex   = '';
-    fromC.style.transition = fromC.style.transform = '';
-    toC.style.transition   = toC.style.transform   = '';
-    overlay.style.pointerEvents = '';
-    _wrapAnimating = false;
-  }, WRAP_DUR);
+    fromC.style.transition = 'none';
+    fromC.style.transform  = '';
+    toC.style.transition   = 'none';
+    toC.style.transform    = '';
+    requestAnimationFrame(function() {
+      fromC.style.transition = '';
+      toC.style.transition   = '';
+      overlay.style.pointerEvents = '';
+      _wrapAnimating = false;
+    });
+  }
+  toC.addEventListener('transitionend', cleanup);
+  setTimeout(cleanup, WRAP_DUR + 120);
 }
 
 function nextSlide() {
@@ -712,16 +877,16 @@ function closeWrap(e) {
   if (e) e.stopPropagation();
   document.getElementById('wrap-overlay').style.display = 'none';
   _wrapAnimating = false;
-  localStorage.setItem('bp_wrap_done', '1');
-  applyWrapDone();
 }
 
-function applyWrapDone() {
-  document.querySelector('.journey-main').classList.add('wrap-done');
-  var illus = document.querySelector('.wrap-illustration');
-  if (illus) illus.style.display = 'none';
+function openSupport() {
+  document.getElementById('supportPanel').classList.add('sp-open');
+  document.getElementById('spBackdrop').classList.add('sp-open');
 }
-
+function closeSupport() {
+  document.getElementById('supportPanel').classList.remove('sp-open');
+  document.getElementById('spBackdrop').classList.remove('sp-open');
+}
 </script>
 </body>
 </html>

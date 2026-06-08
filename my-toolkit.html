@@ -72,8 +72,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 /* ─── Main content ──────────────────────────────────────────── */
 .toolkit-main {
   position: absolute;
-  left: 149px; top: 50%; transform: translateY(-50%);
-  width: 997px;
+  left: 152px; top: 72px; bottom: 0;
+  width: 977px;
   display: flex; flex-direction: column; align-items: center;
 }
 
@@ -86,7 +86,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* ─── Filter pills ──────────────────────────────────────────── */
 .filter-row {
-  display: flex; gap: 8px; margin-bottom: 32px;
+  display: flex; gap: 8px; margin-bottom: 48px;
 }
 .filter-pill {
   height: 40px; padding: 0 20px;
@@ -212,15 +212,15 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 /* ─── Simplified "My toolkit" (no video watched) ────────────── */
 .toolkit-simple {
   position: absolute;
-  left: 149px; top: 50%; transform: translateY(-50%);
-  width: 997px;
+  left: 152px; top: 72px; bottom: 0;
+  width: 977px;
   display: flex; flex-direction: column; gap: 36px;
 }
 .tk-header-row {
   display: flex; align-items: center; justify-content: space-between;
 }
 .tk-title-big {
-  font-family: var(--font-display); font-size: 80px; line-height: 1.06;
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
   letter-spacing: 1.5px; color: #f2f3e5; margin: 0;
 }
 .tk-mood-widget {
@@ -253,7 +253,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .tk-featured-video:hover { transform: scale(1.01); }
 .btn-explore {
-  height: 48px; padding: 0 24px; align-self: center; min-width: 200px;
+  position: absolute; bottom: 63px; left: 50%; transform: translateX(-50%);
+  height: 48px; padding: 0; width: 200px;
   background: transparent; color: #f5f5f5;
   font-family: var(--font-body); font-size: 16px; font-weight: 700;
   border-radius: 8px; border: 1px solid rgba(255,255,255,0.16);
@@ -273,6 +274,70 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   transition: opacity 120ms;
 }
 .explore-back:active { opacity: 0.7; }
+
+
+/* ── Support handle + panel ──────────────────────────────────── */
+.support-handle {
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  width: 28px; height: 80px; z-index: 15;
+  background: #2b2b32; border: 1px solid #444450; border-right: none;
+  border-radius: 10px 0 0 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: width 150ms, background 150ms;
+}
+.support-handle:hover { width: 33px; background: #36363f; }
+.support-handle-label {
+  font-family: var(--font-body); font-size: 11px; font-weight: 700;
+  color: rgba(242,243,229,0.55); writing-mode: vertical-rl;
+  transform: rotate(180deg); letter-spacing: 0.6px; user-select: none;
+}
+.sp-backdrop {
+  position: absolute; inset: 0; z-index: 34;
+  background: rgba(0,0,0,0.45); opacity: 0; pointer-events: none;
+  transition: opacity 500ms ease;
+}
+.sp-backdrop.sp-open { opacity: 1; pointer-events: all; }
+.support-panel {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 380px; z-index: 35;
+  background: #2b2b32; border-left: 1px solid #36363f;
+  transform: translateX(100%); transition: transform 360ms cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.support-panel.sp-open { transform: translateX(0); }
+.sp-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 52px 24px 20px; border-bottom: 1px solid #36363f; flex-shrink: 0;
+}
+.sp-title {
+  font-family: var(--font-display); font-size: 24px; line-height: 1.1;
+  letter-spacing: 0.5px; color: #f2f3e5; margin: 0;
+}
+.sp-close {
+  width: 40px; height: 40px; border-radius: 8px; flex-shrink: 0;
+  background: rgba(255,255,255,0.08); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 120ms;
+}
+.sp-close:hover { background: rgba(255,255,255,0.14); }
+.sp-items { display: flex; flex-direction: column; padding: 8px 0; flex: 1; }
+.sp-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 24px; cursor: pointer; transition: background 120ms;
+}
+.sp-item:hover { background: rgba(255,255,255,0.04); }
+.sp-item-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: #36363f; display: flex; align-items: center; justify-content: center;
+}
+.sp-item-title {
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #f2f3e5; margin: 0 0 3px; letter-spacing: -0.1px;
+}
+.sp-item-sub {
+  font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  color: #737472; margin: 0;
+}
+.sp-divider { height: 1px; background: #36363f; margin: 4px 0; }
 
 </style>
 </head>
@@ -300,8 +365,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <span class="nav-label">My toolkit</span>
       </div>
       <div class="nav-item" onclick="window.location.href='journey.html'">
-        <div class="nav-icon"><img src="./components/icon-04.svg" alt="My journey"></div>
-        <span class="nav-label">My journey</span>
+        <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
+        <span class="nav-label">Journey</span>
       </div>
       <div class="nav-item" onclick="window.location.href='grades.html'">
         <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
@@ -478,6 +543,62 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   </main>
 
+
+  <!-- ── Support handle ──────────────────────────────────────── -->
+  <div class="support-handle" onclick="openSupport()">
+    <span class="support-handle-label">support</span>
+  </div>
+  <div class="sp-backdrop" id="spBackdrop" onclick="closeSupport()"></div>
+  <div class="support-panel" id="supportPanel">
+    <div class="sp-header">
+      <h2 class="sp-title">Need someone to talk to?</h2>
+      <button class="sp-close" onclick="closeSupport()">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M15 5L5 15M5 5L15 15" stroke="#f2f3e5" stroke-width="1.67" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="sp-items">
+      <div class="sp-item">
+        <div class="sp-item-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M11 2C6.03 2 2 6.03 2 11c0 1.6.4 3.1 1.1 4.4L2 20l4.6-1.1A9 9 0 1 0 11 2Z" stroke="#f2f3e5" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="sp-item-title">Talk to someone right now</p>
+          <p class="sp-item-sub">Free to call, any time — day or night</p>
+        </div>
+      </div>
+      <div class="sp-divider"></div>
+      <div class="sp-item">
+        <div class="sp-item-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="2" y="5" width="18" height="13" rx="2" stroke="#f2f3e5" stroke-width="1.5"/>
+            <path d="M2 8l9 6 9-6" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="sp-item-title">Rather text than talk?</p>
+          <p class="sp-item-sub">Sometimes it's easier to write it down</p>
+        </div>
+      </div>
+      <div class="sp-divider"></div>
+      <div class="sp-item">
+        <div class="sp-item-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="7" r="3.5" stroke="#f2f3e5" stroke-width="1.5"/>
+            <path d="M4 19c0-3.87 3.13-7 7-7h0c3.87 0 7 3.13 7 7" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="sp-item-title">Tell someone at school</p>
+          <p class="sp-item-sub">Your counsellor is always on your side</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 </div>
 
@@ -646,6 +767,15 @@ renderSaved();
     if (pill) setFilter(tab, pill);
   }
 })();
+
+function openSupport() {
+  document.getElementById('supportPanel').classList.add('sp-open');
+  document.getElementById('spBackdrop').classList.add('sp-open');
+}
+function closeSupport() {
+  document.getElementById('supportPanel').classList.remove('sp-open');
+  document.getElementById('spBackdrop').classList.remove('sp-open');
+}
 </script>
 </body>
 </html>

@@ -80,7 +80,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .col-left {
   position: absolute; left: 152px; top: 72px;
   width: 449px;
-  display: flex; flex-direction: column; gap: 32px;
+  display: flex; flex-direction: column; gap: 48px;
 }
 
 .grades-title {
@@ -205,12 +205,15 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   width: 408px; transform: rotate(-30deg); pointer-events: none; opacity: 0.7;
 }
 
-.video-bookmark {
+.heart-btn {
   position: absolute; top: 12px; right: 12px;
-  width: 48px; height: 48px; border-radius: 8px;
-  background: #36363f; border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px;
+  background: none; border: none; padding: 0; margin: 0;
+  outline: none; cursor: pointer; display: block;
+  transition: transform 120ms; z-index: 2;
 }
+.heart-btn:active { transform: scale(0.9); }
+.heart-btn img { width: 48px; height: 48px; display: block; }
 .video-play {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 44px; height: 44px; border-radius: 12px;
@@ -418,6 +421,70 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   color: #737472; line-height: 16px; white-space: nowrap;
 }
 
+
+/* ── Support handle + panel ──────────────────────────────────── */
+.support-handle {
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  width: 28px; height: 80px; z-index: 15;
+  background: #2b2b32; border: 1px solid #444450; border-right: none;
+  border-radius: 10px 0 0 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: width 150ms, background 150ms;
+}
+.support-handle:hover { width: 33px; background: #36363f; }
+.support-handle-label {
+  font-family: var(--font-body); font-size: 11px; font-weight: 700;
+  color: rgba(242,243,229,0.55); writing-mode: vertical-rl;
+  transform: rotate(180deg); letter-spacing: 0.6px; user-select: none;
+}
+.sp-backdrop {
+  position: absolute; inset: 0; z-index: 34;
+  background: rgba(0,0,0,0.45); opacity: 0; pointer-events: none;
+  transition: opacity 500ms ease;
+}
+.sp-backdrop.sp-open { opacity: 1; pointer-events: all; }
+.support-panel {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 380px; z-index: 35;
+  background: #2b2b32; border-left: 1px solid #36363f;
+  transform: translateX(100%); transition: transform 360ms cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.support-panel.sp-open { transform: translateX(0); }
+.sp-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 52px 24px 20px; border-bottom: 1px solid #36363f; flex-shrink: 0;
+}
+.sp-title {
+  font-family: var(--font-display); font-size: 24px; line-height: 1.1;
+  letter-spacing: 0.5px; color: #f2f3e5; margin: 0;
+}
+.sp-close {
+  width: 40px; height: 40px; border-radius: 8px; flex-shrink: 0;
+  background: rgba(255,255,255,0.08); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 120ms;
+}
+.sp-close:hover { background: rgba(255,255,255,0.14); }
+.sp-items { display: flex; flex-direction: column; padding: 8px 0; flex: 1; }
+.sp-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 24px; cursor: pointer; transition: background 120ms;
+}
+.sp-item:hover { background: rgba(255,255,255,0.04); }
+.sp-item-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: #36363f; display: flex; align-items: center; justify-content: center;
+}
+.sp-item-title {
+  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  color: #f2f3e5; margin: 0 0 3px; letter-spacing: -0.1px;
+}
+.sp-item-sub {
+  font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  color: #737472; margin: 0;
+}
+.sp-divider { height: 1px; background: #36363f; margin: 4px 0; }
+
 </style>
 </head>
 <body>
@@ -446,8 +513,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <span class="nav-label">My toolkit</span>
       </div>
       <div class="nav-item" onclick="window.location.href='journey.html'">
-        <div class="nav-icon"><img src="./components/icon-04.svg" alt="My journey"></div>
-        <span class="nav-label">My journey</span>
+        <div class="nav-icon"><img src="./components/icon-04.svg" alt="Journey"></div>
+        <span class="nav-label">Journey</span>
       </div>
       <div class="nav-item active">
         <div class="nav-icon"><img src="./components/icon-05.svg" alt="Grades"></div>
@@ -566,10 +633,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <div class="video-card video-card-grades">
       <img class="video-cloud-1" src="./components/cloud-grades-1.svg" alt="">
       <img class="video-cloud-2" src="./components/cloud-grades-2.svg" alt="">
-      <button class="video-bookmark">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M5 3C4.44772 3 4 3.44772 4 4V17L10 14L16 17V4C16 3.44772 15.5523 3 15 3H5Z" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+      <button class="heart-btn" onclick="toggleHeart(this)">
+        <img src="./components/heart-default.svg" alt="save">
       </button>
       <div class="video-play">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -601,10 +666,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <div class="video-card video-card-attend">
       <img class="video-mithosis-1" src="./components/mithosis.svg" alt="">
       <img class="video-mithosis-2" src="./components/mithosis.svg" alt="">
-      <button class="video-bookmark">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M5 3C4.44772 3 4 3.44772 4 4V17L10 14L16 17V4C16 3.44772 15.5523 3 15 3H5Z" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+      <button class="heart-btn" onclick="toggleHeart(this)">
+        <img src="./components/heart-default.svg" alt="save">
       </button>
       <div class="video-play">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -755,6 +818,62 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   </div>
 </div>
+
+
+  <!-- ── Support handle ──────────────────────────────────────── -->
+  <div class="support-handle" onclick="openSupport()">
+    <span class="support-handle-label">support</span>
+  </div>
+  <div class="sp-backdrop" id="spBackdrop" onclick="closeSupport()"></div>
+  <div class="support-panel" id="supportPanel">
+    <div class="sp-header">
+      <h2 class="sp-title">Need someone to talk to?</h2>
+      <button class="sp-close" onclick="closeSupport()">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M15 5L5 15M5 5L15 15" stroke="#f2f3e5" stroke-width="1.67" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="sp-items">
+      <div class="sp-item">
+        <div class="sp-item-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M11 2C6.03 2 2 6.03 2 11c0 1.6.4 3.1 1.1 4.4L2 20l4.6-1.1A9 9 0 1 0 11 2Z" stroke="#f2f3e5" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="sp-item-title">Talk to someone right now</p>
+          <p class="sp-item-sub">Free to call, any time — day or night</p>
+        </div>
+      </div>
+      <div class="sp-divider"></div>
+      <div class="sp-item">
+        <div class="sp-item-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="2" y="5" width="18" height="13" rx="2" stroke="#f2f3e5" stroke-width="1.5"/>
+            <path d="M2 8l9 6 9-6" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="sp-item-title">Rather text than talk?</p>
+          <p class="sp-item-sub">Sometimes it's easier to write it down</p>
+        </div>
+      </div>
+      <div class="sp-divider"></div>
+      <div class="sp-item">
+        <div class="sp-item-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="7" r="3.5" stroke="#f2f3e5" stroke-width="1.5"/>
+            <path d="M4 19c0-3.87 3.13-7 7-7h0c3.87 0 7 3.13 7 7" stroke="#f2f3e5" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="sp-item-title">Tell someone at school</p>
+          <p class="sp-item-sub">Your counsellor is always on your side</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 </div>
@@ -930,6 +1049,26 @@ function selectTargetGrade(btn) {
   var el  = document.getElementById('userAvatar');
   if (el) el.style.background = bg + ' url("' + src + '") no-repeat center / cover';
 })();
+
+function openSupport() {
+  document.getElementById('supportPanel').classList.add('sp-open');
+  document.getElementById('spBackdrop').classList.add('sp-open');
+}
+function closeSupport() {
+  document.getElementById('supportPanel').classList.remove('sp-open');
+  document.getElementById('spBackdrop').classList.remove('sp-open');
+}
+
+function toggleHeart(btn) {
+  var img = btn.querySelector('img');
+  if (btn.classList.contains('saved')) {
+    btn.classList.remove('saved');
+    img.src = './components/heart-default.svg';
+  } else {
+    btn.classList.add('saved');
+    img.src = './components/heart-saved.svg';
+  }
+}
 </script>
 </body>
 </html>
