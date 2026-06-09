@@ -466,10 +466,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <div class="col-right">
       <span class="section-label">Topics to write about</span>
       <div class="questions-list" id="questionsList">
-        <div class="question-circle question-circle-blue" data-qkey="bp_journal_q1" onclick="window.location.href='journal-question.html?q=1'">
+        <div class="question-circle question-circle-blue" id="qCircle1" onclick="openQOverlay(1)">
           <p class="question-text">What kinds of moments or things tend to lift your mood — even a little?</p>
         </div>
-        <div class="question-circle question-circle-coral" data-qkey="bp_journal_q2" onclick="window.location.href='journal-question.html?q=2'">
+        <div class="question-circle question-circle-coral" id="qCircle2" onclick="openQOverlay(2)">
           <p class="question-text">What's making you feel this excited?</p>
         </div>
       </div>
@@ -531,6 +531,42 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
     <!-- Completion screen -->
     <div class="wov-done" id="wovDone">
+      <div class="wov-done-row">
+        <span class="wov-done-plus">+1</span>
+        <img src="./components/spark.svg" alt="spark" style="width:28px;height:28px;display:block;">
+      </div>
+      <p class="wov-done-title">Completed!</p>
+    </div>
+  </div>
+
+  <!-- ── Question overlay ─────────────────────────────────────── -->
+  <div class="write-overlay" id="questionOverlay">
+    <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+    <input type="hidden" id="activeQNum" value="">
+
+    <button class="wov-back" onclick="document.getElementById('questionOverlay').style.display='none';">
+      <svg viewBox="0 0 20 20" fill="none" width="20" height="20">
+        <path d="M12 5L7 10L12 15" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="wov-body">
+      <div class="wov-spark-pill">
+        1 <img src="./components/spark.svg" alt="spark" style="width:20px;height:20px;display:block;">
+      </div>
+      <h1 class="wov-title" style="font-size:24px;margin-bottom:32px;" id="qovTitle"></h1>
+
+      <div class="wov-textarea-wrap">
+        <textarea class="wov-textarea" id="qovInput" placeholder="Start writing here"
+          oninput="var b=document.getElementById('qovSaveBtn');b.disabled=this.value.trim().length===0;"></textarea>
+      </div>
+    </div>
+
+    <div class="wov-save-wrap">
+      <button class="wov-save" id="qovSaveBtn" disabled onclick="saveQAnswer()">Save</button>
+    </div>
+
+    <div class="wov-done" id="qovDone" style="display:none;">
       <div class="wov-done-row">
         <span class="wov-done-plus">+1</span>
         <img src="./components/spark.svg" alt="spark" style="width:28px;height:28px;display:block;">
@@ -665,10 +701,11 @@ function renderJournal() {
     if (!answer) continue;
     var card = document.createElement(‘div’);
     card.className = ‘note-card-today’;
+    card.setAttribute(‘data-qnum’, q.qnum);
     card.innerHTML =
       ‘<div class="note-card-header">’ +
         ‘<span class="note-card-date">Today</span>’ +
-        ‘<button class="note-card-edit" onclick="window.location.href=\’journal-question.html?q=’ + q.qnum + ‘\’">Edit</button>’ +
+        ‘<button class="note-card-edit" onclick="openQOverlay(‘ + q.qnum + ‘)">Edit</button>’ +
       ‘</div>’ +
       ‘<div class="note-card-body">’ +
         ‘<p class="note-question">’ + q.text + ‘</p>’ +
@@ -758,6 +795,68 @@ function saveWovNote() {
     var noteCard = document.getElementById('noteCard');
     noteCard.style.display = 'flex';
     document.getElementById('noteText').textContent = val;
+  }, 1800);
+}
+
+// ── Question overlay ────────────────────────────────────────────
+var Q_DATA = [
+  { key: 'bp_journal_q1', text: 'What kinds of moments or things tend to lift your mood — even a little?', color: '#3f50b8' },
+  { key: 'bp_journal_q2', text: "What's making you feel this excited?", color: '#e65800' }
+];
+
+function openQOverlay(qnum) {
+  var q = Q_DATA[qnum - 1];
+  var overlay = document.getElementById('questionOverlay');
+  overlay.style.background = q.color;
+  overlay.style.display = 'block';
+  document.getElementById('activeQNum').value = String(qnum);
+  document.getElementById('qovTitle').textContent = q.text;
+  var saved = '';
+  try { saved = sessionStorage.getItem(q.key) || localStorage.getItem(q.key) || ''; } catch(e) {}
+  var input = document.getElementById('qovInput');
+  input.value = saved;
+  document.getElementById('qovSaveBtn').disabled = saved.trim().length === 0;
+  document.getElementById('qovDone').style.display = 'none';
+  input.focus();
+}
+
+function saveQAnswer() {
+  var val = document.getElementById('qovInput').value.trim();
+  if (!val) return;
+  var qnum = document.getElementById('activeQNum').value;
+  var q = Q_DATA[parseInt(qnum) - 1];
+
+  try { sessionStorage.setItem(q.key, val); } catch(e) {}
+  try { localStorage.setItem(q.key, val); } catch(e) {}
+
+  document.getElementById('qovDone').style.display = 'flex';
+
+  setTimeout(function() {
+    document.getElementById('questionOverlay').style.display = 'none';
+
+    // Create or replace the answer card
+    var container = document.getElementById('qAnswerCards');
+    var existing = container.querySelector('[data-qnum="' + qnum + '"]');
+    if (existing) existing.remove();
+
+    var card = document.createElement('div');
+    card.className = 'note-card-today';
+    card.setAttribute('data-qnum', qnum);
+    card.innerHTML =
+      '<div class="note-card-header">' +
+        '<span class="note-card-date">Today</span>' +
+        '<button class="note-card-edit" onclick="openQOverlay(' + qnum + ')">Edit</button>' +
+      '</div>' +
+      '<div class="note-card-body">' +
+        '<p class="note-question">' + q.text + '</p>' +
+        '<p class="note-answer">' + val + '</p>' +
+      '</div>';
+    container.appendChild(card);
+    container.style.display = 'flex';
+
+    // Dim the answered circle
+    var circle = document.getElementById('qCircle' + qnum);
+    if (circle) circle.style.opacity = '0.2';
   }, 1800);
 }
 
