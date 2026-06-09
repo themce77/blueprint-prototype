@@ -466,10 +466,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <div class="col-right">
       <span class="section-label">Topics to write about</span>
       <div class="questions-list" id="questionsList">
-        <div class="question-circle question-circle-blue" id="qCircle1" onclick="openQOverlay(1)">
+        <div class="question-circle question-circle-blue" id="qCircle1" onclick="var o=document.getElementById('questionOverlay');o.style.background='#3f50b8';o.style.display='block';document.getElementById('activeQNum').value='1';document.getElementById('qovTitle').textContent='What kinds of moments or things tend to lift your mood — even a little?';var s='';try{s=sessionStorage.getItem('bp_journal_q1')||localStorage.getItem('bp_journal_q1')||'';}catch(e){}document.getElementById('qovInput').value=s;document.getElementById('qovSaveBtn').disabled=s.trim().length===0;document.getElementById('qovDone').style.display='none';document.getElementById('qovInput').focus();">
           <p class="question-text">What kinds of moments or things tend to lift your mood — even a little?</p>
         </div>
-        <div class="question-circle question-circle-coral" id="qCircle2" onclick="openQOverlay(2)">
+        <div class="question-circle question-circle-coral" id="qCircle2" onclick="var o=document.getElementById('questionOverlay');o.style.background='#e65800';o.style.display='block';document.getElementById('activeQNum').value='2';document.getElementById('qovTitle').textContent='What\'s making you feel this excited?';var s='';try{s=sessionStorage.getItem('bp_journal_q2')||localStorage.getItem('bp_journal_q2')||'';}catch(e){}document.getElementById('qovInput').value=s;document.getElementById('qovSaveBtn').disabled=s.trim().length===0;document.getElementById('qovDone').style.display='none';document.getElementById('qovInput').focus();">
           <p class="question-text">What's making you feel this excited?</p>
         </div>
       </div>
@@ -821,40 +821,49 @@ function openQOverlay(qnum) {
 }
 
 function saveQAnswer() {
-  var val = document.getElementById('qovInput').value.trim();
+  var val   = document.getElementById('qovInput').value.trim();
   if (!val) return;
-  var qnum = document.getElementById('activeQNum').value;
-  var q = Q_DATA[parseInt(qnum) - 1];
+  var qnum  = document.getElementById('activeQNum').value;
+  var qtext = document.getElementById('qovTitle').textContent;
+  var key   = 'bp_journal_q' + qnum;
+  var color = document.getElementById('questionOverlay').style.background;
 
-  try { sessionStorage.setItem(q.key, val); } catch(e) {}
-  try { localStorage.setItem(q.key, val); } catch(e) {}
+  try { sessionStorage.setItem(key, val); } catch(e) {}
+  try { localStorage.setItem(key, val); } catch(e) {}
 
   document.getElementById('qovDone').style.display = 'flex';
 
   setTimeout(function() {
     document.getElementById('questionOverlay').style.display = 'none';
 
-    // Create or replace the answer card
     var container = document.getElementById('qAnswerCards');
-    var existing = container.querySelector('[data-qnum="' + qnum + '"]');
+    var existing  = container.querySelector('[data-qnum="' + qnum + '"]');
     if (existing) existing.remove();
 
     var card = document.createElement('div');
     card.className = 'note-card-today';
     card.setAttribute('data-qnum', qnum);
+    // Edit re-opens overlay inline
+    var editOnclick = "var o=document.getElementById('questionOverlay');o.style.background='" + color + "';o.style.display='block';" +
+      "document.getElementById('activeQNum').value='" + qnum + "';" +
+      "document.getElementById('qovTitle').textContent=" + JSON.stringify(qtext) + ";" +
+      "var s='';try{s=sessionStorage.getItem('" + key + "')||localStorage.getItem('" + key + "')||'';}catch(e){}" +
+      "document.getElementById('qovInput').value=s;" +
+      "document.getElementById('qovSaveBtn').disabled=s.trim().length===0;" +
+      "document.getElementById('qovDone').style.display='none';" +
+      "document.getElementById('qovInput').focus();";
     card.innerHTML =
       '<div class="note-card-header">' +
         '<span class="note-card-date">Today</span>' +
-        '<button class="note-card-edit" onclick="openQOverlay(' + qnum + ')">Edit</button>' +
+        '<button class="note-card-edit" onclick="' + editOnclick.replace(/"/g, '&quot;') + '">Edit</button>' +
       '</div>' +
       '<div class="note-card-body">' +
-        '<p class="note-question">' + q.text + '</p>' +
+        '<p class="note-question">' + qtext + '</p>' +
         '<p class="note-answer">' + val + '</p>' +
       '</div>';
     container.appendChild(card);
     container.style.display = 'flex';
 
-    // Dim the answered circle
     var circle = document.getElementById('qCircle' + qnum);
     if (circle) circle.style.opacity = '0.2';
   }, 1800);
