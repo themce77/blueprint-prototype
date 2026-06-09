@@ -517,6 +517,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <button class="wov-save" id="wovSaveBtn" disabled onclick="
         var val=document.getElementById('wovInput').value.trim();
         if(!val)return;
+        try{sessionStorage.setItem('bp_write_text',val);}catch(e){}
+        try{localStorage.setItem('bp_write_text',val);}catch(e){}
         document.getElementById('wovDone').style.display='flex';
         setTimeout(function(){
           document.getElementById('writeOverlay').style.display='none';
@@ -635,6 +637,7 @@ function renderJournal() {
       writeText = urlNote;
     } else {
       try { writeText = sessionStorage.getItem(‘bp_write_text’) || null; } catch(e) {}
+      if (!writeText) { try { writeText = localStorage.getItem(‘bp_write_text’) || null; } catch(e) {} }
     }
     qAnswers = QUESTIONS.map(function(q) {
       try { return localStorage.getItem(q.key); } catch(e) { return null; }
