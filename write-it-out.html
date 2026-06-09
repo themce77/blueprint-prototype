@@ -293,10 +293,10 @@ function saveNote() {
   }
   localStorage.setItem('bp_journal_notes', JSON.stringify(notes));
 
-  const from = new URLSearchParams(location.search).get('from');
+  goTo('s-done');
   setTimeout(() => {
-    window.location.href = 'completed.html?card=write' + (from ? '&from=' + from : '');
-  }, 400);
+    window.location.href = 'journal.html';
+  }, 2200);
 }
 
 // Pre-fill if editing
