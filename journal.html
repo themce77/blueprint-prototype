@@ -288,7 +288,6 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   background: #b38aff; border-radius: 20px; overflow: hidden;
   display: none;
 }
-.write-overlay.open { display: block; }
 .write-overlay-bg {
   position: absolute; width: 1910px; height: 1910px; border-radius: 50%;
   background: #1f1f25; left: -358px; top: 80px; pointer-events: none; z-index: 0;
@@ -424,7 +423,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <div id="qAnswerCards"></div>
 
       <!-- Purple CTA card — shown when no write-it-out entry -->
-      <div class="write-cta-card" id="writeCta" onclick="openWriteOverlay()">
+      <div class="write-cta-card" id="writeCta" onclick="var o=document.getElementById('writeOverlay');o.style.display='block';document.getElementById('wovInput').value='';document.getElementById('wovSaveBtn').disabled=true;document.getElementById('wovDone').style.display='none';document.getElementById('wovInput').focus();">
         <div class="write-cta-monster">
           <img src="./components/Property 1=M02, Type=Default.svg" alt="">
         </div>
@@ -440,7 +439,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <div class="note-card-today" id="noteCard" style="display:none">
         <div class="note-card-header">
           <span class="note-card-date">Today</span>
-          <button class="note-card-edit" onclick="openWriteOverlay()">Edit</button>
+          <button class="note-card-edit" onclick="var o=document.getElementById('writeOverlay');o.style.display='block';document.getElementById('wovInput').value=document.getElementById('noteText').textContent;document.getElementById('wovSaveBtn').disabled=false;document.getElementById('wovDone').style.display='none';document.getElementById('wovInput').focus();">Edit</button>
         </div>
         <p class="note-card-text" id="noteText"></p>
       </div>
@@ -484,7 +483,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <div class="write-overlay-bg"></div>
     <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-    <button class="wov-back" onclick="closeWriteOverlay()">
+    <button class="wov-back" onclick="document.getElementById('writeOverlay').style.display='none';">
       <svg viewBox="0 0 20 20" fill="none" width="20" height="20">
         <path d="M12 5L7 10L12 15" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
@@ -510,12 +509,22 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
 
       <div class="wov-textarea-wrap">
-        <textarea class="wov-textarea" id="wovInput" placeholder="Start writing here" oninput="onWovInput()"></textarea>
+        <textarea class="wov-textarea" id="wovInput" placeholder="Start writing here" oninput="var b=document.getElementById('wovSaveBtn');b.disabled=this.value.trim().length===0;"></textarea>
       </div>
     </div>
 
     <div class="wov-save-wrap">
-      <button class="wov-save" id="wovSaveBtn" disabled onclick="saveWovNote()">Save</button>
+      <button class="wov-save" id="wovSaveBtn" disabled onclick="
+        var val=document.getElementById('wovInput').value.trim();
+        if(!val)return;
+        document.getElementById('wovDone').style.display='flex';
+        setTimeout(function(){
+          document.getElementById('writeOverlay').style.display='none';
+          document.getElementById('writeCta').style.display='none';
+          document.getElementById('noteCard').style.display='flex';
+          document.getElementById('noteText').textContent=val;
+        },1800);
+      ">Save</button>
     </div>
 
     <!-- Completion screen -->
