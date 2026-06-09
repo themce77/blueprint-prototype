@@ -23,7 +23,7 @@
    Anton loaded from local file — no network dependency.
    Barlow Semi Condensed used as DIN Alternate substitute.
    ───────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Semi+Condensed:wght@400;600;700&family=Barlow+Condensed:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@400;500;600&family=Barlow+Condensed:wght@500;600&display=swap');
 
 /* ─────────────────────────────────────────────────────────────
    2. COLORS — Primitive palette
@@ -141,8 +141,8 @@
 :root {
   /* Font stacks */
   --font-display:   'Anton', 'Helvetica Neue Condensed', 'Arial Narrow', sans-serif;
-  --font-body:      'DIN Alternate', 'Barlow Semi Condensed', 'Helvetica Neue', Arial, sans-serif;
-  --font-condensed: 'Barlow Condensed', 'Helvetica Neue Condensed', 'Arial Narrow', sans-serif;
+  --font-body:      'Barlow', sans-serif;
+  --font-condensed: 'Barlow Condensed', 'Arial Narrow', sans-serif;
 
   /* ── Typography tokens (size / line-height%) ──────────────── */
 
@@ -186,7 +186,7 @@
   /* Weights */
   --fw-normal: 400;
   --fw-semi:   600;
-  --fw-bold:   700;
+  --fw-bold:   500;
 
   /* Letter spacing */
   --ls-tight-2: -0.8px;

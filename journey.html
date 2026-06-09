@@ -52,7 +52,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .nav-icon img { width: 24px; height: 24px; display: block; }
 .nav-item.active .nav-icon img { filter: brightness(0) invert(1); }
 .nav-label {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
   color: #a4a59f; text-align: center; width: 64px; line-height: 16px;
 }
 .nav-item.active .nav-label { color: #f2f3e5; }
@@ -63,21 +63,20 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   border: 2px solid #36363f; overflow: hidden; box-sizing: border-box;
 }
 .user-name {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
   color: #a4a59f; text-align: center; width: 64px;
 }
 
 /* ─── Main ──────────────────────────────────────────────────── */
 .journey-main {
-  position: absolute; left: 152px; top: 72px; bottom: 0;
-  width: 977px;
-  display: flex; flex-direction: column; gap: 32px;
+  position: absolute; left: 152px; top: 72px; right: 24px; bottom: 0;
+  display: flex; flex-direction: column;
 }
 
 /* ─── Header ────────────────────────────────────────────────── */
 .journey-title {
   font-family: var(--font-display); font-size: var(--title-medium-size); line-height: var(--title-medium-lh);
-  letter-spacing: 0; color: #f2f3e5; margin: 0 0 8px;
+  letter-spacing: 0; color: #f2f3e5; margin: 0 0 16px;
 }
 .journey-sub {
   font-family: var(--font-body); font-size: 16px; font-weight: 500;
@@ -85,15 +84,16 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 
 /* ─── Tab pills ─────────────────────────────────────────────── */
-.tab-pills { display: flex; gap: 8px; }
+.tab-pills { display: flex; gap: 8px; margin-bottom: 24px; }
 .tab-pill {
   display: flex; align-items: center; justify-content: center;
-  padding: 11px 14px; border-radius: 14px;
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  height: 40px; padding: 0 20px; border-radius: 12px;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   cursor: pointer; border: none; transition: background 150ms, color 150ms;
 }
-.tab-pill-active   { background: #f2f3e5; color: #2b2b35; }
+.tab-pill-active   { background: #f2f3e5; color: #1f1f25; }
 .tab-pill-inactive { background: #2b2b35; color: rgba(242,243,229,0.5); }
+.journey-header    { margin-bottom: 36px; }
 
 /* ─── Tab panels ────────────────────────────────────────────── */
 .period-panel { display: none; flex-direction: column; gap: 32px; }
@@ -101,7 +101,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* ─── Stat cards grid (This month) ─────────────────────────── */
 .stats-grid {
-  display: grid; grid-template-columns: 480.5px 480.5px;
+  display: grid; grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 .stat-card {
@@ -140,8 +140,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* ─── All times horizontal cards ───────────────────────────── */
 .alltime-clip {
-  position: absolute; left: 152px; top: 274px;
-  width: 977px; height: 400px;
+  position: absolute; left: 152px; top: 320px;
+  right: 24px; height: 400px;
   overflow: hidden;
   cursor: grab; user-select: none;
 }
@@ -175,10 +175,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .activity-wzor img { width: 300px; height: 300px; display: block; }
 .alltime-connector {
-  width: 142px; height: 113px; flex-shrink: 0;
+  width: 80px; height: 63px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
 }
-.alltime-connector img { width: 142px; height: 113px; display: block; }
+.alltime-connector img { width: 80px; height: 63px; display: block; }
 
 /* ─── Pagination arrows ─────────────────────────────────────── */
 .alltime-nav {
@@ -303,7 +303,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .support-handle:hover { width: 33px; background: #36363f; }
 .support-handle-label {
-  font-family: var(--font-body); font-size: 11px; font-weight: 700;
+  font-family: var(--font-body); font-size: 11px; font-weight: 500;
   color: rgba(242,243,229,0.55); writing-mode: vertical-rl;
   transform: rotate(180deg); letter-spacing: 0.6px; user-select: none;
 }
@@ -346,7 +346,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   background: #36363f; display: flex; align-items: center; justify-content: center;
 }
 .sp-item-title {
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   color: #f2f3e5; margin: 0 0 3px; letter-spacing: -0.1px;
 }
 .sp-item-sub {
@@ -403,7 +403,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   <div class="journey-main">
 
     <!-- Header -->
-    <div>
+    <div class="journey-header">
       <h1 class="journey-title">Journey</h1>
       <p class="journey-sub">Knowing yourself — that's something to be proud of.</p>
     </div>
@@ -460,7 +460,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
 
       <div class="alltime-connector">
-        <img src="./components/wzor-y.svg" alt="">
+        <img src="./components/wzor-x.svg" alt="">
       </div>
 
       <div class="activity-card">
@@ -470,7 +470,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
 
       <div class="alltime-connector">
-        <img src="./components/wzor-y.svg" alt="">
+        <img src="./components/wzor-x.svg" alt="">
       </div>
 
       <div class="activity-card">
@@ -480,7 +480,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
 
       <div class="alltime-connector">
-        <img src="./components/wzor-y.svg" alt="">
+        <img src="./components/wzor-x.svg" alt="">
       </div>
 
       <div class="activity-card">
@@ -490,7 +490,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
 
       <div class="alltime-connector">
-        <img src="./components/wzor-y.svg" alt="">
+        <img src="./components/wzor-x.svg" alt="">
       </div>
 
       <div class="activity-card">
@@ -500,7 +500,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
 
       <div class="alltime-connector">
-        <img src="./components/wzor-y.svg" alt="">
+        <img src="./components/wzor-x.svg" alt="">
       </div>
 
       <div class="activity-card">
@@ -510,7 +510,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
 
       <div class="alltime-connector">
-        <img src="./components/wzor-y.svg" alt="">
+        <img src="./components/wzor-x.svg" alt="">
       </div>
 
       <div class="activity-card">

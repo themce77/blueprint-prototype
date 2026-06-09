@@ -53,7 +53,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .nav-icon img { width: 24px; height: 24px; display: block; }
 .nav-item.active .nav-icon img { filter: brightness(0) invert(1); }
 .nav-label {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
   color: #a4a59f; text-align: center; line-height: 16px; width: 64px;
 }
 .nav-item.active .nav-label { color: #f2f3e5; }
@@ -65,34 +65,40 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   overflow: hidden; box-sizing: border-box;
 }
 .user-name {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
   color: #a4a59f; text-align: center; width: 64px;
 }
 
 /* ─── Main content ──────────────────────────────────────────── */
 .toolkit-main {
   position: absolute;
-  left: 152px; top: 72px; bottom: 0;
-  width: 977px;
-  display: flex; flex-direction: column; align-items: center;
+  left: 152px; top: 72px; bottom: 0; right: 48px;
+  overflow-y: auto; overflow-x: hidden;
+  display: flex; flex-direction: column; align-items: flex-start;
 }
+.toolkit-main::-webkit-scrollbar { width: 0; }
 
 /* ─── Title ─────────────────────────────────────────────────── */
 .toolkit-title {
   font-family: var(--font-display); font-size: 64px; line-height: 1.06;
   color: #f2f3e5; letter-spacing: -1px;
-  margin: 0 0 48px; text-align: center;
+  margin: 0 0 16px; text-align: left;
+}
+.toolkit-desc {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  letter-spacing: -0.1px; line-height: 20px;
+  color: #737472; margin: 0 0 36px;
 }
 
 /* ─── Filter pills ──────────────────────────────────────────── */
 .filter-row {
-  display: flex; gap: 8px; margin-bottom: 48px;
+  display: flex; gap: 8px; margin-bottom: 24px;
 }
 .filter-pill {
   height: 40px; padding: 0 20px;
-  border-radius: 100px; border: none;
+  border-radius: 12px; border: none;
   background: #2b2b35; color: rgba(242,243,229,0.5);
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   cursor: pointer; transition: background 120ms, color 120ms;
   display: flex; align-items: center;
 }
@@ -100,7 +106,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .filter-pill:not(.active):hover { color: #f2f3e5; }
 
 /* ─── Tab panels ────────────────────────────────────────────── */
-.tab-panel { display: none; width: 100%; min-height: 485px; }
+.tab-panel { display: none; width: 100%; }
 .tab-panel.active { display: block; }
 
 /* ─── Video row ─────────────────────────────────────────────── */
@@ -112,9 +118,15 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .video-tile {
   flex: 1; height: 485px; border-radius: 20px; overflow: hidden;
   position: relative; cursor: pointer;
-  transition: transform 140ms cubic-bezier(0.34,1.56,0.64,1);
 }
-.video-tile:hover { transform: scale(1.02); }
+
+/* ─── Recommended layout: hero + 2-tile pair ────────────────── */
+.rec-hero {
+  width: 100%; flex: none;
+}
+.rec-pair {
+  display: flex; gap: 24px; margin-top: 24px;
+}
 
 .video-tile-bg {
   position: absolute; inset: 0; overflow: hidden;
@@ -148,12 +160,12 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   display: flex; align-items: center; justify-content: space-between;
 }
 .video-duration {
-  font-family: var(--font-body); font-size: 18px; font-weight: 700;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   color: #f2f3e5; letter-spacing: -0.2px;
 }
 .video-sparks {
   display: flex; align-items: center; gap: 4px;
-  font-family: var(--font-body); font-size: 18px; font-weight: 700;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   color: #f2f3e5; letter-spacing: -0.2px;
 }
 .video-sparks img { width: 16px; height: 16px; display: block; }
@@ -186,7 +198,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   width: 100%; height: 100%;
   display: flex; flex-direction: column;
   align-items: center; justify-content: space-between;
-  padding: 28px 36px; box-sizing: border-box;
+  padding: 28px 36px 43px; box-sizing: border-box;
 }
 
 .category-emoji-btn {
@@ -198,7 +210,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 
 .category-label {
-  font-family: var(--font-body); font-size: 20px; font-weight: 700;
+  font-family: var(--font-body); font-size: 20px; font-weight: 500;
   color: #f2f3e5; text-align: center; letter-spacing: -0.4px; line-height: 1.1;
 }
 
@@ -229,7 +241,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   align-items: center; gap: 12px; min-width: 200px;
 }
 .tk-mood-label {
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
   color: #f2f3e5; opacity: 0.4; margin: 0;
 }
 .tk-mood-emotions { display: flex; gap: 20px; align-items: center; }
@@ -256,7 +268,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   position: absolute; bottom: 63px; left: 50%; transform: translateX(-50%);
   height: 48px; padding: 0; width: 200px;
   background: transparent; color: #f5f5f5;
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   border-radius: 8px; border: 1px solid rgba(255,255,255,0.16);
   cursor: pointer; letter-spacing: -0.1px;
   box-shadow: 0 1px 1px rgba(20,21,26,0.03);
@@ -287,7 +299,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .support-handle:hover { width: 33px; background: #36363f; }
 .support-handle-label {
-  font-family: var(--font-body); font-size: 11px; font-weight: 700;
+  font-family: var(--font-body); font-size: 11px; font-weight: 500;
   color: rgba(242,243,229,0.55); writing-mode: vertical-rl;
   transform: rotate(180deg); letter-spacing: 0.6px; user-select: none;
 }
@@ -330,7 +342,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   background: #36363f; display: flex; align-items: center; justify-content: center;
 }
 .sp-item-title {
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   color: #f2f3e5; margin: 0 0 3px; letter-spacing: -0.1px;
 }
 .sp-item-sub {
@@ -412,6 +424,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   <main class="toolkit-main" id="mainFull" style="display:none">
 
     <h2 class="toolkit-title" id="toolkitTitle">My toolkit</h2>
+    <p class="toolkit-desc">Tools and exercises to support your wellbeing.</p>
 
     <div class="filter-row">
       <button class="filter-pill active" onclick="setFilter('recommended', this)">Recommended</button>
@@ -422,25 +435,28 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
     <!-- ─── RECOMMENDED ─────────────────────────────────────── -->
     <div class="tab-panel active" id="tab-recommended">
-      <div class="video-row">
 
-        <div class="video-tile" style="background:#d5e9de;">
-          <div class="video-tile-bg"><img src="./components/carousel-01.svg" alt=""></div>
-          <div class="heart-btn" data-vid="v1" onclick="toggleHeart(this)">
-            <img src="./components/heart-default.svg" alt="save">
-          </div>
-          <div class="video-info">
-            <div class="video-meta">
-              <span class="video-duration">1:07</span>
-              <span class="video-sparks">1 <img src="./components/spark.svg" alt="spark"></span>
-            </div>
-            <p class="video-title">Karl Anthony Tawns Overcoming Challenges</p>
-          </div>
+      <!-- Hero tile (full width) -->
+      <div class="video-tile rec-hero" style="background:#1a1a22;" onclick="window.location.href='toolkit-video.html'">
+        <div class="video-tile-bg"><img src="./components/video-thumbnail.jpg" alt=""></div>
+        <div class="heart-btn" data-vid="v1" onclick="event.stopPropagation();toggleHeart(this)">
+          <img src="./components/heart-default.svg" alt="save">
         </div>
+        <div class="video-info">
+          <div class="video-meta">
+            <span class="video-duration">1:07</span>
+            <span class="video-sparks">1 <img src="./components/spark.svg" alt="spark"></span>
+          </div>
+          <p class="video-title">Karl Anthony Tawns Overcoming Challenges</p>
+        </div>
+      </div>
 
-        <div class="video-tile" style="background:#fef5cc;">
-          <div class="video-tile-bg"><img src="./components/carousel-02.svg" alt=""></div>
-          <div class="heart-btn" data-vid="v2" onclick="toggleHeart(this)">
+      <!-- Two-tile row -->
+      <div class="rec-pair">
+
+        <div class="video-tile" style="background:#6ab4d8;" onclick="window.location.href='toolkit-video.html'">
+          <div class="video-tile-bg"><img src="./components/speaker-01.png" alt=""></div>
+          <div class="heart-btn" data-vid="v2" onclick="event.stopPropagation();toggleHeart(this)">
             <img src="./components/heart-default.svg" alt="save">
           </div>
           <div class="video-info">
@@ -452,9 +468,9 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
           </div>
         </div>
 
-        <div class="video-tile" style="background:#f7ddc6;">
-          <div class="video-tile-bg"><img src="./components/carousel-03.svg" alt=""></div>
-          <div class="heart-btn" data-vid="v3" onclick="toggleHeart(this)">
+        <div class="video-tile" style="background:#d4e8c2;" onclick="window.location.href='toolkit-video.html'">
+          <div class="video-tile-bg"><img src="./components/speaker-02.png" alt=""></div>
+          <div class="heart-btn" data-vid="v3" onclick="event.stopPropagation();toggleHeart(this)">
             <img src="./components/heart-default.svg" alt="save">
           </div>
           <div class="video-info">
@@ -694,10 +710,10 @@ function setFilter(tab, btn) {
 }
 
 const VIDEOS = {
-  v1:     { bg: '#d5e9de', img: './components/carousel-01.svg',      title: 'Karl Anthony Tawns Overcoming Challenges' },
-  v2:     { bg: '#fef5cc', img: './components/carousel-02.svg',      title: 'Aurora Strauss: Calm in the Crash' },
-  v3:     { bg: '#f7ddc6', img: './components/carousel-03.svg',      title: 'Jim Kwik: A small simple step' },
-  vwatch: { bg: '#1a1a1a', img: './components/carousel-01.svg',  title: 'Karl Anthony Tawns Overcoming Challenges' },
+  v1:     { bg: '#1a1a22',  img: './components/video-thumbnail.jpg', title: 'Karl Anthony Tawns Overcoming Challenges' },
+  v2:     { bg: '#6ab4d8',  img: './components/speaker-01.png',      title: 'Aurora Strauss: Calm in the Crash' },
+  v3:     { bg: '#d4e8c2',  img: './components/speaker-02.png',      title: 'Jim Kwik: A small simple step' },
+  vwatch: { bg: '#1a1a1a',  img: './components/carousel-01.svg',     title: 'Karl Anthony Tawns Overcoming Challenges' },
 };
 
 const savedSet = new Set();

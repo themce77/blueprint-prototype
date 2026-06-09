@@ -54,7 +54,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .nav-icon img { width: 24px; height: 24px; display: block; }
 .nav-item.active .nav-icon img { filter: brightness(0) invert(1); }
 .nav-label {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
   color: #a4a59f; text-align: center; width: 64px; line-height: 16px;
 }
 .nav-item.active .nav-label { color: #f2f3e5; }
@@ -66,7 +66,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   overflow: hidden; box-sizing: border-box;
 }
 .user-name {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
   color: #a4a59f; text-align: center; width: 64px;
 }
 
@@ -80,23 +80,28 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .col-left {
   position: absolute; left: 152px; top: 72px;
   width: 449px;
-  display: flex; flex-direction: column; gap: 48px;
+  display: flex; flex-direction: column;
 }
 
 .grades-title {
   font-family: var(--font-display); font-size: 64px; line-height: 1.06;
-  letter-spacing: 0; color: #f2f3e5; margin: 0;
+  letter-spacing: 0; color: #f2f3e5; margin: 0 0 16px;
+}
+.grades-desc {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  letter-spacing: -0.1px; line-height: 20px;
+  color: #737472; margin: 0 0 36px;
 }
 
 /* ─── Tab pills ─────────────────────────────────────────────── */
-.tab-pills { display: flex; gap: 8px; }
+.tab-pills { display: flex; gap: 8px; margin-bottom: 24px; }
 .tab-pill {
   display: flex; align-items: center; justify-content: center;
-  padding: 11px 14px; border-radius: 14px;
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  height: 40px; padding: 0 20px; border-radius: 12px;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   cursor: pointer; border: none; transition: background 150ms, color 150ms;
 }
-.tab-pill-active { background: #f2f3e5; color: #2b2b35; }
+.tab-pill-active   { background: #f2f3e5; color: #1f1f25; }
 .tab-pill-inactive { background: #2b2b35; color: rgba(242,243,229,0.5); }
 
 /* ─── Tab panels ────────────────────────────────────────────── */
@@ -115,20 +120,20 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .subject-card:hover { background: #252530; }
 .subject-left { display: flex; flex-direction: column; gap: 8px; }
 .subject-name {
-  font-family: var(--font-body); font-size: 20px; font-weight: 700;
+  font-family: var(--font-body); font-size: 20px; font-weight: 500;
   color: #f2f3e5; line-height: 1.1; letter-spacing: -0.4px;
 }
 .subject-teacher {
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
   color: #737472; letter-spacing: -0.1px;
 }
 .subject-right { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
 .subject-grade {
-  font-family: var(--font-body); font-size: 20px; font-weight: 700;
+  font-family: var(--font-body); font-size: 20px; font-weight: 500;
   color: #f2f3e5; line-height: 1.1; letter-spacing: -0.4px;
 }
 .subject-pct {
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
   color: #737472; letter-spacing: -0.1px;
 }
 
@@ -141,7 +146,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .att-stat-left { display: flex; flex-direction: column; gap: 16px; }
 .att-stat-label {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
   color: #737472; letter-spacing: 0;
 }
 .att-stat-number {
@@ -151,7 +156,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .att-badge {
   background: #36363f; border: 1px solid #36363f;
   border-radius: 8px; padding: 8px;
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
   color: #f2f3e5; white-space: nowrap;
 }
 
@@ -163,7 +168,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .att-chart-months {
   position: absolute; bottom: 16px; left: 37px; right: 39px;
   display: flex; justify-content: space-between;
-  font-family: var(--font-body); font-size: 10px; font-weight: 700;
+  font-family: var(--font-body); font-size: 10px; font-weight: 500;
   color: #737472; letter-spacing: 0.1px;
 }
 .att-chart-line {
@@ -230,12 +235,12 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   display: flex; align-items: center; justify-content: space-between;
 }
 .video-duration {
-  font-family: var(--font-body); font-size: 18px; font-weight: 700;
+  font-family: var(--font-body); font-size: 18px; font-weight: 500;
   color: #f2f3e5; letter-spacing: -0.2px;
 }
 .video-spark {
   display: flex; align-items: center; gap: 4px;
-  font-family: var(--font-body); font-size: 18px; font-weight: 700;
+  font-family: var(--font-body); font-size: 18px; font-weight: 500;
   color: #f2f3e5; letter-spacing: -0.2px;
 }
 .video-spark img { width: 16px; height: 16px; display: block; }
@@ -252,18 +257,18 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .remember-body { display: flex; flex-direction: column; gap: 8px; }
 .remember-label {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
   color: #737472; letter-spacing: 0;
 }
 .remember-text {
-  font-family: var(--font-body); font-size: 20px; font-weight: 700;
+  font-family: var(--font-body); font-size: 20px; font-weight: 500;
   color: #f2f3e5; line-height: 1.1; letter-spacing: -0.4px; margin: 0;
 }
 .remember-actions { display: flex; gap: 12px; }
 .remember-btn {
   flex: 1; height: 48px; border-radius: 8px;
   background: transparent; border: 1px solid rgba(255,255,255,0.16);
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   color: #f5f5f5; cursor: pointer; transition: background 120ms;
 }
 .remember-btn:hover { background: rgba(255,255,255,0.06); }
@@ -299,7 +304,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   letter-spacing: -0.8px; color: #fff; display: block; margin-bottom: 2px;
 }
 .drw-teacher {
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
   color: #737472; line-height: 20px; letter-spacing: -0.1px; display: block;
 }
 .drw-grade-col { text-align: right; }
@@ -308,7 +313,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   letter-spacing: -0.8px; color: #fff; display: block;
 }
 .drw-pct {
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
   color: rgba(255,255,255,0.25); line-height: 20px; letter-spacing: -0.1px; display: block;
 }
 .drw-divider { height: 1px; background: #444450; }
@@ -322,7 +327,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .drw-monster img { width: 26.667px; height: 26.667px; display: block; }
 .drw-msg-text {
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   color: #a4a59f; letter-spacing: -0.1px; line-height: 20px; flex: 1; margin: 0;
 }
 
@@ -335,7 +340,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .drw-stat.ungraded { opacity: 0.6; justify-content: space-between; min-height: 86px; gap: 0; }
 .drw-stat-label {
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
   color: #737472; letter-spacing: -0.1px; line-height: 20px; margin-bottom: 4px;
 }
 .drw-stat-val {
@@ -350,18 +355,18 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   background: #737472; border-radius: 2px;
 }
 .drw-stat-na {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
   color: #444450; line-height: 16px;
 }
 .drw-hint {
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   color: #a4a59f; letter-spacing: -0.1px; line-height: 20px; margin: 0;
 }
 .drw-btns { display: flex; gap: 12px; }
 .drw-btn {
   flex: 1; height: 40px; border-radius: 8px;
   background: transparent; border: 1px solid rgba(255,255,255,0.16);
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
   color: #f5f5f5; cursor: pointer; letter-spacing: -0.1px;
   transition: background 120ms;
 }
@@ -378,27 +383,27 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   padding: 12px; display: flex; flex-direction: column; gap: 12px; min-width: 0;
 }
 .drw-note-label {
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
   color: #737472; letter-spacing: -0.1px; line-height: 20px;
 }
 .drw-note-rows { display: flex; flex-direction: column; gap: 8px; }
 .drw-note-row {
   display: flex; justify-content: space-between;
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
   letter-spacing: -0.1px; line-height: 20px;
 }
 .drw-note-row-name { color: #737472; }
 .drw-note-row-score { color: #a4a59f; }
 
 .drw-calc-q {
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   color: #a4a59f; letter-spacing: -0.1px; line-height: 20px; margin: 0 0 16px;
 }
 .drw-grade-picker { display: flex; gap: 8px; flex-wrap: wrap; }
 .drw-grade-pill {
   width: 32px; height: 32px; border-radius: 8px;
   border: 1px solid #444450; background: transparent;
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   color: #f2f3e5; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: border-color 120ms;
@@ -413,11 +418,11 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   color: #f2f3e5; text-transform: uppercase;
 }
 .drw-calc-needed {
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
   color: #737472; letter-spacing: -0.1px; line-height: 20px;
 }
 .drw-calc-context {
-  font-family: var(--font-body); font-size: 12px; font-weight: 700;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
   color: #737472; line-height: 16px; white-space: nowrap;
 }
 
@@ -433,7 +438,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .support-handle:hover { width: 33px; background: #36363f; }
 .support-handle-label {
-  font-family: var(--font-body); font-size: 11px; font-weight: 700;
+  font-family: var(--font-body); font-size: 11px; font-weight: 500;
   color: rgba(242,243,229,0.55); writing-mode: vertical-rl;
   transform: rotate(180deg); letter-spacing: 0.6px; user-select: none;
 }
@@ -476,7 +481,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   background: #36363f; display: flex; align-items: center; justify-content: center;
 }
 .sp-item-title {
-  font-family: var(--font-body); font-size: 16px; font-weight: 700;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
   color: #f2f3e5; margin: 0 0 3px; letter-spacing: -0.1px;
 }
 .sp-item-sub {
@@ -537,6 +542,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   <!-- Left column -->
   <div class="col-left">
     <h1 class="grades-title">Grades</h1>
+    <p class="grades-desc">Track your progress and stay on top of school.</p>
 
     <div class="tab-pills">
       <button class="tab-pill tab-pill-active"   id="pill-grades"  onclick="switchTab('grades')">Grades</button>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Debug Storage</title>
+<style>body{font-family:monospace;padding:24px;background:#1f1f25;color:#f2f3e5;font-size:14px;}
+button{background:#b38aff;border:none;padding:8px 16px;color:#fff;cursor:pointer;border-radius:6px;margin:4px;}
+pre{background:#2b2b32;padding:12px;border-radius:8px;white-space:pre-wrap;word-break:break-all;}
+</style></head>
+<body>
+<h2>LocalStorage Debug</h2>
+<button onclick="testWrite()">1. Zapisz testową notatkę</button>
+<button onclick="testRead()">2. Odczytaj z localStorage</button>
+<button onclick="clearAll()">3. Wyczyść wszystko</button>
+<pre id="out">Kliknij przycisk...</pre>
+<script>
+function testWrite() {
+  try {
+    localStorage.setItem('bp_write_text', 'Testowa notatka z debug — działa!');
+    document.getElementById('out').textContent = '✅ Zapisano!\nbp_write_text = ' + localStorage.getItem('bp_write_text');
+  } catch(e) {
+    document.getElementById('out').textContent = '❌ Błąd localStorage:\n' + e.message;
+  }
+}
+function testRead() {
+  try {
+    var all = '';
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      all += k + ' = ' + localStorage.getItem(k).substring(0,100) + '\n';
+    }
+    document.getElementById('out').textContent = all || '(localStorage jest pusty)';
+  } catch(e) {
+    document.getElementById('out').textContent = '❌ Błąd:\n' + e.message;
+  }
+}
+function clearAll() {
+  try {
+    localStorage.clear();
+    document.getElementById('out').textContent = '✅ localStorage wyczyszczony';
+  } catch(e) {
+    document.getElementById('out').textContent = '❌ Błąd:\n' + e.message;
+  }
+}
+testRead();
+</script>
+</body>
+</html>
