@@ -290,13 +290,7 @@ function saveNote() {
   }, 2200);
 }
 
-// Pre-fill if editing
-(function() {
-  var saved = '';
-  try { saved = sessionStorage.getItem('bp_write_text') || localStorage.getItem('bp_write_text') || ''; } catch(e) {}
-  if (saved) { document.getElementById('noteInput').value = saved; }
-  onInput();
-})();
+onInput();
 </script>
 </body>
 </html>

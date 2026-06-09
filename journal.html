@@ -485,16 +485,13 @@ function renderJournal() {
   } else if (demo === ‘3’) {
     writeText = WRITE_TEXT; qAnswers = [null, ‘Weekend trip.’];
   } else {
-    // 1st priority: text passed directly in URL (most reliable, no storage needed)
+    // Show note only if arriving fresh from write-it-out (URL param) or same session
     var urlNote = new URLSearchParams(location.search).get(‘wt’);
     if (urlNote) {
-      // persist it for later visits
       try { sessionStorage.setItem(‘bp_write_text’, urlNote); } catch(e) {}
-      try { localStorage.setItem(‘bp_write_text’, urlNote); } catch(e) {}
       writeText = urlNote;
     } else {
       try { writeText = sessionStorage.getItem(‘bp_write_text’) || null; } catch(e) {}
-      if (!writeText) { try { writeText = localStorage.getItem(‘bp_write_text’) || null; } catch(e) {} }
     }
     qAnswers = QUESTIONS.map(function(q) {
       try { return localStorage.getItem(q.key); } catch(e) { return null; }
