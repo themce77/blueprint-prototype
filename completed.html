@@ -203,13 +203,9 @@ setTimeout(() => {
 
 // 7. Redirect after slide-out finishes
 setTimeout(() => {
-  if (cardSlug === 'write') {
-    window.location.href = 'helpful-content.html';
-  } else {
-    const dest = params.get('from') === 'journal' ? 'journal.html' : 'today.html';
-    if (dest === 'today.html') sessionStorage.setItem('bp_enter_anim', '1');
-    window.location.href = dest;
-  }
+  const dest = params.get('from') === 'journal' ? 'journal.html' : 'today.html';
+  if (dest === 'today.html') sessionStorage.setItem('bp_enter_anim', '1');
+  window.location.href = dest;
 }, 3900);
 </script>
 </body>

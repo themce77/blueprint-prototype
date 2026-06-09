@@ -485,7 +485,7 @@ function renderJournal() {
   } else if (demo === ‘3’) {
     writeText = WRITE_TEXT; qAnswers = [null, ‘Weekend trip.’];
   } else {
-    writeText = localStorage.getItem(‘bp_write_text’) || WRITE_TEXT;
+    writeText = localStorage.getItem(‘bp_write_text’) || null;
     qAnswers   = QUESTIONS.map(function(q) { return localStorage.getItem(q.key); });
   }
 
@@ -551,6 +551,7 @@ function renderJournal() {
 }
 
 document.addEventListener(‘DOMContentLoaded’, renderJournal);
+window.addEventListener(‘pageshow’, function(e) { if (e.persisted) renderJournal(); });
 
 // Load avatar
 (function(){
