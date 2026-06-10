@@ -133,6 +133,12 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .video-tile-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+.tile-gradient {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.20) 100%);
+  pointer-events: none;
+}
+
 /* Heart button — top right */
 .heart-btn {
   position: absolute; top: 12px; right: 12px;
@@ -390,7 +396,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
     </div>
     <div class="sidebar-user">
-      <div class="user-avatar" id="userAvatar"></div>
+      <div class="user-avatar" id="userAvatar" onclick="window.location.href='settings.html'" style="cursor:pointer"></div>
       <span class="user-name">Sophie</span>
     </div>
   </nav>
@@ -439,8 +445,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <!-- Hero tile (full width) -->
       <div class="video-tile rec-hero" style="background:#1a1a22;" onclick="window.location.href='toolkit-video.html'">
         <div class="video-tile-bg"><img src="./components/video-thumbnail.jpg" alt=""></div>
-        <div class="heart-btn" data-vid="v1" onclick="event.stopPropagation();toggleHeart(this)">
-          <img src="./components/heart-default.svg" alt="save">
+        <div class="heart-btn saved" data-vid="v1" onclick="event.stopPropagation();toggleHeart(this)">
+          <img src="./components/heart-saved.svg" alt="save">
         </div>
         <div class="video-info">
           <div class="video-meta">
@@ -456,6 +462,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
         <div class="video-tile" style="background:#6ab4d8;" onclick="window.location.href='toolkit-video.html'">
           <div class="video-tile-bg"><img src="./components/speaker-01.png" alt=""></div>
+          <div class="tile-gradient"></div>
           <div class="heart-btn" data-vid="v2" onclick="event.stopPropagation();toggleHeart(this)">
             <img src="./components/heart-default.svg" alt="save">
           </div>
@@ -470,6 +477,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
         <div class="video-tile" style="background:#d4e8c2;" onclick="window.location.href='toolkit-video.html'">
           <div class="video-tile-bg"><img src="./components/speaker-02.png" alt=""></div>
+          <div class="tile-gradient"></div>
           <div class="heart-btn" data-vid="v3" onclick="event.stopPropagation();toggleHeart(this)">
             <img src="./components/heart-default.svg" alt="save">
           </div>
@@ -710,17 +718,24 @@ function setFilter(tab, btn) {
 }
 
 const VIDEOS = {
-  v1:     { bg: '#1a1a22',  img: './components/video-thumbnail.jpg', title: 'Karl Anthony Tawns Overcoming Challenges' },
-  v2:     { bg: '#6ab4d8',  img: './components/speaker-01.png',      title: 'Aurora Strauss: Calm in the Crash' },
-  v3:     { bg: '#d4e8c2',  img: './components/speaker-02.png',      title: 'Jim Kwik: A small simple step' },
-  vwatch: { bg: '#1a1a1a',  img: './components/carousel-01.svg',     title: 'Karl Anthony Tawns Overcoming Challenges' },
+  v1:          { bg: '#1a1a22',  img: './components/video-thumbnail.jpg', title: 'Karl Anthony Tawns Overcoming Challenges' },
+  v2:          { bg: '#6ab4d8',  img: './components/speaker-01.png',      title: 'Aurora Strauss: Calm in the Crash' },
+  v3:          { bg: '#d4e8c2',  img: './components/speaker-02.png',      title: 'Jim Kwik: A small simple step' },
+  vwatch:      { bg: '#1a1a1a',  img: './components/carousel-01.svg',     title: 'Karl Anthony Tawns Overcoming Challenges' },
+  'grades-v1': { bg: '#addbf2',  img: './components/cloud-grades-1.svg',  title: 'The emotional side of grades' },
+  'grades-v2': { bg: '#d6c0fe',  img: './components/mithosis.svg',        title: 'How to catch up after missing school' },
 };
 
-const savedSet = new Set();
+// Init from localStorage; ensure v1 is always present so Saved tab is never empty
+const _savedArr = JSON.parse(localStorage.getItem('bp_saved') || '["v1"]');
+if (_savedArr.indexOf('v1') === -1) _savedArr.unshift('v1');
+const savedSet = new Set(_savedArr);
 
 function toggleHeart(btn) {
   const vid = btn.dataset.vid;
   const nowSaved = !btn.classList.contains('saved');
+  // Never allow removing the last saved item
+  if (!nowSaved && savedSet.size <= 1) return;
 
   // Sync all buttons with same vid
   document.querySelectorAll(`[data-vid="${vid}"]`).forEach(b => {
@@ -737,6 +752,7 @@ function toggleHeart(btn) {
   if (nowSaved) savedSet.add(vid);
   else savedSet.delete(vid);
 
+  localStorage.setItem('bp_saved', JSON.stringify([...savedSet]));
   renderSaved();
 }
 

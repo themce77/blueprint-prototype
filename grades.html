@@ -531,7 +531,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
     </div>
     <div class="sidebar-user">
-      <div class="user-avatar" id="userAvatar"></div>
+      <div class="user-avatar" id="userAvatar" onclick="window.location.href='settings.html'" style="cursor:pointer"></div>
       <span class="user-name">Sophie</span>
     </div>
   </nav>
@@ -639,7 +639,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <div class="video-card video-card-grades">
       <img class="video-cloud-1" src="./components/cloud-grades-1.svg" alt="">
       <img class="video-cloud-2" src="./components/cloud-grades-2.svg" alt="">
-      <button class="heart-btn" onclick="toggleHeart(this)">
+      <button class="heart-btn" data-vid="grades-v1" onclick="toggleHeart(this)">
         <img src="./components/heart-default.svg" alt="save">
       </button>
       <div class="video-play">
@@ -672,7 +672,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <div class="video-card video-card-attend">
       <img class="video-mithosis-1" src="./components/mithosis.svg" alt="">
       <img class="video-mithosis-2" src="./components/mithosis.svg" alt="">
-      <button class="heart-btn" onclick="toggleHeart(this)">
+      <button class="heart-btn" data-vid="grades-v2" onclick="toggleHeart(this)">
         <img src="./components/heart-default.svg" alt="save">
       </button>
       <div class="video-play">
@@ -1067,14 +1067,29 @@ function closeSupport() {
 
 function toggleHeart(btn) {
   var img = btn.querySelector('img');
+  var vid = btn.dataset.vid;
+  var saved = JSON.parse(localStorage.getItem('bp_saved') || '["v1"]');
   if (btn.classList.contains('saved')) {
     btn.classList.remove('saved');
     img.src = './components/heart-default.svg';
+    saved = saved.filter(function(id) { return id !== vid; });
   } else {
     btn.classList.add('saved');
     img.src = './components/heart-saved.svg';
+    if (vid && saved.indexOf(vid) === -1) saved.push(vid);
   }
+  localStorage.setItem('bp_saved', JSON.stringify(saved));
 }
+
+(function() {
+  var saved = JSON.parse(localStorage.getItem('bp_saved') || '["v1"]');
+  document.querySelectorAll('.heart-btn[data-vid]').forEach(function(btn) {
+    if (saved.indexOf(btn.dataset.vid) !== -1) {
+      btn.classList.add('saved');
+      btn.querySelector('img').src = './components/heart-saved.svg';
+    }
+  });
+})();
 </script>
 </body>
 </html>

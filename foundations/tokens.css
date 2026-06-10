@@ -311,6 +311,7 @@ body {
 
 button {
   font: inherit;
+  font-weight: var(--fw-semi);
   color: inherit;
   background: none;
   border: none;

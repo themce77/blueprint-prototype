@@ -109,7 +109,7 @@ html[data-entry] .today-footer   { transform: translateY(120px) !important;  opa
 .today-main {
   position: absolute;
   left: 152px; top: 72px; bottom: 0;
-  width: 977px;
+  width: 998px;
   display: flex; flex-direction: column; gap: 48px;
 }
 
@@ -421,7 +421,7 @@ html[data-entry] .today-footer   { transform: translateY(120px) !important;  opa
     </div>
 
     <div class="sidebar-user">
-      <div class="user-avatar" id="userAvatar"></div>
+      <div class="user-avatar" id="userAvatar" onclick="window.location.href='settings.html'" style="cursor:pointer"></div>
       <span class="user-name">Sophie</span>
     </div>
   </nav>
@@ -609,13 +609,8 @@ scale(); addEventListener('resize', scale);
 
 // ─── Sparks total ─────────────────────────────────────────────
 function updateSparks() {
-  let sparks = 10; // onboarding
-  if (localStorage.getItem('bp_mood_done') === '1') sparks += 10; // mood check-in
-  if (localStorage.getItem('bp_video_watched') === '1') sparks += 1;
-  const sections = JSON.parse(localStorage.getItem('bp_today_sections') || '["mood"]');
-  if (sections.includes('wins'))  sparks += 1;
-  if (sections.includes('write')) sparks += 1;
-  if (sections.includes('about')) sparks += 1;
+  if (!localStorage.getItem('bp_sparks')) localStorage.setItem('bp_sparks', '360');
+  const sparks = parseInt(localStorage.getItem('bp_sparks'), 10);
   const el = document.getElementById('sparksTotal');
   el.childNodes[0].textContent = sparks;
 }

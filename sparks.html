@@ -176,10 +176,19 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 /* spark cost badge */
 .art-badge {
   position: absolute; bottom: 19px; left: 19px;
-  background: #2f2f37; border-radius: 99px;
+  background: #1f1f25; border-radius: 99px;
   padding: 8px 12px;
   display: flex; align-items: center; gap: 8px;
 }
+
+/* key icon — centered in affordable card */
+.art-key {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 25px; height: 47px;
+  pointer-events: none;
+}
+.art-key img { width: 100%; height: 100%; display: block; }
 .art-badge-num {
   font-family: var(--font-display); font-size: 20px; line-height: 1.05;
   color: #f2f3e5; text-transform: uppercase;
@@ -394,7 +403,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
     </div>
     <div class="sidebar-user">
-      <div class="user-avatar" id="userAvatar"></div>
+      <div class="user-avatar" id="userAvatar" onclick="window.location.href='settings.html'" style="cursor:pointer"></div>
       <span class="user-name">Sophie</span>
     </div>
   </nav>
@@ -424,7 +433,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <div class="sparks-row">
 
         <!-- Unlocked 20 — affordable -->
-        <div class="art-card" style="background:#2b2b32;cursor:pointer" onclick="tryUnlock(20, this)">
+        <div class="art-card" style="background:#2f2f37;border-color:#36363f;cursor:pointer" onclick="tryUnlock(20, this)">
+          <div class="art-key"><img src="./components/key.svg" alt=""></div>
           <div class="art-badge">
             <span class="art-badge-num">20</span>
             <img src="./components/Spark-4.svg" alt="spark">
@@ -596,7 +606,7 @@ scale(); addEventListener('resize', scale);
 
 // Sync spark count from localStorage
 (function() {
-  const total = parseInt(localStorage.getItem('bp_sparks') || '0', 10);
+  const total = parseInt(localStorage.getItem('bp_sparks') || '360', 10);
   if (total > 0) document.getElementById('sparksCount').textContent = total;
 })();
 
