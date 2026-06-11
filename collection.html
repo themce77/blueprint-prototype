@@ -71,29 +71,33 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   transition: width 600ms var(--ease-out-soft);
 }
 .coll-progress-label {
-  font-family: var(--font-body); font-size: 12px; font-weight: 600;
-  color: #a4a59f; white-space: nowrap; flex-shrink: 0;
+  display: flex; align-items: center; gap: 4px;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  line-height: 20px; color: #f2f3e5; white-space: nowrap; flex-shrink: 0;
 }
+.coll-progress-label img { width: 16px; height: 16px; display: block; }
 
 /* Description */
 .coll-desc {
-  font-family: var(--font-body); font-size: 14px; font-weight: 500;
-  color: #a4a59f; line-height: 1.55; margin-bottom: 32px;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  line-height: 20px; color: #a4a59f; margin-bottom: 32px;
 }
 
 /* Category list */
 .coll-list { border-top: 1px solid #36363f; }
 .coll-list-item {
   display: flex; align-items: center; gap: 12px;
-  padding: 14px 0; border-bottom: 1px solid #36363f;
+  padding: 14px 4px; border-bottom: 1px solid #36363f;
 }
 .coll-list-icon { width: 20px; height: 20px; display: block; flex-shrink: 0; }
 .coll-list-name {
   flex: 1;
-  font-family: var(--font-body); font-size: 15px; font-weight: 500; color: #f2f3e5;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  line-height: 20px; color: #f2f3e5;
 }
 .coll-list-count {
-  font-family: var(--font-body); font-size: 15px; font-weight: 500; color: #a4a59f;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  line-height: 20px; color: #a4a59f;
 }
 
 /* ─── Right panel ───────────────────────────────────────────────── */
@@ -134,7 +138,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <button class="back-btn" onclick="window.location.href='summary.html'">
+  <button class="back-btn" onclick="window.location.href='sparks.html'">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
       <path d="M15 18L9 12L15 6" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -153,7 +157,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <div class="coll-progress-track">
           <div class="coll-progress-fill" id="progressFill"></div>
         </div>
-        <span class="coll-progress-label" id="progressLabel">20%</span>
+        <span class="coll-progress-label">+30 <img src="./components/Spark-4.svg" alt="sparks"></span>
       </div>
 
       <p class="coll-desc">
@@ -200,7 +204,6 @@ const pct          = Math.round((count / TOTAL) * 100);
 // ── Update counter & progress ────────────────────────────────────
 document.getElementById('countNum').textContent    = count;
 document.getElementById('progressFill').style.width = pct + '%';
-document.getElementById('progressLabel').textContent = pct + '%';
 
 // ── Category list ────────────────────────────────────────────────
 const listEl = document.getElementById('catList');

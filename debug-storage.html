@@ -10,6 +10,7 @@ pre{background:#2b2b32;padding:12px;border-radius:8px;white-space:pre-wrap;word-
 <button onclick="testWrite()">1. Zapisz testową notatkę</button>
 <button onclick="testRead()">2. Odczytaj z localStorage</button>
 <button onclick="clearAll()">3. Wyczyść wszystko</button>
+<button onclick="resetVideo()" style="background:#e65800;">🎬 Reset "video watched"</button>
 <pre id="out">Kliknij przycisk...</pre>
 <script>
 function testWrite() {
@@ -31,6 +32,11 @@ function testRead() {
   } catch(e) {
     document.getElementById('out').textContent = '❌ Błąd:\n' + e.message;
   }
+}
+function resetVideo() {
+  localStorage.removeItem('bp_video_watched');
+  document.getElementById('out').textContent = '✅ bp_video_watched usunięty — możesz teraz otworzyć My Toolkit';
+  testRead();
 }
 function clearAll() {
   try {

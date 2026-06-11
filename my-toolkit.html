@@ -230,17 +230,15 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 /* ─── Simplified "My toolkit" (no video watched) ────────────── */
 .toolkit-simple {
   position: absolute;
-  left: 152px; top: 72px; bottom: 0;
+  left: 152px; top: 72px; bottom: 112px; /* 64px btn-bottom + 48px btn-height */
   width: 977px;
-  display: flex; flex-direction: column; gap: 36px;
+  display: flex; flex-direction: column;
 }
 .tk-header-row {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-shrink: 0;
 }
-.tk-title-big {
-  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
-  letter-spacing: 0; color: #f2f3e5; margin: 0;
-}
+.toolkit-simple .toolkit-desc { margin-bottom: 0; }
 .tk-mood-widget {
   border: 1px solid #36363f; border-radius: 12px;
   padding: 16px; display: flex; flex-direction: column;
@@ -267,11 +265,12 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .tk-featured-video {
   width: 100%; height: 485px; border-radius: 20px; overflow: hidden;
   position: relative; cursor: pointer;
+  margin: auto 0;
   transition: transform 140ms cubic-bezier(0.34,1.56,0.64,1);
 }
 .tk-featured-video:hover { transform: scale(1.01); }
 .btn-explore {
-  position: absolute; bottom: 63px; left: 50%; transform: translateX(-50%);
+  position: absolute; bottom: 64px; left: 50%; transform: translateX(-50%);
   height: 48px; padding: 0; width: 200px;
   background: transparent; color: #f5f5f5;
   font-family: var(--font-body); font-size: 16px; font-weight: 500;
@@ -404,12 +403,15 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   <!-- Simplified view (no video watched) -->
   <section class="toolkit-simple" id="mainSimple" style="display:none">
     <div class="tk-header-row">
-      <h2 class="tk-title-big">My toolkit</h2>
+      <div>
+        <h2 class="toolkit-title">My toolkit</h2>
+        <p class="toolkit-desc">Tools and exercises to support your wellbeing.</p>
+      </div>
       <div class="tk-mood-widget" id="moodWidget"></div>
     </div>
 
     <div class="tk-featured-video" onclick="window.location.href='toolkit-video.html'">
-      <div class="video-tile-bg"><img src="./components/video-thumbnail.jpg" alt=""></div>
+      <div class="video-tile-bg"><img src="./components/video-th.jpg" alt=""></div>
       <div style="position:absolute;inset:0;background:linear-gradient(182deg,rgba(0,0,0,0) 44%,rgba(0,0,0,0.5) 84%);"></div>
       <div class="heart-btn" data-vid="vfeatured" onclick="event.stopPropagation();toggleHeart(this)" style="z-index:2">
         <img src="./components/heart-default.svg" alt="save">
@@ -423,8 +425,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       </div>
     </div>
 
-    <button class="btn-explore" onclick="goExplore()">Explore</button>
   </section>
+
+  <!-- Explore button — outside toolkit-simple so it positions relative to device -->
+  <button class="btn-explore" id="btnExplore" onclick="goExplore()" style="display:none">Explore</button>
 
   <!-- Full toolkit view -->
   <main class="toolkit-main" id="mainFull" style="display:none">
@@ -445,8 +449,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <!-- Hero tile (full width) -->
       <div class="video-tile rec-hero" style="background:#1a1a22;" onclick="window.location.href='toolkit-video.html'">
         <div class="video-tile-bg"><img src="./components/video-thumbnail.jpg" alt=""></div>
-        <div class="heart-btn saved" data-vid="v1" onclick="event.stopPropagation();toggleHeart(this)">
-          <img src="./components/heart-saved.svg" alt="save">
+        <div class="heart-btn" data-vid="v1" onclick="event.stopPropagation();toggleHeart(this)">
+          <img src="./components/heart-default.svg" alt="save">
         </div>
         <div class="video-info">
           <div class="video-meta">
@@ -463,15 +467,15 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <div class="video-tile" style="background:#6ab4d8;" onclick="window.location.href='toolkit-video.html'">
           <div class="video-tile-bg"><img src="./components/speaker-01.png" alt=""></div>
           <div class="tile-gradient"></div>
-          <div class="heart-btn" data-vid="v2" onclick="event.stopPropagation();toggleHeart(this)">
-            <img src="./components/heart-default.svg" alt="save">
+          <div class="heart-btn saved" data-vid="v2" onclick="event.stopPropagation();toggleHeart(this)">
+            <img src="./components/heart-saved.svg" alt="save">
           </div>
           <div class="video-info">
             <div class="video-meta">
               <span class="video-duration">1:07</span>
               <span class="video-sparks">1 <img src="./components/spark.svg" alt="spark"></span>
             </div>
-            <p class="video-title">Aurora Strauss: Calm in the Crash</p>
+            <p class="video-title">Dr Jen: Discovering emotional intelligence</p>
           </div>
         </div>
 
@@ -630,6 +634,9 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 // ─── Decide which view to show ────────────────────────────────
 (function() {
   const params       = new URLSearchParams(location.search);
+  if (params.get('reset') === 'video') {
+    localStorage.removeItem('bp_video_watched');
+  }
   const videoWatched = localStorage.getItem('bp_video_watched') === '1' && params.get('preview') !== 'simple';
   const exploreMode  = params.get('explore') === '1';
 
@@ -647,21 +654,20 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       backBtn.onclick = () => history.back();
       document.getElementById('device').appendChild(backBtn);
 
-      // Center the main content, start from top
+      // Center the main content — same top/spacing as other sections
       mainFull.style.left      = '50%';
-      mainFull.style.top       = '52px';
+      mainFull.style.top       = '72px';
       mainFull.style.transform = 'translateX(-50%)';
       mainFull.style.width     = '994px';
-      mainFull.style.gap       = '48px';
 
-      const title = document.getElementById('toolkitTitle');
-      title.textContent      = 'Explore';
-      title.style.fontSize   = '80px';
-      title.style.letterSpacing = '1.5px';
-      title.style.margin     = '0';
+      document.getElementById('toolkitTitle').textContent = 'Explore';
+      mainFull.style.alignItems = 'center';
+      mainFull.querySelector('.toolkit-title').style.textAlign = 'center';
+      mainFull.querySelector('.toolkit-desc').style.textAlign  = 'center';
     }
   } else {
     document.getElementById('mainSimple').style.display = '';
+    document.getElementById('btnExplore').style.display = '';
     renderMoodWidget();
   }
 
@@ -719,7 +725,7 @@ function setFilter(tab, btn) {
 
 const VIDEOS = {
   v1:          { bg: '#1a1a22',  img: './components/video-thumbnail.jpg', title: 'Karl Anthony Tawns Overcoming Challenges' },
-  v2:          { bg: '#6ab4d8',  img: './components/speaker-01.png',      title: 'Aurora Strauss: Calm in the Crash' },
+  v2:          { bg: '#6ab4d8',  img: './components/speaker-01.png',      title: 'Dr Jen: Discovering emotional intelligence' },
   v3:          { bg: '#d4e8c2',  img: './components/speaker-02.png',      title: 'Jim Kwik: A small simple step' },
   vwatch:      { bg: '#1a1a1a',  img: './components/carousel-01.svg',     title: 'Karl Anthony Tawns Overcoming Challenges' },
   'grades-v1': { bg: '#addbf2',  img: './components/cloud-grades-1.svg',  title: 'The emotional side of grades' },
@@ -727,8 +733,8 @@ const VIDEOS = {
 };
 
 // Init from localStorage; ensure v1 is always present so Saved tab is never empty
-const _savedArr = JSON.parse(localStorage.getItem('bp_saved') || '["v1"]');
-if (_savedArr.indexOf('v1') === -1) _savedArr.unshift('v1');
+const _savedArr = JSON.parse(localStorage.getItem('bp_saved') || '["v2"]');
+if (_savedArr.length === 0) _savedArr.push('v2');
 const savedSet = new Set(_savedArr);
 
 function toggleHeart(btn) {

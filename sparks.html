@@ -107,15 +107,20 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 /* ─── Main ──────────────────────────────────────────────────── */
 .sparks-main {
   position: absolute;
-  left: 152px; top: 72px;
+  left: 152px; top: 72px; bottom: 100px;
   width: 998px;
   z-index: 1;
+  display: flex; flex-direction: column;
 }
 
 /* ─── Header ────────────────────────────────────────────────── */
 .sparks-header {
   display: flex; align-items: flex-start; justify-content: space-between;
-  margin-bottom: 48px;
+  flex-shrink: 0;
+}
+
+.sparks-grid-wrapper {
+  flex: 1; display: flex; align-items: center; width: 100%;
 }
 .sparks-header-left { width: 532px; display: flex; flex-direction: column; gap: 16px; }
 .sparks-title {
@@ -127,7 +132,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   color: #737472; letter-spacing: -0.1px; margin: 0;
 }
 .sparks-total-box {
-  width: 185px;
+  width: calc((100% - 48px) / 4);
   background: #1f1f25; border: 1px solid #444450; border-radius: 20px;
   padding: 36px; box-sizing: border-box;
   display: flex; flex-direction: column; align-items: center; gap: 16px;
@@ -145,7 +150,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* ─── Grid ──────────────────────────────────────────────────── */
 .sparks-grid {
-  display: flex; flex-direction: column; gap: 16px;
+  display: flex; flex-direction: column; gap: 16px; width: 100%;
 }
 .sparks-row {
   display: flex; gap: 16px;
@@ -175,7 +180,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* spark cost badge */
 .art-badge {
-  position: absolute; bottom: 19px; left: 19px;
+  position: absolute; bottom: 11px; left: 11px;
   background: #1f1f25; border-radius: 99px;
   padding: 8px 12px;
   display: flex; align-items: center; gap: 8px;
@@ -271,6 +276,19 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   transition: transform 1000ms cubic-bezier(0.73,-0.01,0.2,0.98) 60ms,
               opacity 800ms ease 60ms;
 }
+
+/* ── View cards collection button ────────────────────────────── */
+.sparks-collection-btn {
+  position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+  height: 48px; padding: 0 28px; white-space: nowrap; z-index: 5;
+  background: transparent; color: #f5f5f5;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  border-radius: 8px; border: 1px solid rgba(255,255,255,0.16);
+  cursor: pointer; letter-spacing: -0.1px;
+  box-shadow: 0px 1px 1px 0px rgba(20,21,26,0.03);
+  transition: background 140ms;
+}
+.sparks-collection-btn:hover { background: rgba(255,255,255,0.06); }
 
 .confirm-btn {
   position: absolute; bottom: 45px; left: 50%;
@@ -427,6 +445,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     </div>
 
     <!-- Artwork grid -->
+    <div class="sparks-grid-wrapper">
     <div class="sparks-grid">
 
       <!-- Row 1 -->
@@ -509,7 +528,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
       </div>
     </div>
+    </div>
   </div>
+
+  <button class="sparks-collection-btn" onclick="window.location.href='collection.html'">View cards collection</button>
 
   <!-- ── Unlock overlay ──────────────────────────────────────── -->
   <div id="unlock-overlay" class="unlock-overlay">
