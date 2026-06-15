@@ -1,5 +1,5 @@
 <svg width="195" height="245" viewBox="0 0 195 245" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="8" y="8" width="179" height="229" rx="20" fill="#49AEE1" stroke="#36363F" stroke-width="16"/>
+<rect x="8" y="8" width="179" height="229" rx="20" fill="#49AEE1" stroke="none"/>
 <g clip-path="url(#clip0_40000220_10222)">
 <rect x="37" y="46" width="120" height="120" rx="60" fill="#CBD1F5"/>
 <rect x="40.2324" y="82" width="18" height="33" rx="4" transform="rotate(19.8993 40.2324 82)" fill="#E65800"/>

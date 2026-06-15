@@ -302,6 +302,39 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   font-family: var(--font-body); font-size: 14px; font-weight: 600;
   color: #f2f3e5; text-align: center; line-height: 1.3;
 }
+.why-block--add .why-label { color: #a4a59f; }
+.why-block--input {
+  grid-column: span 2; width: auto;
+  flex-direction: row; gap: 10px; padding: 0 12px; cursor: default;
+}
+.why-block--input:hover { background: #2f2f37; }
+.why-input-field {
+  flex: 1; background: none; border: none; outline: none;
+  color: #f2f3e5; font-family: var(--font-body); font-size: 14px; font-weight: 600; min-width: 0;
+}
+.why-input-field::placeholder { color: #a4a59f; }
+.why-confirm-btn {
+  width: 36px; height: 36px; background: none; border: none; padding: 0;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: opacity 120ms;
+}
+.why-confirm-btn:active { opacity: 0.75; }
+.why-picker-overlay { position: absolute; inset: 0; z-index: 150; display: none; }
+.why-emoji-picker {
+  position: absolute; background: #2b2b32; border: 1px solid #444450;
+  border-radius: 12px; width: 282px; z-index: 200;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7); display: none; overflow: hidden;
+}
+.why-picker-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  padding: 8px; max-height: 228px; overflow-y: auto;
+}
+.why-picker-grid button {
+  background: none; border: none; font-size: 24px; line-height: 1;
+  padding: 5px 2px; border-radius: 6px; cursor: pointer;
+  transition: background 80ms; text-align: center;
+}
+.why-picker-grid button:hover { background: #3a3a44; }
 
 
 /* ══════════════════════════════════════════════════════════════
@@ -720,8 +753,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <svg viewBox="0 0 532 310" width="532" height="310" overflow="visible">
         <defs>
           <linearGradient id="grad-sleep" gradientUnits="userSpaceOnUse" x1="48" y1="247" x2="480" y2="247">
-            <stop offset="0%" stop-color="#1a3a9f"/>
-            <stop offset="100%" stop-color="#5abfea"/>
+            <stop offset="0%" stop-color="#2A315D"/>
+            <stop offset="100%" stop-color="#3F50B8"/>
           </linearGradient>
         </defs>
         <path id="arcTrack-sleep" fill="none" stroke="#2f2f37" stroke-width="68" stroke-linecap="round"/>
@@ -796,21 +829,21 @@ if (new URLSearchParams(location.search).get('edit') === '1') {
 
 // ─── Emotion data ─────────────────────────────────────────────
 const EMOTIONS = {
-  curious:   { name:'Curious',      color:'#FDDA3C', emoji:'🤔', emojis:['🤔','🧐','😲'], levels:['Interested','Curious','Have to know!'],          chips:['Interested','Intrigued','Fascinated','Nosy','Wonder-Filled'],  shape:{ size:1454, left:-130, top:-460 } },
-  happy:     { name:'Happy',        color:'#f4a021', emoji:'😊', emojis:['🙂','😊','😄'], levels:['Good','Happy','Joyful'],                          chips:['Joyful','Content','Pleased','Cheerful','Elated'],              shape:{ size:1495, left:-151, top:-331 } },
-  excited:   { name:'Excited',      color:'#e84326', emoji:'🤩', emojis:['😌','🤩','🎉'], levels:['Looking forward to it','Excited','Pumped'],       chips:['Enthusiastic','Eager','Thrilled','Energised','Pumped'],         shape:{ size:1495, left:-151, top:-331 } },
-  okay:      { name:'Okay',         color:'#68DCC6', emoji:'🙂', emojis:['😌','🙂','😀'], levels:['Fine','Okay','Pretty good'],                      chips:['Fine','Comfortable','Satisfied','Steady','Relieved'],           shape:{ size:1511, left:-159, top:-339 } },
-  grateful:  { name:'Grateful',     color:'#4ecb71', emoji:'🙏', emojis:['🥰','🙏','💝'], levels:['Warm inside','Grateful','Thankful'],              chips:['Appreciative','Thankful','Touched','Lucky','Warm Inside'],       shape:{ size:1405, left:-106, top:-286 } },
-  hopeful:   { name:'Hopeful',      color:'#c5e000', emoji:'😇', emojis:['🌱','😇','✨'], levels:['A little hopeful','Hopeful','Optimistic'],        chips:['Optimistic','Encouraged','Wishing','Inspired','Looking forward'], shape:{ size:1495, left:-151, top:-331 } },
-  meh:       { name:'Meh',          color:'#b8b8a8', emoji:'😑', emojis:['😑','🙄','😒'], levels:['Blah','Meh','Over it'],                           chips:['Unimpressed','Bored','Flat','Disengaged','Apathetic'],           shape:{ size:1108, left:43,   top:-262 } },
-  neutral:   { name:'Neutral',      color:'#a0a09a', emoji:'😐', emojis:['😐','😶','🫤'], levels:['Just okay','Neutral','Normal'],                   chips:['Indifferent','Detached','Composed','Shoulder Shrug','Neither'],  shape:{ size:1244, left:-25,  top:-205 } },
-  idontknow: { name:"I Don't Know", color:'#888880', emoji:'🤷', emojis:['😕','🤷','😵'], levels:['Unsure','Not sure','Confused'],                   chips:['Confused','Uncertain','Overwhelmed','Numb','Conflicted'],        shape:{ size:1555, left:-181, top:-361 } },
-  sad:       { name:'Sad',          color:'#5abfea', emoji:'😢', emojis:['😔','😢','💔'], levels:['Down','Sad','Hurt'],                              chips:['Sorrowful','Left Out','Let Down','Disappointed','Heartbroken'],  shape:{ size:1281, left:-44,  top:-74  } },
-  tired:     { name:'Tired',        color:'#4a67f5', emoji:'😴', emojis:['🥱','😴','😪'], levels:['Low energy','Tired','Exhausted'],                 chips:['Exhausted','Drained','Fatigued','Sleepy','Checked Out'],         shape:{ size:1495, left:-151, top:-286 } },
-  lonely:    { name:'Lonely',       color:'#a070d4', emoji:'😔', emojis:['😔','🥺','😿'], levels:['A little alone','Lonely','Isolated'],             chips:['Isolated','Disconnected','Left Out','Longing','Forgotten'],      shape:{ size:1495, left:-151, top:-331 } },
-  angry:     { name:'Angry',        color:'#e84326', emoji:'😠', emojis:['😒','😠','🤬'], levels:['Annoyed','Angry','Furious'],                      chips:['Frustrated','Irritated','Furious','Annoyed','Jealous'],          shape:{ size:1615, left:-211, top:-591 } },
-  stressed:  { name:'Stressed',     color:'#be2f6e', emoji:'😤', emojis:['😬','😤','🤯'], levels:['Tense','Stressed','Overwhelmed'],                 chips:['Overwhelmed','Pressured','Tense','Rushed','Snappy'],             shape:{ size:1495, left:-151, top:-131 } },
-  anxious:   { name:'Anxious',      color:'#b38aff', emoji:'😰', emojis:['😟','😰','😱'], levels:['Uneasy','Anxious','Panicked'],                    chips:['Worried','Nervous','Scared','Fearful','Panicked'],               shape:{ size:1495, left:-151, top:-331 } },
+  curious:   { name:'Curious',      color:'#FDDA3C', gradDark:'#5A4518', emoji:'🤔', emojis:['🤔','🧐','😲'], levels:['Interested','Curious','Have to know!'],          chips:['Interested','Intrigued','Fascinated','Nosy','Wonder-Filled'],  shape:{ size:1454, left:-130, top:-460 } },
+  happy:     { name:'Happy',        color:'#FFAF25', gradDark:'#5A4518', emoji:'😊', emojis:['🙂','😊','😄'], levels:['Good','Happy','Joyful'],                          chips:['Joyful','Content','Pleased','Cheerful','Elated'],              shape:{ size:1495, left:-151, top:-331 } },
+  excited:   { name:'Excited',      color:'#E65800', gradDark:'#633315', emoji:'🤩', emojis:['😌','🤩','🎉'], levels:['Looking forward to it','Excited','Pumped'],       chips:['Enthusiastic','Eager','Thrilled','Energised','Pumped'],         shape:{ size:1495, left:-151, top:-331 } },
+  okay:      { name:'Okay',         color:'#68DCC6', gradDark:'#284B44', emoji:'🙂', emojis:['😌','🙂','😀'], levels:['Fine','Okay','Pretty good'],                      chips:['Fine','Comfortable','Satisfied','Steady','Relieved'],           shape:{ size:1511, left:-159, top:-339 } },
+  grateful:  { name:'Grateful',     color:'#2CD573', gradDark:'#295D3F', emoji:'🙏', emojis:['🥰','🙏','💝'], levels:['Warm inside','Grateful','Thankful'],              chips:['Appreciative','Thankful','Touched','Lucky','Warm Inside'],       shape:{ size:1405, left:-106, top:-286 } },
+  hopeful:   { name:'Hopeful',      color:'#D1F00B', gradDark:'#414815', emoji:'😇', emojis:['🌱','😇','✨'], levels:['A little hopeful','Hopeful','Optimistic'],        chips:['Optimistic','Encouraged','Wishing','Inspired','Looking forward'], shape:{ size:1495, left:-151, top:-331 } },
+  meh:       { name:'Meh',          color:'#F2F3E5', gradDark:'#828282', emoji:'😑', emojis:['😑','🙄','😒'], levels:['Blah','Meh','Over it'],                           chips:['Unimpressed','Bored','Flat','Disengaged','Apathetic'],           shape:{ size:1108, left:43,   top:-262 } },
+  neutral:   { name:'Neutral',      color:'#BFBFBF', gradDark:'#555555', emoji:'😐', emojis:['😐','😶','🫤'], levels:['Just okay','Neutral','Normal'],                   chips:['Indifferent','Detached','Composed','Shoulder Shrug','Neither'],  shape:{ size:1244, left:-25,  top:-205 } },
+  idontknow: { name:"I Don't Know", color:'#8C8C8C', gradDark:'#404040', emoji:'🤷', emojis:['😕','🤷','😵'], levels:['Unsure','Not sure','Confused'],                   chips:['Confused','Uncertain','Overwhelmed','Numb','Conflicted'],        shape:{ size:1555, left:-181, top:-361 } },
+  sad:       { name:'Sad',          color:'#56CCF2', gradDark:'#1C4958', emoji:'😢', emojis:['😔','😢','💔'], levels:['Down','Sad','Hurt'],                              chips:['Sorrowful','Left Out','Let Down','Disappointed','Heartbroken'],  shape:{ size:1281, left:-44,  top:-74  } },
+  tired:     { name:'Tired',        color:'#6A7EFF', gradDark:'#2A315D', emoji:'😴', emojis:['🥱','😴','😪'], levels:['Low energy','Tired','Exhausted'],                 chips:['Exhausted','Drained','Fatigued','Sleepy','Checked Out'],         shape:{ size:1495, left:-151, top:-286 } },
+  lonely:    { name:'Lonely',       color:'#C4A3FF', gradDark:'#645387', emoji:'😔', emojis:['😔','🥺','😿'], levels:['A little alone','Lonely','Isolated'],             chips:['Isolated','Disconnected','Left Out','Longing','Forgotten'],      shape:{ size:1495, left:-151, top:-331 } },
+  angry:     { name:'Angry',        color:'#EC3E23', gradDark:'#6A251A', emoji:'😠', emojis:['😒','😠','🤬'], levels:['Annoyed','Angry','Furious'],                      chips:['Frustrated','Irritated','Furious','Annoyed','Jealous'],          shape:{ size:1615, left:-211, top:-591 } },
+  stressed:  { name:'Stressed',     color:'#C12A67', gradDark:'#5A253B', emoji:'😤', emojis:['😬','😤','🤯'], levels:['Tense','Stressed','Overwhelmed'],                 chips:['Overwhelmed','Pressured','Tense','Rushed','Snappy'],             shape:{ size:1495, left:-151, top:-131 } },
+  anxious:   { name:'Anxious',      color:'#BD67FF', gradDark:'#3B1B54', emoji:'😰', emojis:['😟','😰','😱'], levels:['Uneasy','Anxious','Panicked'],                    chips:['Worried','Nervous','Scared','Fearful','Panicked'],               shape:{ size:1495, left:-151, top:-331 } },
 };
 
 // ─── Screen nav ───────────────────────────────────────────────
@@ -917,7 +950,7 @@ function buildDetailScreen(key, idx, total) {
         <svg viewBox="0 0 532 310" width="532" height="310" overflow="visible">
           <defs>
             <linearGradient id="${gradId}" gradientUnits="userSpaceOnUse" x1="48" y1="247" x2="480" y2="247">
-              <stop offset="0%" stop-color="#252530"/>
+              <stop offset="0%" stop-color="${em.gradDark}"/>
               <stop offset="100%" stop-color="${em.color}"/>
             </linearGradient>
           </defs>
@@ -992,6 +1025,12 @@ function buildWhyScreen(selectedKeys) {
       <span class="why-label">${b.label}</span>
     </button>`).join('');
 
+  const addOtherHtml = `
+    <button class="why-block why-block--add" onclick="whyAddOther(this)">
+      <div class="why-icon"><span style="font-size:20px;color:#a4a59f">+</span></div>
+      <span class="why-label">Add other</span>
+    </button>`;
+
   const div = document.createElement('div');
   div.className = 'screen why-screen';
   div.id = 'wh-0';
@@ -1000,7 +1039,7 @@ function buildWhyScreen(selectedKeys) {
     <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
     <div class="prog"><div class="prog-fill" style="width:${Math.round(progWidth)}px"></div></div>
     <h2 class="why-title">What makes you feel this way?</h2>
-    <div class="why-grid">${blocksHtml}</div>
+    <div class="why-grid">${blocksHtml}${addOtherHtml}</div>
     <div class="ed-nav">
       <button class="btn-back-dark" onclick="whyBack()">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1009,6 +1048,139 @@ function buildWhyScreen(selectedKeys) {
     </div>
   `;
   return div;
+}
+
+// ─── Add other ────────────────────────────────────────────────
+function whyAddOther(el) {
+  el.className = 'why-block why-block--input';
+  el.style.gridColumn = 'span 2';
+  el.onclick = null;
+  el.innerHTML = `
+    <div class="why-icon" style="cursor:pointer;flex-shrink:0" onclick="event.stopPropagation();whyShowPicker(this)"><span class="why-emoji">✏️</span></div>
+    <input class="why-input-field" type="text" placeholder="Type here…" maxlength="40">
+    <button class="why-confirm-btn" onclick="event.stopPropagation();whyConfirmAdd(this.closest('.why-block'))">
+      <img src="./components/checkbox.svg" style="width:36px;height:36px;display:block;" alt="">
+    </button>`;
+  const input = el.querySelector('.why-input-field');
+  input.focus();
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') whyConfirmAdd(el);
+    if (e.key === 'Escape') whyRevertAdd(el);
+  });
+}
+
+function whyConfirmAdd(el) {
+  const val = el.querySelector('.why-input-field').value.trim();
+  const emoji = el.querySelector('.why-emoji').textContent;
+  whyHidePicker();
+  if (!val) { whyRevertAdd(el); return; }
+  const newBlock = document.createElement('button');
+  newBlock.className = 'why-block sel';
+  newBlock.onclick = function() { this.classList.toggle('sel'); };
+  newBlock.innerHTML = `
+    <div class="why-icon"><span class="why-emoji">${emoji}</span></div>
+    <span class="why-label">${val}</span>`;
+  el.parentElement.insertBefore(newBlock, el);
+  whyRevertAdd(el);
+}
+
+function whyRevertAdd(el) {
+  el.className = 'why-block why-block--add';
+  el.style.gridColumn = '';
+  el.onclick = function() { whyAddOther(this); };
+  el.innerHTML = `
+    <div class="why-icon"><span style="font-size:20px;color:#a4a59f">+</span></div>
+    <span class="why-label">Add other</span>`;
+}
+
+// ─── Emoji picker ─────────────────────────────────────────────
+const PICKER_EMOJI = [
+  '😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩',
+  '😘','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶',
+  '😏','😒','🙄','😬','🤥','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤧','🥵',
+  '🥶','🥴','😵','🤯','🤠','🥸','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯','😲',
+  '😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫',
+  '🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','🤡','👹','👺','👻','👽','👾','🤖',
+  '👋','🤚','🖐️','✋','🖖','👌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','☝️',
+  '👇','👍','👎','✊','👊','🤛','🤜','👏','🙌','🫶','🙏','✍️','💪','🦾',
+  '🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈',
+  '🙉','🙊','🐔','🐧','🐦','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🦋','🐌',
+  '🐞','🐜','🐢','🐍','🦎','🐙','🦑','🐠','🐟','🐬','🐳','🦈','🦒','🐘','🦏','🐪',
+  '🍎','🍊','🍋','🍇','🍓','🫐','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🥦',
+  '🥕','🌽','🌶️','🍔','🍟','🍕','🌭','🌮','🌯','🍜','🍛','🍣','🍱','🍤','🎂','🍰',
+  '🧁','🍩','🍪','🍫','🍬','🍭','🍿','☕','🍵','🧋','🍺','🍷','🥂',
+  '⚽','🏀','🏈','⚾','🎾','🏐','🏉','🎱','🏓','🏸','🏆','🥇','🎮','🕹️','🎲','♟️',
+  '🧩','🎯','🎨','🎭','🎬','🎤','🎧','🎹','🥁','🎸','🎺','🎻',
+  '🚗','🚙','🚌','✈️','🚀','🛸','🛶','⛵','🚤','🏠','🏢','🌆','🌇','🌌','🌠','🏔️',
+  '🌋','🏕️','🏖️',
+  '❤️','🧡','💛','💚','💙','💜','🖤','🤍','💔','💕','💞','💓','💗','💖','💘','💝',
+  '✨','⭐','🌟','💫','🌈','🔥','💥','❄️','🌊','💧','🌸','🌺','🌻','🌹','🌷','🌼',
+  '🍀','🍁','🌿','🌱','💡','🔦','💎','🔮','🪄','🎩','📱','💻','📷','📸','📹','🎥',
+  '💰','💵','💳','✉️','📝','📚','📖','💼','🎁','🎀','🏅','🎟️','🎪',
+];
+
+function whyBuildPicker() {
+  const div = document.createElement('div');
+  div.className = 'why-emoji-picker';
+  div.innerHTML = `<div class="why-picker-grid">${
+    PICKER_EMOJI.map(e => `<button onclick="event.stopPropagation();whySelectEmoji('${e}')">${e}</button>`).join('')
+  }</div>`;
+  return div;
+}
+
+function whyShowPicker(iconEl) {
+  const screen = document.getElementById('wh-0');
+
+  let overlay = screen.querySelector('.why-picker-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.className = 'why-picker-overlay';
+    overlay.onclick = () => whyHidePicker();
+    screen.appendChild(overlay);
+  }
+
+  let picker = screen.querySelector('.why-emoji-picker');
+  if (!picker) {
+    picker = whyBuildPicker();
+    screen.appendChild(picker);
+  }
+  picker._iconEl = iconEl;
+
+  // Position picker relative to device coords
+  const device = document.getElementById('device');
+  const dRect = device.getBoundingClientRect();
+  const iRect = iconEl.getBoundingClientRect();
+  const scale = dRect.width / 1194;
+  const cx = (iRect.left - dRect.left) / scale;
+  const cy = (iRect.top - dRect.top) / scale;
+  const iH = iRect.height / scale;
+  const pw = 282, ph = 244;
+  let pl = Math.max(8, Math.min(cx - 20, 1194 - pw - 8));
+  let pt = cy - ph - 8;
+  if (pt < 50) pt = cy + iH + 8;
+  picker.style.left = pl + 'px';
+  picker.style.top = pt + 'px';
+
+  overlay.style.display = 'block';
+  picker.style.display = 'block';
+}
+
+function whyHidePicker() {
+  const screen = document.getElementById('wh-0');
+  if (!screen) return;
+  const overlay = screen.querySelector('.why-picker-overlay');
+  const picker = screen.querySelector('.why-emoji-picker');
+  if (overlay) overlay.style.display = 'none';
+  if (picker) picker.style.display = 'none';
+}
+
+function whySelectEmoji(emoji) {
+  const screen = document.getElementById('wh-0');
+  const picker = screen && screen.querySelector('.why-emoji-picker');
+  if (picker && picker._iconEl) {
+    picker._iconEl.querySelector('.why-emoji').textContent = emoji;
+  }
+  whyHidePicker();
 }
 
 // ─── Chip toggle ──────────────────────────────────────────────

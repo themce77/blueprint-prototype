@@ -81,6 +81,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .btn-back:active { opacity: 0.75; }
 .btn-back.dark  { background: #0f0f0f; }
 
+
+
 .btn-next {
   width: 200px; height: 48px;
   background: #f2f3e5; color: #1f1f25;
@@ -177,32 +179,39 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .cc-blue   img { animation-delay: 900ms; }
 
 /* Cards positioned by center point */
-.cc-purple { left: 400px; top: 50px;  transform: translate(-50%, -50%) rotate(165deg); }
-.cc-green  { left: 1110px; top: 567px; transform: translate(-50%, -50%) rotate(-60deg); }
-.cc-blue   { left: 80px;  top: 530px; transform: translate(-50%, -50%) rotate(68.64deg); }
+.cc-purple { left: 400px; top: 30px;  transform: translate(-50%, -50%) rotate(165deg); }
+.cc-green  { left: 1160px; top: 567px; transform: translate(-50%, -50%) rotate(-60deg); }
+.cc-blue   { left: 60px;  top: 530px; transform: translate(-50%, -50%) rotate(68.64deg); }
 
-/* ── S0→S1 arch transition element (device-level, not inside any screen) */
-#arch-intro {
+/* ── Horizontal slide group ────────────────────────────────── */
+.slide-group {
+  position: absolute; inset: 0; z-index: 5;
+}
+
+/* ── S-TRANS: transitional screen ─────────────────────────── */
+#s-trans { background: #3f50b8; }
+
+.s-trans-hex {
   position: absolute;
-  width: 1243px; height: 1087px;
-  left: 0; top: 0;
-  /* start: X same as end so arch stays centred; Y=750 puts arch top at ~672px
-     (162px peek from viewport bottom) — stays within overflow:hidden bounds */
-  transform: translate(-24.5px, 750px) rotate(-90deg);
-  transform-origin: 50% 50%;
-  pointer-events: none;
-  z-index: 15;
-  opacity: 1;
+  width: 2400px; height: 2400px;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none; z-index: 0;
 }
-#arch-intro.entering {
-  transform: translate(-24.5px, -126.5px) rotate(0deg);
-  opacity: 1;
-  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99);
+
+.s-trans-panel {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  overflow: hidden;
+  background: #b38aff;
+  z-index: 5;
 }
-#arch-intro.done {
-  transform: translate(-24.5px, 750px) rotate(-90deg);
-  opacity: 0;
-  transition: none;
+
+.s-trans-inner {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 834px;
 }
 
 /* ── S0 → S1 exit animation ────────────────────────────────── */
@@ -259,7 +268,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   left: 50%; top: 50%;
   transform: translate(-50%, -50%) scale(1.08);
   width: 1243px; height: 1087px;
-  pointer-events: none; z-index: 0;
+  pointer-events: none; z-index: 4;
 }
 .s1-content {
   position: absolute;
@@ -407,10 +416,14 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 .s4-union {
   position: absolute;
-  left: 82px; top: 0;
+  left: 50%; top: 0;
   width: 1030px; height: 834px;
+  transform: translateX(-50%) scaleX(1);
+  transform-origin: 50% 0%;
   pointer-events: none; z-index: 0;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
+.s4-union.no-transition { transition: none; }
 
 .s4-content {
   position: absolute;
@@ -460,7 +473,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 
 .arc-slider__pill {
-  position: absolute; bottom: 0; left: 50%;
+  position: absolute; bottom: 40px; left: 50%;
   transform: translateX(-50%);
   background: #2f2f37; border-radius: 99px;
   padding: 0 24px;
@@ -482,14 +495,14 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 .s5-content {
   position: absolute;
-  left: 50%; top: 128px;
+  left: 50%; top: 112px;
   transform: translateX(-50%);
   width: 1090px; z-index: 5; text-align: center;
 }
 
 .fc-row {
   display: flex; gap: 12px;
-  margin-top: 100px;
+  margin-top: 80px;
   max-width: 1067px;
   margin-left: auto; margin-right: auto;
   overflow: hidden;
@@ -497,13 +510,13 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 .fc {
   flex: 1; height: 211px; min-width: 0;
-  background: #36363f; border-radius: 28px;
+  background: #49aee1; border-radius: 28px;
   position: relative; cursor: pointer;
   overflow: hidden;
 }
 .fc::after {
   content: ''; position: absolute; inset: 0;
-  border: 16px solid #36363f;
+  border: 13px solid #36363f;
   border-radius: 28px;
   pointer-events: none; z-index: 3;
   transition: border-color 200ms;
@@ -513,23 +526,17 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 .fc-art {
   position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
 }
 .fc-art img {
-  width: 90%; height: 90%; display: block;
-  object-fit: contain;
-  transform: translateY(-18px);
-}
-.fc--full .fc-art img {
   width: 100%; height: 100%;
+  display: block;
   object-fit: fill;
-  transform: none;
 }
 
 .fc-bar {
   position: absolute; bottom: 0; left: 50%;
   transform: translateX(-50%);
-  width: 124px; height: 53px;
+  width: 116px; height: 49px;
   background: #36363f; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-display); font-size: 16px;
@@ -772,8 +779,23 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 <div class="bp-stage">
 <div class="bp-device" id="device">
 
-<!-- arch for S0→S1 transition, animated independently -->
-<img id="arch-intro" src="./foundations/assets/backgrounds/shell.svg" alt="">
+<!-- S-TRANS: big hexagon + purple panel expanding from bottom -->
+<div class="screen" id="s-trans">
+  <img class="s-trans-hex" src="./foundations/assets/backgrounds/polygon.svg" alt="">
+  <div class="s-trans-panel" id="s-trans-panel">
+    <div class="s-trans-inner" style="pointer-events:none">
+      <img class="arch-bg" src="./foundations/assets/backgrounds/shell.svg" alt="">
+      <div class="s1-content">
+        <p class="t-xl" style="white-space:nowrap">Your space</p>
+        <p class="t-body">You're in control of what your teacher sees. Choose what to share — your mood trends, survey answers, or nothing at all. Your journal is always just yours.</p>
+      </div>
+      <div class="nav">
+        <button class="btn-back"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="btn-next">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- single shared progress bar -->
 <div class="prog" id="prog" style="opacity:0"><div class="prog-fill" id="prog-fill" style="width:100px"></div></div>
@@ -786,9 +808,9 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   <img class="s0-poly" src="./foundations/assets/backgrounds/polygon.svg" alt="">
 
   <!-- Challenge cards (decorative, rotated) -->
-  <div class="ccard cc-purple"><img src="./components/card-02.png" alt="Write it out"></div>
-  <div class="ccard cc-green"><img src="./components/card-01.png" alt="All about you"></div>
-  <div class="ccard cc-blue"><img src="./components/card-03.png" alt="Notice your wins"></div>
+  <div class="ccard cc-purple"><img src="./components/karta-02.svg" alt=""></div>
+  <div class="ccard cc-green"><img src="./components/karta-03.svg" alt=""></div>
+  <div class="ccard cc-blue"><img src="./components/karta-01.svg" alt=""></div>
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
@@ -813,14 +835,15 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 
 
-  <div class="s1-content">
-    <p class="t-xl" style="white-space:nowrap">Your space</p>
-    <p class="t-body">You choose how support works for you. With "Get Support," your school may see overall patterns — not your exact words. With "Keep It Private," your check-ins stay private. If something suggests you may be in serious danger, we may still reach out to support you.</p>
-  </div>
-
-  <div class="nav">
-    <button class="btn-back" onclick="goTo(0)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <button class="btn-next" onclick="goTo(2)">Next</button>
+  <div class="slide-group" id="s1-slide">
+    <div class="s1-content">
+      <p class="t-xl" style="white-space:nowrap">Your space</p>
+      <p class="t-body">You're in control of what your teacher sees. Choose what to share — your mood trends, survey answers, or nothing at all. Your journal is always just yours.</p>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="goTo(0)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="btn-next" onclick="slideS1toS2()">Next</button>
+    </div>
   </div>
 </div>
 
@@ -833,56 +856,58 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <div class="s2-content">
-    <p class="s2-sub">Your teacher sees the big picture, not the details</p>
+  <div class="slide-group" id="s2-slide">
+    <div class="s2-content">
+      <p class="s2-sub">Your teacher sees the big picture, not the details</p>
 
-    <div class="pcards">
+      <div class="pcards">
 
-      <div class="pcard">
-        <div class="pcard-hdr">
-          <span class="pcard-lbl">Your weekly mood trend</span>
-          <div class="toggle-row" onclick="flipToggle(this)" style="cursor:pointer">
-            <span class="toggle-on-lbl">OFF</span>
-            <div class="toggle off"></div>
+        <div class="pcard">
+          <div class="pcard-hdr">
+            <span class="pcard-lbl">Your weekly mood trend</span>
+            <div class="toggle-row" onclick="flipToggle(this)" style="cursor:pointer">
+              <span class="toggle-on-lbl">OFF</span>
+              <div class="toggle off"></div>
+            </div>
           </div>
+          <p class="pcard-body">Your teacher sees if you've had a tough week overall — not what you felt each specific day.</p>
+          <p class="pcard-cap">Weekly overview only · No daily details</p>
         </div>
-        <p class="pcard-body">Your teacher sees if you've had a tough week overall — not what you felt each specific day.</p>
-        <p class="pcard-cap">Weekly overview only · No daily details</p>
-      </div>
 
-      <div class="pcard">
-        <div class="pcard-hdr">
-          <span class="pcard-lbl">Class survey results</span>
-          <div class="toggle-row" onclick="flipToggle(this)" style="cursor:pointer">
-            <span class="toggle-on-lbl">OFF</span>
-            <div class="toggle off"></div>
+        <div class="pcard">
+          <div class="pcard-hdr">
+            <span class="pcard-lbl">Class survey results</span>
+            <div class="toggle-row" onclick="flipToggle(this)" style="cursor:pointer">
+              <span class="toggle-on-lbl">OFF</span>
+              <div class="toggle off"></div>
+            </div>
           </div>
+          <p class="pcard-body">Your teacher sees how the whole class is doing on average. Your individual answers stay private.</p>
+          <p class="pcard-cap">Class average only · Your answers are anonymous</p>
         </div>
-        <p class="pcard-body">Your teacher sees how the whole class is doing on average. Your individual answers stay private.</p>
-        <p class="pcard-cap">Class average only · Your answers are anonymous</p>
-      </div>
 
-      <div class="pcard">
-        <div class="pcard-hdr">
-          <span class="pcard-lbl">Your journal notes</span>
-          <div class="lock-btn">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <rect x="3" y="7" width="10" height="8" rx="2" fill="#a4a59f"/>
-              <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="#a4a59f" stroke-width="1.5" fill="none"/>
-            </svg>
+        <div class="pcard">
+          <div class="pcard-hdr">
+            <span class="pcard-lbl">Your journal notes</span>
+            <div class="lock-btn">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <rect x="3" y="7" width="10" height="8" rx="2" fill="#a4a59f"/>
+                <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="#a4a59f" stroke-width="1.5" fill="none"/>
+              </svg>
+            </div>
           </div>
+          <p class="pcard-body">What you write here is for you only. Nobody else can read your notes — ever.</p>
+          <p class="pcard-cap">Always private · Only you can choose to share</p>
         </div>
-        <p class="pcard-body">What you write here is for you only. Nobody else can read your notes — ever.</p>
-        <p class="pcard-cap">Always private · Only you can choose to share</p>
-      </div>
 
+      </div>
+      <p class="s2-footer">You can update these choices anytime in Settings → Privacy</p>
     </div>
-    <p class="s2-footer">You can update these choices anytime in Settings → Privacy</p>
-  </div>
 
-  <div class="nav">
-    <button class="btn-back" onclick="goTo(1)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <button class="btn-next" onclick="goTo(3)">Next</button>
+    <div class="nav">
+      <button class="btn-back" onclick="goTo(1)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="btn-next" onclick="slideS2toS3()">Next</button>
+    </div>
   </div>
 </div>
 
@@ -891,32 +916,34 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
      S3 — "Select your avatar"
      ════════════════════════════════════════════════════════════ -->
 <div class="screen" id="s3">
-  <img class="s3-frame" src="./foundations/assets/backgrounds/frame.svg" alt="">
-
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <div class="s3-content">
-    <p class="t-lg">Select your<br>avatar</p>
+  <div class="slide-group" id="s3-slide">
+    <img class="s3-frame" src="./foundations/assets/backgrounds/frame.svg" alt="">
 
-    <div class="avatar-row">
-      <button class="av-btn" style="background:#b38aff" data-bg="#b38aff" onclick="pickAvatar(this)">
-        <img src="./foundations/assets/avatars/avatar-1.svg" alt="avatar 1">
-      </button>
-      <button class="av-btn" style="background:#f3beaf" data-bg="#f3beaf" onclick="pickAvatar(this)">
-        <img src="./foundations/assets/avatars/avatar-2.svg" alt="avatar 2">
-      </button>
-      <button class="av-btn" style="background:#b8c0ed" data-bg="#b8c0ed" onclick="pickAvatar(this)">
-        <img src="./foundations/assets/avatars/avatar-3.svg" alt="avatar 3">
-      </button>
-      <button class="av-btn" style="background:#58b880" data-bg="#58b880" onclick="pickAvatar(this)">
-        <img src="./foundations/assets/avatars/avatar-4.svg" alt="avatar 4">
-      </button>
+    <div class="s3-content">
+      <p class="t-lg">Select your<br>avatar</p>
+
+      <div class="avatar-row">
+        <button class="av-btn" style="background:#b38aff" data-bg="#b38aff" onclick="pickAvatar(this)">
+          <img src="./foundations/assets/avatars/avatar-1.svg" alt="avatar 1">
+        </button>
+        <button class="av-btn" style="background:#f3beaf" data-bg="#f3beaf" onclick="pickAvatar(this)">
+          <img src="./foundations/assets/avatars/avatar-2.svg" alt="avatar 2">
+        </button>
+        <button class="av-btn" style="background:#b8c0ed" data-bg="#b8c0ed" onclick="pickAvatar(this)">
+          <img src="./foundations/assets/avatars/avatar-3.svg" alt="avatar 3">
+        </button>
+        <button class="av-btn" style="background:#58b880" data-bg="#58b880" onclick="pickAvatar(this)">
+          <img src="./foundations/assets/avatars/avatar-4.svg" alt="avatar 4">
+        </button>
+      </div>
     </div>
-  </div>
 
-  <div class="nav">
-    <button class="btn-back" onclick="goTo(2)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <button class="btn-next" onclick="goTo(4)">Next</button>
+    <div class="nav">
+      <button class="btn-back" onclick="goTo(2)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="btn-next" onclick="slideS3toS4()">Next</button>
+    </div>
   </div>
 </div>
 
@@ -925,41 +952,39 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
      S4 — "How do you feel the most of the time?"
      ════════════════════════════════════════════════════════════ -->
 <div class="screen" id="s4">
-  <img class="s4-union" src="./foundations/assets/backgrounds/union.svg" alt="">
-
   <div class="sb" style="color:rgba(255,255,255,0.7)"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <div class="s4-content">
-    <p class="t-lg">How do you feel<br>the most of<br>the time?</p>
+  <div class="slide-group" id="s4-slide">
+    <img class="s4-union" src="./foundations/assets/backgrounds/union.svg" alt="">
+    <div class="s4-content">
+      <p class="t-lg">How do you feel<br>the most of<br>the time?</p>
 
-    <div class="arc-slider" id="arcSlider" tabindex="0">
-      <svg viewBox="0 0 532 310" width="532" height="310">
-        <defs>
-          <linearGradient id="gradMood" gradientUnits="userSpaceOnUse" x1="48" y1="247" x2="480" y2="247">
-            <stop offset="0%"   stop-color="#c45a10"/>
-            <stop offset="55%"  stop-color="#e65800"/>
-            <stop offset="100%" stop-color="#ffbb25"/>
-          </linearGradient>
-        </defs>
-        <!-- Gray end-cap circles (behind paths) -->
-        <circle id="arcCapGrayL" r="40" fill="#2f2f37"/>
-        <circle id="arcCapGrayR" r="40" fill="#2f2f37"/>
-        <path id="arcTrack" fill="none" stroke="#2f2f37"          stroke-width="80" stroke-linecap="round"/>
-        <path id="arcFill"  fill="none" stroke="url(#gradMood)"  stroke-width="56" stroke-linecap="round"/>
-        <!-- Fill end-cap circles (on top of fill) -->
-        <circle id="arcCapFillL" r="28" fill="url(#gradMood)"/>
-        <circle id="arcCapFillE" r="28" fill="url(#gradMood)"/>
-        <g id="arcDots"></g>
-      </svg>
-      <div class="arc-slider__hit" id="arcHit"></div>
-      <div class="arc-slider__thumb" id="arcThumb"><span id="arcEmoji"></span></div>
-      <div class="arc-slider__pill"><span id="arcLabel"></span></div>
+      <div class="arc-slider" id="arcSlider" tabindex="0">
+        <svg viewBox="0 0 532 310" width="532" height="310">
+          <defs>
+            <linearGradient id="gradMood" gradientUnits="userSpaceOnUse" x1="48" y1="247" x2="480" y2="247">
+              <stop offset="0%"   stop-color="#945218"/>
+              <stop offset="100%" stop-color="#F08B31"/>
+            </linearGradient>
+          </defs>
+          <circle id="arcCapGrayL" r="40" fill="#2f2f37"/>
+          <circle id="arcCapGrayR" r="40" fill="#2f2f37"/>
+          <path id="arcTrack" fill="none" stroke="#2f2f37"          stroke-width="80" stroke-linecap="round"/>
+          <path id="arcFill"  fill="none" stroke="url(#gradMood)"  stroke-width="56" stroke-linecap="round"/>
+          <circle id="arcCapFillL" r="28" fill="url(#gradMood)"/>
+          <circle id="arcCapFillE" r="28" fill="url(#gradMood)"/>
+          <g id="arcDots"></g>
+        </svg>
+        <div class="arc-slider__hit" id="arcHit"></div>
+        <div class="arc-slider__thumb" id="arcThumb"><span id="arcEmoji"></span></div>
+        <div class="arc-slider__pill"><span id="arcLabel"></span></div>
+      </div>
     </div>
-  </div>
 
-  <div class="nav">
-    <button class="btn-back dark" onclick="goTo(3)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <button class="btn-next" onclick="goTo(5)">Next</button>
+    <div class="nav">
+      <button class="btn-back" style="background:#36363f" onclick="goTo(3)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="btn-next" onclick="curtainS4toS5()">Next</button>
+    </div>
   </div>
 </div>
 
@@ -970,6 +995,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 <div class="screen" id="s5">
   <div class="sb" style="color:rgba(255,255,255,0.7)"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
+  <div class="slide-group" id="s5-slide">
   <div class="s5-content">
     <p class="t-lg">What helps you<br>feel good?</p>
 
@@ -1015,8 +1041,9 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   </div>
 
   <div class="nav">
-    <button class="btn-back dark" onclick="goTo(4)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <button class="btn-next" onclick="goTo(6)">Next</button>
+    <button class="btn-back" onclick="goTo(4)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="btn-next" onclick="slideS5toS6()">Next</button>
+  </div>
   </div>
 </div>
 
@@ -1029,23 +1056,25 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <div class="s6-content">
-    <p class="t-lg">Is there someone that<br>makes things easier<br>for you?</p>
+  <div class="slide-group" id="s6-slide">
+    <div class="s6-content">
+      <p class="t-lg">Is there someone that<br>makes things easier<br>for you?</p>
 
-    <div class="pgrid">
-      <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">👫</div><span class="pb-lbl">Friend</span></button>
-      <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">👩‍🦱</div><span class="pb-lbl">Parent/Guardian</span></button>
-      <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">🏠</div><span class="pb-lbl">Other family</span></button>
-      <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">🧑‍🏫</div><span class="pb-lbl">Teacher</span></button>
-      <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">🤵</div><span class="pb-lbl">Counsellor</span></button>
-      <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">😶</div><span class="pb-lbl">No one</span></button>
-      <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">📱</div><span class="pb-lbl">Prefer to use AI for help</span></button>
+      <div class="pgrid">
+        <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">👫</div><span class="pb-lbl">Friend</span></button>
+        <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">👩‍🦱</div><span class="pb-lbl">Parent/Guardian</span></button>
+        <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">🏠</div><span class="pb-lbl">Other family</span></button>
+        <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">🧑‍🏫</div><span class="pb-lbl">Teacher</span></button>
+        <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">🤵</div><span class="pb-lbl">Counsellor</span></button>
+        <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">😶</div><span class="pb-lbl">No one</span></button>
+        <button class="pb" onclick="togglePb(this)"><div class="pb-emoji">📱</div><span class="pb-lbl">Prefer to use AI for help</span></button>
+      </div>
     </div>
-  </div>
 
-  <div class="nav">
-    <button class="btn-back" onclick="goTo(5)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <button class="btn-next" onclick="goTo(7)">Next</button>
+    <div class="nav">
+      <button class="btn-back" onclick="goTo(5)"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="#f2f3e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="btn-next" onclick="slideS6toS7()">Next</button>
+    </div>
   </div>
 </div>
 
@@ -1058,33 +1087,35 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <!-- Orange bubble — top right -->
-  <div class="msg-bubble msg-orange">
-    <div class="msg-avatar"><img src="./components/monster-02.svg" alt=""></div>
-    <p class="msg-text">You earned 10 Sparks! They add up over time – just like the work you put in.</p>
-  </div>
-
-  <!-- Green bubble — lower left -->
-  <div class="msg-bubble msg-green">
-    <div class="msg-avatar"><img src="./components/monster-01.svg" alt=""></div>
-    <p class="msg-text">This is your space – a toolkit you can use whenever you need it. Nothing here affects your grades.</p>
-  </div>
-
-  <div class="s7-content">
-    <div class="reward-row">
-      <span class="reward-plus">+10</span>
-      <div class="spark-badge">
-        <img src="./components/Spark-4.svg" alt="spark">
-        <img src="./components/Spark-01.svg" alt="spark">
-        <img src="./components/Spark-02.svg" alt="spark">
-        <img src="./components/Spark-03.svg" alt="spark">
-      </div>
+  <div class="slide-group" id="s7-slide">
+    <!-- Orange bubble — top right -->
+    <div class="msg-bubble msg-orange">
+      <div class="msg-avatar"><img src="./components/monster-02.svg" alt=""></div>
+      <p class="msg-text">You earned 10 Sparks! They add up over time – just like the work you put in.</p>
     </div>
-    <p class="t-xl">Setup<br>completed!</p>
-  </div>
 
-  <div class="s7-cta-wrap">
-    <button class="btn-cta" onclick="startMoodCheckin()">Start by logging your mood</button>
+    <!-- Green bubble — lower left -->
+    <div class="msg-bubble msg-green">
+      <div class="msg-avatar"><img src="./components/monster-01.svg" alt=""></div>
+      <p class="msg-text">This is your space – a toolkit you can use whenever you need it. Nothing here affects your grades.</p>
+    </div>
+
+    <div class="s7-content">
+      <div class="reward-row">
+        <span class="reward-plus">+10</span>
+        <div class="spark-badge">
+          <img src="./components/Spark-4.svg" alt="spark">
+          <img src="./components/Spark-01.svg" alt="spark">
+          <img src="./components/Spark-02.svg" alt="spark">
+          <img src="./components/Spark-03.svg" alt="spark">
+        </div>
+      </div>
+      <p class="t-xl">Setup<br>completed!</p>
+    </div>
+
+    <div class="s7-cta-wrap">
+      <button class="btn-cta" onclick="startMoodCheckin()">Start by logging your mood</button>
+    </div>
   </div>
 </div>
 
@@ -1114,36 +1145,333 @@ function updateProg(n) {
   }
 }
 
+// ─── S1 → S2 horizontal slide ────────────────────────────────
+function slideS1toS2() {
+  const s1     = document.getElementById('s1');
+  const s2     = document.getElementById('s2');
+  const s1sl   = document.getElementById('s1-slide');
+  const s2sl   = document.getElementById('s2-slide');
+  const ease   = 'transform 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
+
+  // Pokaż s2 natychmiast, s2-slide zaczyna poza prawą krawędzią
+  s2.style.transition = 'none';
+  s2.classList.add('active');
+  s2sl.style.transition = 'none';
+  s2sl.style.transform = 'translateX(1194px)';
+
+  // Dwa rAF — żeby przeglądarka utrwaliła pozycję startową przed animacją
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    s1sl.style.transition = ease;
+    s2sl.style.transition = ease;
+    s1sl.style.transform = 'translateX(-1194px)';
+    s2sl.style.transform = 'translateX(0)';
+
+    setTimeout(() => {
+      // Ukryj s1, zresetuj s1-slide na pozycję wyjściową
+      s1.style.transition = 'none';
+      s1.classList.remove('active');
+      s1sl.style.transition = 'none';
+      s1sl.style.transform = '';
+      requestAnimationFrame(() => { s1.style.transition = ''; });
+      cur = 2;
+      updateProg(2);
+    }, 800);
+  }));
+}
+
+function slideS2toS3() {
+  const s2      = document.getElementById('s2');
+  const s3      = document.getElementById('s3');
+  const s2sl    = document.getElementById('s2-slide');
+  const s3sl    = document.getElementById('s3-slide');
+  const archBg  = s2.querySelector('.arch-bg');
+  const ease    = 'transform 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
+
+  // S3 active but transparent — S2 animates its color to blue
+  s3.style.transition = 'none';
+  s3.style.background = 'transparent';
+  s3.classList.add('active');
+  s3sl.style.transition = 'none';
+  s3sl.style.transform = 'translateX(1194px)';
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const colorEase = 'background-color 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
+    s2sl.style.transition = ease;
+    s3sl.style.transition = ease;
+    if (archBg) archBg.style.transition = ease;
+    s2.style.transition = colorEase;
+
+    s2sl.style.transform = 'translateX(-1194px)';
+    s3sl.style.transform = 'translateX(0)';
+    if (archBg) archBg.style.transform = 'translate(calc(-50% - 1500px), -50%) scale(1.08)';
+    s2.style.backgroundColor = '#3f50b8';
+
+    setTimeout(() => {
+      s2.style.transition = 'none';
+      s2.classList.remove('active');
+      s2.style.background = '';
+      s2.style.backgroundColor = '';
+      s2sl.style.transition = 'none';
+      s2sl.style.transform = '';
+      if (archBg) { archBg.style.transition = 'none'; archBg.style.transform = ''; }
+      s3.style.background = '';
+      requestAnimationFrame(() => { s2.style.transition = ''; });
+      cur = 3;
+      updateProg(3);
+    }, 800);
+  }));
+}
+
+function slideS3toS4() {
+  const s3   = document.getElementById('s3');
+  const s4   = document.getElementById('s4');
+  const s3sl = document.getElementById('s3-slide');
+  const s4sl = document.getElementById('s4-slide');
+  const ease = 'transform 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
+
+  s4.style.transition = 'none';
+  s4.style.background = 'transparent';
+  s4.classList.add('active');
+  s4sl.style.transition = 'none';
+  s4sl.style.transform = 'translateX(1194px)';
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const colorEase = 'background-color 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
+    s3sl.style.transition = ease;
+    s4sl.style.transition = ease;
+    s3.style.transition = colorEase;
+
+    s3sl.style.transform = 'translateX(-1194px)';
+    s4sl.style.transform = 'translateX(0)';
+    s3.style.backgroundColor = '#1f1f25';
+
+    setTimeout(() => {
+      s3.style.transition = 'none';
+      s3.classList.remove('active');
+      s3.style.background = '';
+      s3.style.backgroundColor = '';
+      s3sl.style.transition = 'none';
+      s3sl.style.transform = '';
+      s4.style.background = '';
+      requestAnimationFrame(() => { s3.style.transition = ''; });
+      cur = 4;
+      updateProg(4);
+    }, 800);
+  }));
+}
+
+function curtainS4toS5() {
+  const s4   = document.getElementById('s4');
+  const s5   = document.getElementById('s5');
+  const s4sl = document.getElementById('s4-slide');
+  const s5sl = document.getElementById('s5-slide');
+  const ease = 'transform 700ms cubic-bezier(0.81, 0, 0.26, 0.98)';
+
+  // Force clean starting state regardless of previous slide transform
+  s4sl.style.transition = 'none';
+  s4sl.style.transformOrigin = '50% 50%';
+  s4sl.style.transform = 'scaleX(1)';
+
+  // S5 active instantly (same bg color — invisible switch)
+  s5.style.transition = 'none';
+  s5.classList.add('active');
+  s5sl.style.transition = 'none';
+  s5sl.style.transform = 'translateX(1194px)';
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    // s4-slide collapses to center — content "swallowed into the hole"
+    s4sl.style.transition = ease;
+    s4sl.style.transformOrigin = '50% 50%';
+    s4sl.style.transform = 'scaleX(0)';
+    // s5-slide slides in from right simultaneously
+    s5sl.style.transition = ease;
+    s5sl.style.transform = 'translateX(0)';
+
+    setTimeout(() => {
+      s4.style.transition = 'none';
+      s4.classList.remove('active');
+      s4sl.style.transition = 'none';
+      s4sl.style.transform = '';
+      s4sl.style.transformOrigin = '';
+      requestAnimationFrame(() => { s4.style.transition = ''; s5.style.transition = ''; });
+      cur = 5;
+      updateProg(5);
+    }, 700);
+  }));
+}
+
+function slideS6toS7() {
+  const s6      = document.getElementById('s6');
+  const s7      = document.getElementById('s7');
+  const s6sl    = document.getElementById('s6-slide');
+  const s7sl    = document.getElementById('s7-slide');
+  const s6el    = s6.querySelector('.s6-ellipse');
+  const s7el    = s7.querySelector('.s7-ellipse');
+  const ease    = 'transform 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
+
+  s7.style.transition = 'none';
+  s7.style.background = 'transparent';
+  ['.s7-content', '.msg-green', '.msg-orange', '.s7-cta-wrap'].forEach(sel => {
+    const el = s7.querySelector(sel);
+    if (el) el.style.transition = 'none';
+  });
+  s7.classList.add('active', 's7-entered');
+
+  // Hide S6 ellipse — only S7 ellipse animates (one circle)
+  s6el.style.opacity = '0';
+
+  // S7 ellipse starts at S6 ellipse position/size (center: 597,484 → size: 1114px)
+  // S7 ellipse natural center: 604,1105. Offset to S6 center: -7,-621. Scale: 1114/1910≈0.583
+  s7el.style.transition = 'none';
+  s7el.style.transformOrigin = 'center center';
+  s7el.style.transform = 'translate(-7px, -621px) scale(0.583)';
+
+  s7sl.style.transition = 'none';
+  s7sl.style.transform = 'translateY(834px)';
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const colorEase = 'background-color 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
+
+    s6.style.transition = colorEase;
+    s6.style.backgroundColor = '#3f50b8';
+
+    s6sl.style.transition = ease;
+    s6sl.style.transform = 'translateY(834px)';
+
+    s7sl.style.transition = ease;
+    s7sl.style.transform = 'translateY(0)';
+
+    // Single circle grows and moves to its natural S7 position
+    s7el.style.transition = ease;
+    s7el.style.transform = 'translate(0, 0) scale(1)';
+
+    // Progress bar slides out above the screen
+    const prog = document.getElementById('prog');
+    prog.style.transition = 'transform 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
+    prog.style.transform = 'translateY(-120px)';
+
+    setTimeout(() => {
+      s6.style.transition = 'none';
+      s6.classList.remove('active');
+      s6.style.background = '';
+      s6.style.backgroundColor = '';
+      s6sl.style.transition = 'none';
+      s6sl.style.transform = '';
+      s6el.style.opacity = '';
+
+      s7.style.background = '';
+      s7el.style.transition = 'none';
+      s7el.style.transform = '';
+      s7el.style.transformOrigin = '';
+      s7sl.style.transition = 'none';
+      s7sl.style.transform = '';
+
+      prog.style.transition = 'none';
+      prog.style.transform = '';
+
+      requestAnimationFrame(() => { s6.style.transition = ''; s7.style.transition = ''; });
+      cur = 7;
+      updateProg(7);
+
+      // Phase 2: orange bubble from right + CTA button from bottom, delayed
+      ['.msg-orange', '.s7-cta-wrap'].forEach(sel => {
+        const el = s7.querySelector(sel);
+        if (el) el.style.transition = '';
+      });
+      setTimeout(() => { s7.classList.add('s7-phase2'); }, 300);
+    }, 800);
+  }));
+}
+
+function slideS5toS6() {
+  const s5      = document.getElementById('s5');
+  const s6      = document.getElementById('s6');
+  const s5sl    = document.getElementById('s5-slide');
+  const s6sl    = document.getElementById('s6-slide');
+  const ellipse = s6.querySelector('.s6-ellipse');
+  const ease    = 'transform 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
+
+  s6.style.transition = 'none';
+  s6.style.background = 'transparent';
+  s6.classList.add('active');
+
+  ellipse.style.transition = 'none';
+  ellipse.style.transform = 'translate(-50%, -44%) scale(1.8)';
+
+  s6sl.style.transition = 'none';
+  s6sl.style.transform = 'translateX(1194px)';
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const colorEase = 'background-color 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
+
+    s5.style.transition = colorEase;
+    s5.style.backgroundColor = '#b38aff';
+
+    s5sl.style.transition = ease;
+    s5sl.style.transform = 'translateX(-1194px)';
+
+    s6sl.style.transition = ease;
+    s6sl.style.transform = 'translateX(0)';
+
+    ellipse.style.transition = ease;
+    ellipse.style.transform = 'translate(-50%, -44%) scale(1)';
+
+    setTimeout(() => {
+      s5.style.transition = 'none';
+      s5.classList.remove('active');
+      s5.style.background = '';
+      s5.style.backgroundColor = '';
+      s5sl.style.transition = 'none';
+      s5sl.style.transform = '';
+
+      s6.style.background = '';
+      ellipse.style.transition = 'none';
+      ellipse.style.transform = '';
+      s6sl.style.transition = 'none';
+      s6sl.style.transform = '';
+
+      requestAnimationFrame(() => { s5.style.transition = ''; s6.style.transition = ''; });
+      cur = 6;
+      updateProg(6);
+    }, 800);
+  }));
+}
+
 // ─── Navigation ──────────────────────────────────────────────
 let cur = 0;
 function goTo(n) {
   if (cur === 0 && n === 1) {
     const s0 = document.getElementById('s0');
     const s1 = document.getElementById('s1');
-    const arch = document.getElementById('arch-intro');
+    const ease = 'transform 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
 
     // S0 elements exit
     s0.classList.add('exiting');
 
-    requestAnimationFrame(() => {
-      arch.classList.remove('done');
-      void arch.offsetHeight;
-      requestAnimationFrame(() => arch.classList.add('entering'));
-    });
+    // S1 waits below screen, ready to slide up
+    s1.style.transition = 'none';
+    s1.style.transform = 'translateY(834px)';
+    s1.classList.add('active');
 
-    // 800ms: arch done → switch screens + show progress
+    // 800ms: s0 exit done → S1 slides up from below
     setTimeout(() => {
+      s0.style.transition = 'none';
       s0.classList.remove('active', 'exiting');
-      s1.classList.add('active');
-      cur = n;
-      updateProg(n);
-    }, 800);
 
-    // 1100ms: S1 fully opaque → hide intro arch (S1's own arch-bg takes over)
-    setTimeout(() => {
-      arch.classList.remove('entering');
-      arch.classList.add('done');
-    }, 1100);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        s0.style.transition = '';
+        s1.style.transition = ease;
+        s1.style.transform = 'translateY(0)';
+
+        setTimeout(() => {
+          s1.style.transition = 'none';
+          s1.style.transform = '';
+          requestAnimationFrame(() => { s1.style.transition = ''; });
+          cur = 1;
+          updateProg(1);
+        }, 800);
+      }));
+    }, 800);
 
   } else if (cur === 6 && n === 7) {
     const s6   = document.getElementById('s6');
@@ -1215,22 +1543,12 @@ function pickAvatar(el) {
 }
 
 // ─── Card theme swap ─────────────────────────────────────────
-const CARD_THEMES = {
-  '#b38aff': { bg: '#b38aff', src: n => `./components/Potworek-0${[6,5,4,3,2,1][n-1]}.svg` },
-  '#f3beaf': { bg: '#f0aa8c', src: n => `./components/Property%201=0${n}.svg` },
-  '#b8c0ed': { bg: '#36363f', src: n => `./components/card-ilu-0${n}.svg` },
-  '#58b880': { bg: '#219653', src: n => `./components/Potworek-2-0${n}.svg` },
-};
 function updateCardTheme() {
-  const avatarBg = localStorage.getItem('bp_avatar_bg') || '#b8c0ed';
-  const theme = CARD_THEMES[avatarBg] || CARD_THEMES['#b8c0ed'];
-  const isDefault = avatarBg === '#b8c0ed';
   document.querySelectorAll('.fc').forEach((card, i) => {
-    card.style.background = theme.bg;
-    card.style.setProperty('--fc-bg', theme.bg);
-    card.classList.toggle('fc--full', isDefault);
+    card.style.background = '#49aee1';
+    card.classList.add('fc--full');
     const img = card.querySelector('.fc-art img');
-    if (img) img.src = theme.src(i + 1);
+    if (img) img.src = `./components/card-ilu-0${i + 1}.svg`;
   });
 }
 
@@ -1318,6 +1636,18 @@ const dotEls = stopAngles.map(a => {
 
 let arcAngle = stopAngles[2];
 
+// scaleX values derived from Figma widths relative to neutral (1030px)
+const UNION_SCALES = [730/1030, 870/1030, 1, 1230/1030, 1430/1030];
+
+function updateUnion(a) {
+  const union = document.querySelector('#s4 .s4-union');
+  if (!union) return;
+  const t     = Math.max(0, Math.min(4, (ARC_A_MAX - a) / (ARC_A_MAX - ARC_A_MIN) * 4));
+  const i     = Math.min(Math.floor(t), 3);
+  const scale = UNION_SCALES[i] + (t - i) * (UNION_SCALES[i + 1] - UNION_SCALES[i]);
+  union.style.transform = `translateX(-50%) scaleX(${scale})`;
+}
+
 function arcMove(a) {
   a = Math.max(ARC_A_MIN, Math.min(ARC_A_MAX, a));
   arcAngle = a;
@@ -1331,6 +1661,7 @@ function arcMove(a) {
   document.getElementById('arcEmoji').textContent = MOOD_STOPS[near].e;
   document.getElementById('arcLabel').innerHTML   = MOOD_STOPS[near].t.replace('\n', '<br>');
   dotEls.forEach((c, i) => c.setAttribute('fill', (stopAngles[i] > arcAngle || i === near) ? 'transparent' : '#18181f'));
+  updateUnion(a);
 }
 
 function arcSnap(v, noAnim) {
@@ -1352,13 +1683,20 @@ function clientToAngle(e) {
   const r = arcSlider.getBoundingClientRect();
   return arcAng(t.clientX - r.left, t.clientY - r.top);
 }
+function getUnionEl() { return document.querySelector('#s4 .s4-union'); }
 function onStart(e) {
   dragging = true; arcSlider.classList.add('is-dragging');
   arcThumb.classList.remove('is-snapping');
+  const u = getUnionEl(); if (u) u.classList.add('no-transition');
   e.preventDefault(); arcMove(clientToAngle(e));
 }
 function onMove(e) { if (!dragging) return; e.preventDefault(); arcMove(clientToAngle(e)); }
-function onEnd()   { if (!dragging) return; dragging = false; arcSlider.classList.remove('is-dragging'); arcSnap(arcNearest(arcAngle)); }
+function onEnd() {
+  if (!dragging) return;
+  dragging = false; arcSlider.classList.remove('is-dragging');
+  const u = getUnionEl(); if (u) u.classList.remove('no-transition');
+  arcSnap(arcNearest(arcAngle));
+}
 
 document.getElementById('arcHit').addEventListener('mousedown', onStart);
 arcThumb.addEventListener('mousedown', onStart);

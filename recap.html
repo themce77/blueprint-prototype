@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint — Monthly Recap</title>
+<script>(function(){document.documentElement.style.setProperty('--s',Math.min(innerWidth/1194,innerHeight/834)*0.96);})()</script>
+<link rel="stylesheet" href="./foundations/tokens.css">
+<style>
+
+body { background: #0a0a0f; overflow: hidden; margin: 0; }
+.bp-stage { position: fixed; inset: 0; display: grid; place-items: center; }
+.bp-device {
+  width: 1194px; height: 834px; position: relative; overflow: hidden;
+  border-radius: 20px; transform-origin: center center;
+  transform: scale(var(--s,1)); background: #1f1f25;
+}
+
+/* ─── Status bar ────────────────────────────────────────────── */
+.sb {
+  position: absolute; top: 0; left: 0; right: 0; height: 24px; z-index: 30;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  font-family: -apple-system, sans-serif; font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.9); pointer-events: none;
+}
+
+/* ─── Progress bar ──────────────────────────────────────────── */
+.recap-progress {
+  position: absolute; top: 55px; left: 219px; width: 756px; height: 4px; z-index: 20;
+  display: none;
+}
+.recap-progress.visible { display: block; }
+.recap-progress-track {
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0.22); border-radius: 99px;
+}
+.recap-progress-fill {
+  position: absolute; top: 0; left: 0; height: 100%;
+  background: #f2f3e5; border-radius: 99px;
+  transition: width 400ms ease;
+}
+
+/* ─── Skip button ───────────────────────────────────────────── */
+.recap-skip {
+  position: absolute; top: 40px; right: 24px; z-index: 20;
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: rgba(245,245,245,0.75); letter-spacing: -0.1px; padding: 4px 8px;
+  transition: opacity 120ms;
+  display: none;
+}
+.recap-skip.visible { display: block; }
+.recap-skip:active { opacity: 0.6; }
+
+/* ─── Navigation (back + next) ──────────────────────────────── */
+.recap-nav {
+  position: absolute; bottom: 65px; left: 50%; transform: translateX(-50%);
+  align-items: center; gap: 12px; z-index: 20;
+  display: none;
+}
+.recap-nav.visible { display: flex; }
+.recap-back {
+  width: 48px; height: 48px; border-radius: 8px; flex-shrink: 0;
+  background: rgba(255,255,255,0.16); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 120ms;
+}
+.recap-back:active { opacity: 0.7; }
+.recap-next {
+  width: 200px; height: 48px; border-radius: 8px;
+  background: #f2f3e5; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #1f1f25; letter-spacing: -0.1px;
+  box-shadow: 0 1px 1px rgba(20,21,26,0.03);
+  transition: opacity 120ms;
+}
+.recap-next:active { opacity: 0.8; }
+
+/* ─── Slides ────────────────────────────────────────────────── */
+.slide {
+  position: absolute; inset: 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity 380ms ease;
+}
+.slide.active { opacity: 1; pointer-events: all; }
+
+/* ── SLIDE 1: Intro ─────────────────────────────────────────── */
+.slide-intro { background: #1f1f25; }
+.intro-bg {
+  position: absolute; inset: 0;
+}
+.intro-bg img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.intro-content {
+  position: absolute; inset: 0;
+}
+/* label + title grouped, bottom edge sits 116px above top of button (64+48+116=228) */
+.intro-group {
+  position: absolute; bottom: 228px; left: 0; right: 0;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.intro-month {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #737472; letter-spacing: -0.1px; line-height: 20px; margin: 0 0 24px;
+}
+.intro-title {
+  font-family: var(--font-display); font-size: 80px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0;
+}
+.intro-planet {
+  position: absolute; bottom: -250px; left: 50%; transform: translateX(-50%);
+  width: 500px; height: 500px; display: block;
+}
+.btn-start {
+  position: absolute; bottom: 64px; left: 50%; transform: translateX(-50%);
+  width: 270px; height: 48px; border-radius: 8px;
+  background: #f2f3e5; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #1f1f25; letter-spacing: -0.1px;
+  box-shadow: 0 1px 1px rgba(20,21,26,0.03);
+  transition: opacity 120ms;
+}
+.btn-start:active { opacity: 0.8; }
+
+/* ── SLIDE 2: Cloud / Quote ─────────────────────────────────── */
+.slide-cloud { background: #49aee1; }
+.cloud-img {
+  position: absolute; inset: 0;
+}
+.cloud-img img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.cloud-text {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 661px; text-align: center;
+  display: flex; flex-direction: column; gap: 24px;
+  align-items: center;
+}
+.cloud-label {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #a4a59f; letter-spacing: -0.1px; line-height: 20px; margin: 0;
+}
+.cloud-quote {
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0;
+}
+
+/* ── SLIDE 3: Emotions ──────────────────────────────────────── */
+.slide-emotions { background: #1f1f25; }
+.emo-content {
+  position: absolute; top: 111px; left: 0; right: 0;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.emo-bg {
+  position: absolute; bottom: -500px; left: 50%; transform: translateX(-50%);
+  width: 1000px; height: 1000px; display: block;
+  animation: spin 15000ms linear infinite;
+  transform-origin: center center;
+}
+@keyframes spin {
+  from { transform: translateX(-50%) rotate(0deg); }
+  to   { transform: translateX(-50%) rotate(360deg); }
+}
+.stat-label {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #a4a59f; letter-spacing: -0.1px; line-height: 20px; margin: 0 0 24px;
+}
+.stat-heading {
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0 0 24px;
+}
+.stat-sub {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #a4a59f; letter-spacing: -0.1px; line-height: 20px; margin: 0 0 48px;
+}
+.stat-pin {
+  position: absolute; width: 99px; height: 96px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center; gap: 6px;
+}
+.stat-num {
+  font-family: var(--font-display); font-size: 48px; line-height: 1.06;
+  letter-spacing: -0.8px; color: #f2f3e5; margin: 0;
+}
+.stat-num-desc {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #a4a59f; line-height: 20px; margin: 0; max-width: 110px;
+}
+
+/* ── SLIDE 4: Sleep & mood ──────────────────────────────────── */
+.slide-journey { background: #1f1f25; }
+.journey-bg {
+  position: absolute; bottom: -575px; left: 50%;
+  width: 1150px; height: 1150px; display: block; opacity: 0.9;
+  animation: rock-graph 2400ms linear infinite;
+}
+@keyframes rock-graph {
+  0%     { transform: translateX(-50%) rotate(0deg); }
+  33.33% { transform: translateX(-50%) rotate(0deg); animation-timing-function: cubic-bezier(0.62, 0, 0.3, 1); }
+  66.67% { transform: translateX(-50%) rotate(15deg); animation-timing-function: cubic-bezier(0.62, 0, 0.3, 1); }
+  100%   { transform: translateX(-50%) rotate(0deg); }
+}
+.journey-content {
+  position: absolute; top: 111px; left: 50%; transform: translateX(-50%);
+  width: 660px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.journey-heading {
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0 0 24px;
+}
+.journey-sub {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #a4a59f; letter-spacing: -0.1px; line-height: 20px; margin: 0;
+}
+
+/* ── SLIDE 5: You kept taking care ─────────────────────────── */
+.slide-care { background: #1f1f25; }
+.care-content {
+  position: absolute; top: 121px; left: 50%; transform: translateX(-50%);
+  width: 661px; text-align: center;
+  display: flex; flex-direction: column; gap: 24px; align-items: center;
+}
+.care-sub {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #a4a59f; letter-spacing: -0.1px; line-height: 20px; margin: 0;
+}
+.care-heading {
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0;
+}
+.care-cards {
+  position: absolute; top: 292px; left: 108px;
+  display: flex; gap: 12px;
+}
+.care-card {
+  width: 318px; height: 376px; border-radius: 16px; overflow: hidden;
+  position: relative; flex-shrink: 0;
+  background: #1f1f25; border: 1px solid #36363f; box-sizing: border-box;
+}
+.care-card-label {
+  position: absolute; top: 24px; left: 24px; right: 24px;
+  font-family: var(--font-body); font-size: 20px; font-weight: 500;
+  line-height: 1.1; letter-spacing: -0.4px; color: #f2f3e5;
+}
+.care-card-shape {
+  position: absolute; left: 118px; top: 150px; width: 300px; height: 300px;
+}
+.care-card-shape img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.care-card-num {
+  position: absolute; left: 268px; top: 264px;
+  transform: translateX(-50%);
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5;
+}
+
+/* ── SLIDE 6: Final ─────────────────────────────────────────── */
+.slide-final { background: #1f1f25; }
+.final-bg {
+  position: absolute; inset: 0;
+}
+.final-bg img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.final-content {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -55%);
+  width: 661px; text-align: center;
+  display: flex; flex-direction: column; gap: 24px; align-items: center;
+}
+.final-label {
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  color: #f2f3e5; letter-spacing: -0.1px; line-height: 20px; margin: 0;
+}
+.final-heading {
+  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  letter-spacing: 1.5px; color: #f2f3e5; margin: 0;
+}
+
+</style>
+</head>
+<body>
+
+<div class="bp-stage">
+<div class="bp-device" id="device">
+
+  <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
+
+  <!-- Progress bar -->
+  <div class="recap-progress" id="recapProgress">
+    <div class="recap-progress-track"></div>
+    <div class="recap-progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+
+  <!-- Skip -->
+  <button class="recap-skip" id="skipBtn" onclick="goToday()">Skip</button>
+
+  <!-- ── Slide 1: Intro ──────────────────────────────────────── -->
+  <div class="slide slide-intro active" id="slide-0">
+    <div class="intro-bg"><img src="./components/tlo-01.svg" alt=""></div>
+    <div class="intro-content">
+      <div class="intro-group">
+        <p class="intro-month">May 2026</p>
+        <h1 class="intro-title">Your Monthly<br>Recap</h1>
+      </div>
+      <button class="btn-start" onclick="goNext()">Start</button>
+    </div>
+  </div>
+
+  <!-- ── Slide 2: Cloud / Quote ─────────────────────────────── -->
+  <div class="slide slide-cloud" id="slide-1">
+    <div class="cloud-img"><img src="./components/tlo-02.svg" alt=""></div>
+    <div class="cloud-text">
+      <p class="cloud-label">You put that into words.</p>
+      <p class="cloud-quote" id="quoteText">"That was a great week"</p>
+    </div>
+  </div>
+
+  <!-- ── Slide 3: Emotion stats ─────────────────────────────── -->
+  <div class="slide slide-emotions" id="slide-2">
+    <div class="emo-content">
+      <h2 class="stat-heading">You named emotions<br>27 times</h2>
+      <p class="stat-sub">That takes courage.</p>
+    </div>
+    <img class="intro-planet" src="./components/planet.svg" alt="">
+    <img class="emo-bg" src="./components/good-emo.svg" alt="">
+  </div>
+
+  <!-- ── Slide 4: Sleep & mood ──────────────────────────────── -->
+  <div class="slide slide-journey" id="slide-3">
+    <div class="journey-content">
+      <h2 class="journey-heading">On the days you slept well, you felt happier.</h2>
+      <p class="journey-sub">Your body is talking — you're listening.</p>
+    </div>
+    <img class="journey-bg" src="./components/graph2.svg" alt="">
+    <div class="stat-pin" style="left:263px; top:662px">
+      <p class="stat-num">13</p>
+      <p class="stat-num-desc">Good sleep nights</p>
+    </div>
+    <div class="stat-pin" style="left:801px; top:590px">
+      <p class="stat-num">18</p>
+      <p class="stat-num-desc">Positive emotions</p>
+    </div>
+  </div>
+
+  <!-- ── Slide 5: You kept taking care ────────────────────────── -->
+  <div class="slide slide-care" id="slide-4">
+    <div class="care-content">
+      <p class="care-sub">You did a lot of good things for yourself</p>
+      <h2 class="care-heading">You kept taking care</h2>
+    </div>
+    <div class="care-cards">
+      <div class="care-card">
+        <span class="care-card-label">Journal notes written</span>
+        <div class="care-card-shape">
+          <img src="https://www.figma.com/api/mcp/asset/a3e29590-8010-41a4-8244-b40074bef60e" alt="">
+        </div>
+        <span class="care-card-num">5</span>
+      </div>
+      <div class="care-card">
+        <span class="care-card-label">Videos watched</span>
+        <div class="care-card-shape">
+          <img src="https://www.figma.com/api/mcp/asset/7fb1a29a-b945-47c6-842b-38c4e9c5519c" alt="">
+        </div>
+        <span class="care-card-num">10</span>
+      </div>
+      <div class="care-card">
+        <span class="care-card-label">Activities tried</span>
+        <div class="care-card-shape">
+          <img src="https://www.figma.com/api/mcp/asset/fb055d0a-c4d0-4cf1-b5ef-e21eaedef4a1" alt="">
+        </div>
+        <span class="care-card-num">12</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Slide 6: Final ─────────────────────────────────────── -->
+  <div class="slide slide-final" id="slide-5">
+    <div class="final-bg"><img src="./components/last-slide.svg" alt=""></div>
+    <div class="final-content">
+      <p class="final-label">You built this.</p>
+      <h2 class="final-heading">Every check‑in, every feeling you named.<br>Be proud of that.</h2>
+    </div>
+  </div>
+
+  <!-- Navigation (slides 2–4) -->
+  <div class="recap-nav" id="recapNav">
+    <button class="recap-back" onclick="goPrev()">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M12.5 15.833L6.667 10 12.5 4.167" stroke="#f2f3e5" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="recap-next" id="nextBtn" onclick="goNext()">Next</button>
+  </div>
+
+</div>
+</div>
+
+<script>
+function scale() {
+  const s = Math.min(innerWidth / 1194, innerHeight / 834) * 0.96;
+  document.getElementById('device').style.setProperty('--s', s);
+}
+scale(); addEventListener('resize', scale);
+
+const TOTAL = 6;
+let cur = 0;
+
+// Pull journal quote from localStorage
+const writeText = localStorage.getItem('bp_write_text');
+if (writeText && writeText.trim()) {
+  const firstSentence = writeText.trim().split(/[.!?]/)[0].trim();
+  if (firstSentence.length > 10) {
+    document.getElementById('quoteText').textContent = '“' + firstSentence + '”';
+  }
+}
+
+function updateUI() {
+  document.querySelectorAll('.slide').forEach((s, i) => s.classList.toggle('active', i === cur));
+
+  const isIntro = cur === 0;
+  const isFinal = cur === TOTAL - 1;
+
+  document.getElementById('recapProgress').classList.toggle('visible', !isIntro);
+  if (!isIntro) {
+    document.getElementById('progressFill').style.width = (cur / (TOTAL - 1) * 100) + '%';
+  }
+  document.getElementById('skipBtn').classList.toggle('visible', !isIntro && !isFinal);
+  document.getElementById('recapNav').classList.toggle('visible', !isIntro);
+  const nextBtn = document.getElementById('nextBtn');
+  if (isFinal) {
+    nextBtn.textContent = 'Back to Journey';
+    nextBtn.onclick = goToday;
+  } else {
+    nextBtn.textContent = 'Next';
+    nextBtn.onclick = goNext;
+  }
+}
+
+function goNext() { if (cur < TOTAL - 1) { cur++; updateUI(); } }
+function goPrev() { if (cur > 0) { cur--; updateUI(); } }
+function goToday() { window.location.href = 'journey.html'; }
+
+updateUI();
+</script>
+</body>
+</html>
