@@ -427,7 +427,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 .s4-content {
   position: absolute;
-  left: 50%; top: 128px;
+  left: 50%; top: 112px;
   transform: translateX(-50%);
   width: 660px; z-index: 5; text-align: center;
 }
@@ -440,7 +440,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   overflow: visible; outline: none;
   cursor: grab;
   -webkit-user-select: none; user-select: none;
-  margin: 52px auto 0;
+  margin: 48px auto 0;
 }
 .arc-slider.is-dragging { cursor: grabbing; }
 .arc-slider svg {
@@ -500,9 +500,17 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   width: 1090px; z-index: 5; text-align: center;
 }
 
+.s5-desc {
+  font-family: var(--font-body);
+  font-size: 20px; font-weight: 500;
+  line-height: 110%; letter-spacing: -0.4px;
+  color: rgba(242,243,229,0.6);
+  margin-top: 16px;
+}
+
 .fc-row {
   display: flex; gap: 12px;
-  margin-top: 80px;
+  margin-top: 112px;
   max-width: 1067px;
   margin-left: auto; margin-right: auto;
   overflow: hidden;
@@ -998,6 +1006,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   <div class="slide-group" id="s5-slide">
   <div class="s5-content">
     <p class="t-lg">What helps you<br>feel good?</p>
+    <p class="s5-desc">Pick up to 3</p>
 
     <div class="fc-row">
 
@@ -1147,23 +1156,31 @@ function updateProg(n) {
 
 // ─── S1 → S2 horizontal slide ────────────────────────────────
 function slideS1toS2() {
-  const s1   = document.getElementById('s1');
-  const s2   = document.getElementById('s2');
-  const ease = 'clip-path 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
+  const s1     = document.getElementById('s1');
+  const s2     = document.getElementById('s2');
+  const s1sl   = document.getElementById('s1-slide');
+  const s2sl   = document.getElementById('s2-slide');
+  const ease   = 'transform 800ms cubic-bezier(0.81, 0, 0.26, 0.98)';
 
+  // Pokaż s2 natychmiast, s2-slide zaczyna poza prawą krawędzią
   s2.style.transition = 'none';
-  s2.style.clipPath = 'inset(calc(100% - 1px) 0 0 0)';
   s2.classList.add('active');
+  s2sl.style.transition = 'none';
+  s2sl.style.transform = 'translateX(1194px)';
 
+  // Dwa rAF — żeby przeglądarka utrwaliła pozycję startową przed animacją
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    s2.style.transition = ease;
-    s2.style.clipPath = 'inset(0% 0 0 0)';
+    s1sl.style.transition = ease;
+    s2sl.style.transition = ease;
+    s1sl.style.transform = 'translateX(-1194px)';
+    s2sl.style.transform = 'translateX(0)';
 
     setTimeout(() => {
+      // Ukryj s1, zresetuj s1-slide na pozycję wyjściową
       s1.style.transition = 'none';
       s1.classList.remove('active');
-      s2.style.clipPath = '';
-      s2.style.transition = '';
+      s1sl.style.transition = 'none';
+      s1sl.style.transform = '';
       requestAnimationFrame(() => { s1.style.transition = ''; });
       cur = 2;
       updateProg(2);
