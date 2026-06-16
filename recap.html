@@ -458,16 +458,16 @@ function animateToSlide(fromIdx, toIdx) {
 
   // Place incoming slide below screen, make visible
   toEl.style.transition = 'none';
-  toEl.style.transform  = 'translateY(100%)';
+  toEl.style.transform  = 'translateX(100%)';
   toEl.style.opacity    = '1';
   toEl.offsetWidth; // force reflow
 
   // Animate: old exits up, new enters from bottom
   var t = 'transform ' + SLIDE_DUR + 'ms ' + SLIDE_BEZ;
   fromEl.style.transition = t;
-  fromEl.style.transform  = 'translateY(-100%)';
+  fromEl.style.transform  = 'translateX(-100%)';
   toEl.style.transition   = t;
-  toEl.style.transform    = 'translateY(0)';
+  toEl.style.transform    = 'translateX(0)';
 
   setTimeout(function() {
     cur = toIdx;
