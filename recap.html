@@ -402,12 +402,12 @@ scale(); addEventListener('resize', scale);
 const TOTAL = 6;
 let cur = 0;
 
-// Pull journal quote from localStorage
-const writeText = localStorage.getItem('bp_write_text');
-if (writeText && writeText.trim()) {
-  const firstSentence = writeText.trim().split(/[.!?]/)[0].trim();
-  if (firstSentence.length > 10) {
-    document.getElementById('quoteText').textContent = '“' + firstSentence + '”';
+// Pull wins note quote from localStorage
+var winsText = localStorage.getItem('bp_wins_note');
+if (winsText && winsText.trim()) {
+  var firstSentence = winsText.trim().split(/[.!?]/)[0].trim();
+  if (firstSentence.length > 0) {
+    document.getElementById('quoteText').textContent = '”' + firstSentence + '”';
   }
 }
 
