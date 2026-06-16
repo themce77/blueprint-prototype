@@ -478,13 +478,7 @@ function goPrev() {
   if (cur > 0) animateToSlide(cur, cur - 1);
 }
 function goToday() {
-  var inner = document.getElementById('recap-inner');
-  inner.style.animation = 'none';
-  inner.style.transform  = 'translateX(0)';
-  inner.offsetWidth;
-  inner.style.transition = 'transform ' + SLIDE_DUR + 'ms ' + SLIDE_BEZ;
-  inner.style.transform  = 'translateX(-100%)';
-  setTimeout(function() { window.location.href = 'journey.html?from=recap'; }, SLIDE_DUR);
+  window.location.href = 'journey.html?from=recap';
 }
 
 updateUI();
