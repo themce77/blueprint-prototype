@@ -355,12 +355,23 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .sp-divider { height: 1px; background: #36363f; margin: 4px 0; }
 
+/* ─── Entry from recap ──────────────────────────────────────── */
+#journey-inner { position: absolute; inset: 0; }
+#journey-inner.from-recap {
+  animation: journey-enter-right 1000ms cubic-bezier(0.81,0,0.26,0.98) both;
+}
+@keyframes journey-enter-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
 </style>
 </head>
 <body>
 
 <div class="bp-stage">
 <div class="bp-device" id="device">
+<div id="journey-inner">
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
@@ -690,6 +701,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 </div>
 </div>
+</div>
 
 <script>
 function scale() {
@@ -881,6 +893,10 @@ function openSupport() {
 function closeSupport() {
   document.getElementById('supportPanel').classList.remove('sp-open');
   document.getElementById('spBackdrop').classList.remove('sp-open');
+}
+
+if (location.search.includes('from=recap')) {
+  document.getElementById('journey-inner').classList.add('from-recap');
 }
 </script>
 </body>
