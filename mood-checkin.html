@@ -901,6 +901,34 @@ function goTo(id) {
   cur = id;
 }
 
+var _mcAnimating = false;
+var MC_DUR = 1000;
+var MC_BEZ = 'cubic-bezier(0.81,0,0.26,0.98)';
+
+function animateScreen(fromId, toId, dir) {
+  if (_mcAnimating) return;
+  _mcAnimating = true;
+  var fromEl = document.getElementById(fromId);
+  var toEl   = document.getElementById(toId);
+  toEl.style.transition = 'none';
+  toEl.style.opacity    = '1';
+  toEl.style.transform  = 'translateX(' + (dir * 100) + '%)';
+  toEl.offsetWidth;
+  var t = 'transform ' + MC_DUR + 'ms ' + MC_BEZ;
+  fromEl.style.transition = t;
+  fromEl.style.transform  = 'translateX(' + (dir * -100) + '%)';
+  toEl.style.transition   = t;
+  toEl.style.transform    = 'translateX(0)';
+  setTimeout(function() {
+    toEl.classList.add('active');
+    fromEl.classList.remove('active');
+    fromEl.style.cssText = '';
+    toEl.style.cssText   = '';
+    cur = toId;
+    _mcAnimating = false;
+  }, MC_DUR + 60);
+}
+
 // ─── Emotion picker ───────────────────────────────────────────
 const MAX = 3;
 const grid = document.getElementById('emGrid');
@@ -937,7 +965,7 @@ function startDetailFlow() {
   });
   // Build one why screen with all selected emotions as background
   device.appendChild(buildWhyScreen(selected));
-  goTo('ed-0');
+  animateScreen('s0', 'ed-0', 1);
 }
 
 // ─── Detail screen builder ────────────────────────────────────
@@ -1000,14 +1028,16 @@ function buildDetailScreen(key, idx, total) {
 }
 
 function edBack(idx) {
-  if (idx === 0) { goTo('s0'); } else { goTo(`ed-${idx - 1}`); }
+  var toId = idx === 0 ? 's0' : 'ed-' + (idx - 1);
+  animateScreen(cur, toId, -1);
 }
 function edNext(idx, total) {
-  if (idx < total - 1) { goTo(`ed-${idx + 1}`); } else { goTo('wh-0'); }
+  var toId = idx < total - 1 ? 'ed-' + (idx + 1) : 'wh-0';
+  animateScreen(cur, toId, 1);
 }
-function whyBack()  { goTo(`ed-${detailOrder.length - 1}`); }
-function whyNext()  { goTo('s-sleep'); }
-function goBackFromSleep() { goTo('wh-0'); }
+function whyBack()  { animateScreen(cur, 'ed-' + (detailOrder.length - 1), -1); }
+function whyNext()  { animateScreen(cur, 's-sleep', 1); }
+function goBackFromSleep() { animateScreen(cur, 'wh-0', -1); }
 
 // ─── Why screen builder ───────────────────────────────────────
 const WHY_BLOCKS = [
