@@ -477,7 +477,12 @@ function goNext() {
 function goPrev() {
   if (cur > 0) animateToSlide(cur, cur - 1);
 }
-function goToday() { window.location.href = 'journey.html'; }
+function goToday() {
+  var inner = document.getElementById('recap-inner');
+  inner.style.transition = 'transform ' + SLIDE_DUR + 'ms ' + SLIDE_BEZ;
+  inner.style.transform  = 'translateY(-100%)';
+  setTimeout(function() { window.location.href = 'journey.html'; }, SLIDE_DUR);
+}
 
 updateUI();
 </script>
