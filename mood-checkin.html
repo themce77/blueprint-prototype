@@ -922,8 +922,11 @@ function animateScreen(fromId, toId, dir) {
   setTimeout(function() {
     toEl.classList.add('active');
     fromEl.classList.remove('active');
-    fromEl.style.cssText = '';
-    toEl.style.cssText   = '';
+    fromEl.style.transition = '';
+    fromEl.style.transform  = '';
+    toEl.style.transition   = '';
+    toEl.style.transform    = '';
+    toEl.style.opacity      = '';
     cur = toId;
     _mcAnimating = false;
   }, MC_DUR + 60);
