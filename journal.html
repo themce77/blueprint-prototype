@@ -37,7 +37,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   z-index: 10;
 }
 .sidebar-logo {
-  font-family: var(--font-display); font-size: 16px; color: #8e8b85;
+  font-family: var(--font-display); font-weight: 400; font-size: 16px; color: #8e8b85;
   text-transform: uppercase; text-align: center; letter-spacing: 0.5px;
   height: 52px; display: flex; align-items: center; justify-content: center; width: 100%;
 }
@@ -76,7 +76,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   position: absolute;
   left: 152px;
   top: 72px;
-  font-family: var(--font-display); font-size: 64px; line-height: 1.06;
+  font-family: var(--font-display); font-weight: 400; font-size: 64px; line-height: 1.06;
   letter-spacing: 0; color: #f2f3e5; text-align: left;
   margin: 0; pointer-events: none;
 }
@@ -134,7 +134,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .write-cta-spark img { width: 16px; height: 16px; display: block; }
 .write-cta-label {
-  font-family: var(--font-display); font-size: 24px; line-height: 1.12;
+  font-family: var(--font-display); font-weight: 400; font-size: 24px; line-height: 1.12;
   color: #f2f3e5; letter-spacing: -0.4px; text-align: center;
 }
 
@@ -259,7 +259,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   padding: 52px 24px 20px; border-bottom: 1px solid #36363f; flex-shrink: 0;
 }
 .sp-title {
-  font-family: var(--font-display); font-size: 24px; line-height: 1.1;
+  font-family: var(--font-display); font-weight: 400; font-size: 24px; line-height: 1.1;
   letter-spacing: 0.5px; color: #f2f3e5; margin: 0;
 }
 .sp-close {
@@ -313,11 +313,11 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .wov-spark-pill {
   display: flex; align-items: center; gap: 8px;
   background: #2f2f37; border-radius: 99px; padding: 8px 12px;
-  font-family: var(--font-display); font-size: 20px; color: #f2f3e5;
+  font-family: var(--font-display); font-weight: 400; font-size: 20px; color: #f2f3e5;
   margin-bottom: 10px;
 }
 .wov-title {
-  font-family: var(--font-display); font-size: 32px; color: #f2f3e5;
+  font-family: var(--font-display); font-weight: 400; font-size: 32px; color: #f2f3e5;
   margin: 0 0 48px; line-height: 40px; text-align: center;
 }
 .wov-bubble {
@@ -366,10 +366,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   display: flex; align-items: center; gap: 8px; margin-bottom: 24px;
 }
 .wov-done-plus {
-  font-family: var(--font-display); font-size: 32px; color: #f2f3e5;
+  font-family: var(--font-display); font-weight: 400; font-size: 32px; color: #f2f3e5;
 }
 .wov-done-title {
-  font-family: var(--font-display); font-size: 80px; line-height: 1;
+  font-family: var(--font-display); font-weight: 400; font-size: 80px; line-height: 1;
   color: #f2f3e5; margin: 0;
 }
 
@@ -390,13 +390,13 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .qov-btn-secondary {
   width: 270px; height: 48px; border-radius: 8px;
-  background: rgba(0,0,0,0.08); color: #2e2e2e;
+  background: rgba(255,255,255,0.16); color: #ededed;
   font-family: var(--font-body); font-size: 16px; font-weight: 500;
   border: none; cursor: pointer;
 }
 .qov-btn-primary {
   width: 270px; height: 48px; border-radius: 8px;
-  background: #1f1f25; color: #f2f3e5;
+  background: #f2f3e5; color: #1f1f25;
   font-family: var(--font-body); font-size: 16px; font-weight: 500;
   border: none; cursor: pointer;
 }
@@ -404,6 +404,30 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 #questionOverlay .wov-bubble { margin-top: 48px; }
 /* reset margin so qov-done gap handles spacing */
 .qov-done .wov-done-row { margin-bottom: 0; }
+
+/* ─── Step 1: Question prompt screen ──────────────────────────── */
+#qovPrompt {
+  position: absolute; inset: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+}
+#qovPromptCircle {
+  position: absolute; width: 1026px; height: 1026px; border-radius: 50%;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  pointer-events: none; z-index: 0;
+}
+.qov-prompt-text {
+  font-family: var(--font-display); font-weight: 400; font-size: 48px;
+  line-height: 1.14; color: #f2f3e5; text-align: center;
+  width: 449px; position: relative; z-index: 1; margin: 0;
+}
+.qov-prompt-write {
+  position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+  width: 270px; height: 48px; border-radius: 8px;
+  background: #f2f3e5; color: #1f1f25;
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  border: none; cursor: pointer; z-index: 6;
+  display: flex; align-items: center; justify-content: center;
+}
 
 </style>
 </head>
@@ -506,10 +530,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <div class="col-right">
       <span class="section-label">Topics to write about</span>
       <div class="questions-list" id="questionsList">
-        <div class="question-circle question-circle-blue" id="qCircle1" onclick="var o=document.getElementById('questionOverlay');o.style.background='#3f50b8';o.style.display='block';document.getElementById('activeQNum').value='1';document.getElementById('qovTitle').textContent='What kinds of moments or things tend to lift your mood — even a little?';document.getElementById('qovBubble').style.background='#49aee1';var s='';try{s=sessionStorage.getItem('bp_journal_q1')||localStorage.getItem('bp_journal_q1')||'';}catch(e){}document.getElementById('qovInput').value=s;document.getElementById('qovSaveBtn').disabled=s.trim().length===0;if(s.trim().length>0){document.getElementById('qovDone').style.display='flex';document.getElementById('qovBody').style.display='none';document.getElementById('qovSaveWrap').style.display='none';}else{document.getElementById('qovDone').style.display='none';document.getElementById('qovBody').style.display='flex';document.getElementById('qovSaveWrap').style.display='block';document.getElementById('qovInput').focus();}">
+        <div class="question-circle question-circle-blue" id="qCircle1" onclick="openQOverlay(1)">
           <p class="question-text">What kinds of moments or things tend to lift your mood — even a little?</p>
         </div>
-        <div class="question-circle question-circle-coral" id="qCircle2" onclick="var o=document.getElementById('questionOverlay');o.style.background='#e65800';o.style.display='block';document.getElementById('activeQNum').value='2';document.getElementById('qovTitle').textContent='What\'s making you feel this excited?';document.getElementById('qovBubble').style.background='#f08b31';var s='';try{s=sessionStorage.getItem('bp_journal_q2')||localStorage.getItem('bp_journal_q2')||'';}catch(e){}document.getElementById('qovInput').value=s;document.getElementById('qovSaveBtn').disabled=s.trim().length===0;if(s.trim().length>0){document.getElementById('qovDone').style.display='flex';document.getElementById('qovBody').style.display='none';document.getElementById('qovSaveWrap').style.display='none';}else{document.getElementById('qovDone').style.display='none';document.getElementById('qovBody').style.display='flex';document.getElementById('qovSaveWrap').style.display='block';document.getElementById('qovInput').focus();}">
+        <div class="question-circle question-circle-coral" id="qCircle2" onclick="openQOverlay(2)">
           <p class="question-text">What's making you feel this excited?</p>
         </div>
       </div>
@@ -581,22 +605,30 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
   <!-- ── Question overlay ─────────────────────────────────────── -->
   <div class="write-overlay" id="questionOverlay">
-    <div class="write-overlay-bg"></div>
     <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
     <input type="hidden" id="activeQNum" value="">
 
-    <button class="wov-back" onclick="document.getElementById('questionOverlay').style.display='none';">
+    <button class="wov-back" onclick="qovBack()">
       <svg viewBox="0 0 20 20" fill="none" width="20" height="20">
         <path d="M12 5L7 10L12 15" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
 
-    <div class="wov-body" id="qovBody">
+    <!-- Step 1: Prompt screen — question on big circle, Write button -->
+    <div id="qovPrompt" style="display:none">
+      <div id="qovPromptCircle"></div>
+      <p class="qov-prompt-text" id="qovPromptText"></p>
+      <button class="qov-prompt-write" onclick="showQovWrite()">Write</button>
+    </div>
+
+    <!-- Step 2+3 dark circle bg (shown in write + done steps) -->
+    <div class="write-overlay-bg" id="qovBg" style="display:none"></div>
+
+    <!-- Step 2: Write body -->
+    <div class="wov-body" id="qovBody" style="display:none">
       <div class="wov-spark-pill">
         1 <img src="./components/spark.svg" alt="spark" style="width:20px;height:20px;display:block;">
       </div>
-
-      <!-- Question displayed as message bubble -->
       <div class="wov-bubble" id="qovBubble">
         <div class="wov-avatar">
           <div style="position:relative;width:40px;height:40px;">
@@ -609,19 +641,18 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         </div>
         <p class="wov-bubble-text" id="qovTitle"></p>
       </div>
-
       <div class="wov-textarea-wrap">
         <textarea class="wov-textarea" id="qovInput" placeholder="Start writing here"
-          oninput="var b=document.getElementById('qovSaveBtn');b.disabled=this.value.trim().length===0;"></textarea>
+          oninput="document.getElementById('qovSaveBtn').disabled=this.value.trim().length===0;"></textarea>
       </div>
     </div>
 
-    <div class="wov-save-wrap" id="qovSaveWrap">
+    <div class="wov-save-wrap" id="qovSaveWrap" style="display:none">
       <button class="wov-save" id="qovSaveBtn" disabled onclick="saveQAnswer()">Save</button>
     </div>
 
-    <!-- Completion screen — transparent, shows overlay bg through -->
-    <div class="qov-done" id="qovDone">
+    <!-- Step 3: Done screen — transparent, overlay bg shows through -->
+    <div class="qov-done" id="qovDone" style="display:none">
       <div class="wov-done-row">
         <span class="wov-done-plus">+1</span>
         <img src="./components/spark.svg" alt="spark" style="width:28px;height:28px;display:block;">
@@ -640,8 +671,8 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <p class="wov-bubble-text">Did writing this help you understand your feelings more?</p>
       </div>
       <div class="qov-btn-row">
-        <button class="qov-btn-secondary" onclick="document.getElementById('questionOverlay').style.display='none';">Not really</button>
-        <button class="qov-btn-primary" onclick="document.getElementById('questionOverlay').style.display='none';">Yes, a bit!</button>
+        <button class="qov-btn-secondary" onclick="closeQOverlay()">Not really</button>
+        <button class="qov-btn-primary" onclick="closeQOverlay()">Yes, a bit!</button>
       </div>
     </div>
   </div>
@@ -721,30 +752,30 @@ scale();
 // demo=1: empty, demo=2: write-it-out note, demo=3: question + write-it-out
 function renderJournal() {
   var QUESTIONS = [
-    { key: ‘bp_journal_q1’, text: ‘What kinds of moments or things tend to lift your mood — even a little?’, qnum: ‘1’ },
-    { key: ‘bp_journal_q2’, text: "What’s making you feel this excited?", qnum: ‘2’ }
+    { key: 'bp_journal_q1', text: 'What kinds of moments or things tend to lift your mood — even a little?', qnum: '1' },
+    { key: 'bp_journal_q2', text: "What's making you feel this excited?", qnum: '2' }
   ];
-  var WRITE_TEXT = ‘Today my mood was okay. I felt a bit low on energy and not very motivated at times, but nothing too overwhelming. There were small moments when I felt calm and a bit more present, which helped. Overall, it was a pretty average day — not bad, just a bit slow.’;
+  var WRITE_TEXT = 'Today my mood was okay. I felt a bit low on energy and not very motivated at times, but nothing too overwhelming. There were small moments when I felt calm and a bit more present, which helped. Overall, it was a pretty average day — not bad, just a bit slow.';
 
-  var demo = new URLSearchParams(location.search).get(‘demo’);
+  var demo = new URLSearchParams(location.search).get('demo');
 
   var writeText, qAnswers;
 
-  if (demo === ‘1’) {
+  if (demo === '1') {
     writeText = null; qAnswers = [null, null];
-  } else if (demo === ‘2’) {
+  } else if (demo === '2') {
     writeText = WRITE_TEXT; qAnswers = [null, null];
-  } else if (demo === ‘3’) {
-    writeText = WRITE_TEXT; qAnswers = [null, ‘Weekend trip.’];
+  } else if (demo === '3') {
+    writeText = WRITE_TEXT; qAnswers = [null, 'Weekend trip.'];
   } else {
     // Show note only if arriving fresh from write-it-out (URL param) or same session
-    var urlNote = new URLSearchParams(location.search).get(‘wt’);
+    var urlNote = new URLSearchParams(location.search).get('wt');
     if (urlNote) {
-      try { sessionStorage.setItem(‘bp_write_text’, urlNote); } catch(e) {}
+      try { sessionStorage.setItem('bp_write_text', urlNote); } catch(e) {}
       writeText = urlNote;
     } else {
-      try { writeText = sessionStorage.getItem(‘bp_write_text’) || null; } catch(e) {}
-      if (!writeText) { try { writeText = localStorage.getItem(‘bp_write_text’) || null; } catch(e) {} }
+      try { writeText = sessionStorage.getItem('bp_write_text') || null; } catch(e) {}
+      if (!writeText) { try { writeText = localStorage.getItem('bp_write_text') || null; } catch(e) {} }
     }
     qAnswers = QUESTIONS.map(function(q) {
       try { return localStorage.getItem(q.key); } catch(e) { return null; }
@@ -756,39 +787,39 @@ function renderJournal() {
   var hasAnyNote = hasQCards || hasWrite;
 
   // CTA card (state 1)
-  document.getElementById(‘writeCta’).style.display = hasAnyNote ? ‘none’ : ‘block’;
+  document.getElementById('writeCta').style.display = hasAnyNote ? 'none' : 'block';
 
   // Write-it-out note card (state 2 + 3)
-  var noteCard = document.getElementById(‘noteCard’);
-  noteCard.style.display = hasWrite ? ‘flex’ : ‘none’;
-  if (hasWrite) document.getElementById(‘noteText’).textContent = writeText;
+  var noteCard = document.getElementById('noteCard');
+  noteCard.style.display = hasWrite ? 'flex' : 'none';
+  if (hasWrite) document.getElementById('noteText').textContent = writeText;
 
   // Question answer cards (state 3)
-  var container = document.getElementById(‘qAnswerCards’);
-  container.innerHTML = ‘’;
+  var container = document.getElementById('qAnswerCards');
+  container.innerHTML = '';
   for (var j = 0; j < QUESTIONS.length; j++) {
     var q = QUESTIONS[j];
     var answer = qAnswers[j];
     if (!answer) continue;
-    var card = document.createElement(‘div’);
-    card.className = ‘note-card-today’;
-    card.setAttribute(‘data-qnum’, q.qnum);
+    var card = document.createElement('div');
+    card.className = 'note-card-today';
+    card.setAttribute('data-qnum', q.qnum);
     card.innerHTML =
-      ‘<div class="note-card-header">’ +
-        ‘<span class="note-card-date">Today</span>’ +
-        ‘<button class="note-card-edit" onclick="openQOverlay(‘ + q.qnum + ‘)">Edit</button>’ +
-      ‘</div>’ +
-      ‘<div class="note-card-body">’ +
-        ‘<p class="note-question">’ + q.text + ‘</p>’ +
-        ‘<p class="note-answer">’ + answer + ‘</p>’ +
-      ‘</div>’;
+      '<div class="note-card-header">' +
+        '<span class="note-card-date">Today</span>' +
+        '<button class="note-card-edit" onclick="openQOverlay(' + q.qnum + ')">Edit</button>' +
+      '</div>' +
+      '<div class="note-card-body">' +
+        '<p class="note-question">' + q.text + '</p>' +
+        '<p class="note-answer">' + answer + '</p>' +
+      '</div>';
     container.appendChild(card);
   }
-  container.style.display = hasQCards ? ‘flex’ : ‘none’;
+  container.style.display = hasQCards ? 'flex' : 'none';
 
   // Past notes counts from bp_journal_notes array
   (function() {
-    var notes = JSON.parse(localStorage.getItem(‘bp_journal_notes’) || ‘[]’);
+    var notes = JSON.parse(localStorage.getItem('bp_journal_notes') || '[]');
     if (notes.length > 0) {
       var now = new Date();
       var monthCount = notes.filter(function(n) {
@@ -796,25 +827,25 @@ function renderJournal() {
         return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
       }).length;
       var allCount = notes.length;
-      var monthEl = document.getElementById(‘pastNotesMonth’);
-      var allEl   = document.getElementById(‘pastNotesAll’);
-      if (monthEl) monthEl.textContent = monthCount + (monthCount === 1 ? ‘ entry this month’ : ‘ entries this month’);
-      if (allEl)   allEl.textContent   = allCount   + (allCount   === 1 ? ‘ entry total’      : ‘ entries total’);
+      var monthEl = document.getElementById('pastNotesMonth');
+      var allEl   = document.getElementById('pastNotesAll');
+      if (monthEl) monthEl.textContent = monthCount + (monthCount === 1 ? ' entry this month' : ' entries this month');
+      if (allEl)   allEl.textContent   = allCount   + (allCount   === 1 ? ' entry total'      : ' entries total');
     }
   })();
 
   // Dim answered question circles
-  var list = document.getElementById(‘questionsList’);
-  var circles = list.querySelectorAll(‘.question-circle’);
+  var list = document.getElementById('questionsList');
+  var circles = list.querySelectorAll('.question-circle');
   for (var i = 0; i < circles.length; i++) {
     var el = circles[i];
     var answered = qAnswers[i] !== null && qAnswers[i] !== undefined;
-    el.style.opacity = answered ? ‘0.2’ : ‘1’;
+    el.style.opacity = answered ? '0.2' : '1';
   }
 }
 
-document.addEventListener(‘DOMContentLoaded’, renderJournal);
-window.addEventListener(‘pageshow’, function(e) { if (e.persisted) renderJournal(); });
+document.addEventListener('DOMContentLoaded', renderJournal);
+window.addEventListener('pageshow', function(e) { if (e.persisted) renderJournal(); });
 
 // Load avatar
 (function(){
@@ -874,69 +905,117 @@ var Q_DATA = [
   { key: 'bp_journal_q1', text: 'What kinds of moments or things tend to lift your mood — even a little?', color: '#3f50b8', bubbleColor: '#49aee1' },
   { key: 'bp_journal_q2', text: "What's making you feel this excited?", color: '#e65800', bubbleColor: '#f08b31' }
 ];
+var _qovStep = 'prompt'; // 'prompt' | 'write' | 'done'
 
 function openQOverlay(qnum) {
+  try {
   var q = Q_DATA[qnum - 1];
   var overlay = document.getElementById('questionOverlay');
-  overlay.style.background = q.color;
-  overlay.style.display = 'block';
+
   document.getElementById('activeQNum').value = String(qnum);
   document.getElementById('qovTitle').textContent = q.text;
   document.getElementById('qovBubble').style.background = q.bubbleColor;
+  document.getElementById('qovPromptText').textContent = q.text;
+  document.getElementById('qovPromptCircle').style.background = q.color;
+
   var saved = '';
   try { saved = sessionStorage.getItem(q.key) || localStorage.getItem(q.key) || ''; } catch(e) {}
-  var input = document.getElementById('qovInput');
-  input.value = saved;
-  document.getElementById('qovSaveBtn').disabled = saved.trim().length === 0;
-  document.getElementById('qovDone').style.display = 'none';
+
+  if (saved.trim()) {
+    // Already answered — open write step for editing
+    overlay.style.background = q.color;
+    overlay.style.display = 'block';
+    document.getElementById('qovPrompt').style.display = 'none';
+    document.getElementById('qovBg').style.display = 'block';
+    document.getElementById('qovInput').value = saved;
+    document.getElementById('qovSaveBtn').disabled = false;
+    document.getElementById('qovBody').style.display = 'flex';
+    document.getElementById('qovSaveWrap').style.display = 'block';
+    document.getElementById('qovDone').style.display = 'none';
+    document.getElementById('qovInput').focus();
+    _qovStep = 'write';
+  } else {
+    // Fresh — show prompt step first
+    overlay.style.background = '#1f1f25';
+    overlay.style.display = 'block';
+    document.getElementById('qovPrompt').style.display = 'flex';
+    document.getElementById('qovBg').style.display = 'none';
+    document.getElementById('qovBody').style.display = 'none';
+    document.getElementById('qovSaveWrap').style.display = 'none';
+    document.getElementById('qovDone').style.display = 'none';
+    _qovStep = 'prompt';
+  }
+  } catch(e) { alert('openQOverlay error: ' + e); }
+}
+
+function showQovWrite() {
+  var qnum = document.getElementById('activeQNum').value;
+  var q = Q_DATA[qnum - 1];
+  var overlay = document.getElementById('questionOverlay');
+
+  overlay.style.background = q.color;
+  document.getElementById('qovPrompt').style.display = 'none';
+  document.getElementById('qovBg').style.display = 'block';
+  document.getElementById('qovInput').value = '';
+  document.getElementById('qovSaveBtn').disabled = true;
   document.getElementById('qovBody').style.display = 'flex';
   document.getElementById('qovSaveWrap').style.display = 'block';
-  input.focus();
+  document.getElementById('qovDone').style.display = 'none';
+  document.getElementById('qovInput').focus();
+  _qovStep = 'write';
+}
+
+function qovBack() {
+  if (_qovStep === 'write') {
+    // Back to prompt step
+    var qnum = document.getElementById('activeQNum').value;
+    var q = Q_DATA[qnum - 1];
+    document.getElementById('questionOverlay').style.background = '#1f1f25';
+    document.getElementById('qovPrompt').style.display = 'flex';
+    document.getElementById('qovBg').style.display = 'none';
+    document.getElementById('qovBody').style.display = 'none';
+    document.getElementById('qovSaveWrap').style.display = 'none';
+    document.getElementById('qovDone').style.display = 'none';
+    _qovStep = 'prompt';
+  } else {
+    closeQOverlay();
+  }
+}
+
+function closeQOverlay() {
+  document.getElementById('questionOverlay').style.display = 'none';
 }
 
 function saveQAnswer() {
-  var val   = document.getElementById('qovInput').value.trim();
+  var val  = document.getElementById('qovInput').value.trim();
   if (!val) return;
-  var qnum  = document.getElementById('activeQNum').value;
-  var qtext = document.getElementById('qovTitle').textContent;
-  var key   = 'bp_journal_q' + qnum;
-  var color = document.getElementById('questionOverlay').style.background;
-  var bubbleColor = document.getElementById('qovBubble').style.background;
+  var qnum = document.getElementById('activeQNum').value;
+  var q    = Q_DATA[qnum - 1];
+  var key  = 'bp_journal_q' + qnum;
 
   try { sessionStorage.setItem(key, val); } catch(e) {}
   try { localStorage.setItem(key, val); } catch(e) {}
 
-  // Show completion screen — user dismisses via button
-  document.getElementById('qovDone').style.display = 'flex';
+  // Show done step
   document.getElementById('qovBody').style.display = 'none';
   document.getElementById('qovSaveWrap').style.display = 'none';
+  document.getElementById('qovDone').style.display = 'flex';
+  _qovStep = 'done';
 
-  // Add answer card to journal immediately (overlay covers it)
+  // Update answer card in background
   var container = document.getElementById('qAnswerCards');
   var existing  = container.querySelector('[data-qnum="' + qnum + '"]');
   if (existing) existing.remove();
-
   var card = document.createElement('div');
   card.className = 'note-card-today';
   card.setAttribute('data-qnum', qnum);
-  var editOnclick = "var o=document.getElementById('questionOverlay');o.style.background='" + color + "';o.style.display='block';" +
-    "document.getElementById('activeQNum').value='" + qnum + "';" +
-    "document.getElementById('qovTitle').textContent=" + JSON.stringify(qtext) + ";" +
-    "document.getElementById('qovBubble').style.background='" + bubbleColor + "';" +
-    "var s='';try{s=sessionStorage.getItem('" + key + "')||localStorage.getItem('" + key + "')||'';}catch(e){}" +
-    "document.getElementById('qovInput').value=s;" +
-    "document.getElementById('qovSaveBtn').disabled=s.trim().length===0;" +
-    "document.getElementById('qovDone').style.display='none';" +
-    "document.getElementById('qovBody').style.display='flex';" +
-    "document.getElementById('qovSaveWrap').style.display='block';" +
-    "document.getElementById('qovInput').focus();";
   card.innerHTML =
     '<div class="note-card-header">' +
       '<span class="note-card-date">Today</span>' +
-      '<button class="note-card-edit" onclick="' + editOnclick.replace(/"/g, '&quot;') + '">Edit</button>' +
+      '<button class="note-card-edit" onclick="openQOverlay(' + qnum + ')">Edit</button>' +
     '</div>' +
     '<div class="note-card-body">' +
-      '<p class="note-question">' + qtext + '</p>' +
+      '<p class="note-question">' + q.text + '</p>' +
       '<p class="note-answer">' + val + '</p>' +
     '</div>';
   container.appendChild(card);
