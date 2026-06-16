@@ -504,7 +504,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .fc-row {
   display: flex; gap: 12px;
   margin-top: 132px;
-  max-width: 1190px;
+  max-width: 1067px;
   margin-left: auto; margin-right: auto;
   overflow: hidden;
 }
@@ -558,57 +558,6 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .fc-check img { width: 100%; height: 100%; display: block; }
 .fc.sel .fc-check { display: block; }
-
-/* ── S5 Add other card ── */
-.fc-add {
-  flex: 0 0 140px; height: 211px;
-  border: 2px dashed rgba(242,243,229,0.25); border-radius: 28px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-  cursor: pointer; transition: border-color 160ms, background 160ms;
-}
-.fc-add:hover { border-color: rgba(242,243,229,0.5); background: rgba(242,243,229,0.05); }
-.fc-add__plus { font-size: 30px; color: rgba(242,243,229,0.4); line-height: 1; }
-.fc-add__label { font-family: var(--font-body); font-size: 14px; font-weight: 500; color: rgba(242,243,229,0.4); }
-.fc-add--input {
-  flex-basis: 260px; cursor: default;
-  background: #2f2f37; border-style: solid; border-color: rgba(242,243,229,0.3);
-  padding: 20px 16px; gap: 12px; justify-content: center;
-}
-.fc-add--input:hover { border-color: rgba(242,243,229,0.3); background: #2f2f37; }
-.fc-add-field {
-  width: 100%; background: rgba(255,255,255,0.08); border: none; outline: none;
-  border-radius: 8px; padding: 10px 12px;
-  color: #f2f3e5; font-family: var(--font-body); font-size: 14px; font-weight: 500;
-}
-.fc-add-field::placeholder { color: rgba(242,243,229,0.4); }
-.fc-add-actions { display: flex; gap: 8px; width: 100%; }
-.fc-add-confirm {
-  flex: 1; height: 40px; background: #f2f3e5; color: #1f1f25;
-  font-family: var(--font-body); font-size: 14px; font-weight: 600;
-  border: none; border-radius: 8px; cursor: pointer; transition: opacity 120ms;
-}
-.fc-add-confirm:active { opacity: 0.8; }
-.fc-add-cancel {
-  width: 40px; height: 40px; background: rgba(255,255,255,0.08); color: rgba(242,243,229,0.6);
-  border: none; border-radius: 8px; cursor: pointer; font-size: 16px;
-}
-/* ── Custom fc card (user-added) ── */
-.fc-custom {
-  flex: 0 0 140px; height: 211px;
-  background: #2f2f37; border-radius: 28px;
-  position: relative; cursor: pointer; overflow: hidden;
-}
-.fc-custom::after {
-  content: ''; position: absolute; inset: 0;
-  border: 13px solid rgba(92,92,101,0.5); border-radius: 28px;
-  pointer-events: none; z-index: 3; transition: border-color 200ms;
-}
-.fc-custom.sel::after { border-color: #f2f3e5; }
-.fc-custom .fc-bar { width: calc(100% - 20px); white-space: normal; }
-.fc-custom.sel .fc-bar { background: #f2f3e5; color: #1f1f25; }
-.fc-custom .fc-check { display: none; }
-.fc-custom.sel .fc-check { display: block; }
-
 
 /* ══════════════════════════════════════════════════════════════
    S6 — Trusted person
@@ -1088,10 +1037,6 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
         <div class="fc-check"><img src="./components/checkbox.svg" alt=""></div>
       </div>
 
-      <div class="fc-add" id="fcAddCard" onclick="fcAddOther()">
-        <span class="fc-add__plus">+</span>
-        <span class="fc-add__label">Add other</span>
-      </div>
 
     </div>
   </div>
@@ -1610,46 +1555,6 @@ function updateCardTheme() {
 
 // ─── Feel-good card toggle ───────────────────────────────────
 function toggleFc(el) { el.classList.toggle('sel'); }
-
-function fcAddOther() {
-  const card = document.getElementById('fcAddCard');
-  card.onclick = null;
-  card.className = 'fc-add fc-add--input';
-  card.innerHTML = `
-    <input class="fc-add-field" id="fcAddField" type="text" placeholder="Add your own…" maxlength="30" autocomplete="off">
-    <div class="fc-add-actions">
-      <button class="fc-add-confirm" onclick="event.stopPropagation();fcConfirmAdd()">Add</button>
-      <button class="fc-add-cancel" onclick="event.stopPropagation();fcCancelAdd()">✕</button>
-    </div>`;
-  const field = document.getElementById('fcAddField');
-  field.focus();
-  field.addEventListener('keydown', e => {
-    if (e.key === 'Enter') fcConfirmAdd();
-    if (e.key === 'Escape') fcCancelAdd();
-  });
-}
-
-function fcConfirmAdd() {
-  const field = document.getElementById('fcAddField');
-  const val = field ? field.value.trim() : '';
-  if (!val) { fcCancelAdd(); return; }
-  const card = document.getElementById('fcAddCard');
-  const custom = document.createElement('div');
-  custom.className = 'fc-custom sel';
-  custom.onclick = function() { toggleFc(this); };
-  custom.innerHTML = `
-    <div class="fc-bar">${val}</div>
-    <div class="fc-check"><img src="./components/checkbox.svg" alt=""></div>`;
-  card.parentElement.insertBefore(custom, card);
-  fcCancelAdd();
-}
-
-function fcCancelAdd() {
-  const card = document.getElementById('fcAddCard');
-  card.className = 'fc-add';
-  card.innerHTML = `<span class="fc-add__plus">+</span><span class="fc-add__label">Add other</span>`;
-  card.onclick = function() { fcAddOther(); };
-}
 
 
 // ─── Person toggle ───────────────────────────────────────────
