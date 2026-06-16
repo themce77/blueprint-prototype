@@ -253,6 +253,16 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   letter-spacing: 1.5px; color: #f2f3e5;
 }
 
+/* ─── Entry animation ──────────────────────────────────────── */
+#recap-inner {
+  position: absolute; inset: 0;
+  animation: recap-slide-in 800ms cubic-bezier(0.81, 0, 0.26, 0.98) both;
+}
+@keyframes recap-slide-in {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
 /* ── SLIDE 6: Final ─────────────────────────────────────────── */
 .slide-final { background: #1f1f25; }
 .final-bg {
@@ -280,6 +290,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 <div class="bp-stage">
 <div class="bp-device" id="device">
+<div id="recap-inner">
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
@@ -390,6 +401,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <button class="recap-next" id="nextBtn" onclick="goNext()">Next</button>
   </div>
 
+</div>
 </div>
 </div>
 
