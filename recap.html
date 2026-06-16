@@ -245,7 +245,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 /* ─── Entry animation ──────────────────────────────────────── */
 #recap-inner {
-  position: absolute; inset: 0;
+  position: absolute; inset: 0; z-index: 1;
   animation: recap-slide-in 800ms cubic-bezier(0.81, 0, 0.26, 0.98) both;
 }
 @keyframes recap-slide-in {
@@ -280,6 +280,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 
 <div class="bp-stage">
 <div class="bp-device" id="device">
+  <iframe src="journey.html" style="position:absolute;inset:0;width:100%;height:100%;border:none;z-index:0;pointer-events:none;"></iframe>
 <div id="recap-inner">
 
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
@@ -479,8 +480,12 @@ function goPrev() {
 }
 function goToday() {
   var inner = document.getElementById('recap-inner');
+  // Cancel CSS keyframe (its fill-forward would block the JS transition)
+  inner.style.animation = 'none';
+  inner.style.transform = 'translateY(0)';
+  inner.offsetWidth; // force reflow to register start state
   inner.style.transition = 'transform ' + SLIDE_DUR + 'ms ' + SLIDE_BEZ;
-  inner.style.transform  = 'translateY(-100%)';
+  inner.style.transform = 'translateY(-100%)';
   setTimeout(function() { window.location.href = 'journey.html'; }, SLIDE_DUR);
 }
 
