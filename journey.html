@@ -794,33 +794,7 @@ var WRAP_BEZ = 'cubic-bezier(0.73,-0.01,0.2,0.98)';
 var WRAP_DUR = 800;
 
 function openWrap() {
-  _slide = 0;
-  _wrapAnimating = false;
-  buildProgress();
-
-  // Reset all slides to initial state
-  for (var i = 0; i < SLIDE_COUNT; i++) {
-    var s = document.getElementById('ws-' + i);
-    s.classList.toggle('ws-active', i === 0);
-    var c = s.querySelector('.ws-content');
-    if (c) { c.style.transition = 'none'; c.style.transform = ''; }
-  }
-
-  var overlay = document.getElementById('wrap-overlay');
-  // Start: 1px tall, pinned to bottom, clipping content, invisible
-  overlay.style.cssText = 'display:block; position:absolute; left:0; right:0; bottom:0; top:auto; height:1px; opacity:0; overflow:hidden; z-index:25;';
-
-  // Force reflow so transition fires
-  overlay.offsetHeight;
-
-  overlay.style.transition = 'height 800ms cubic-bezier(0.81,0,0.26,0.98), opacity 800ms cubic-bezier(0.81,0,0.26,0.98)';
-  overlay.style.height = '834px';
-  overlay.style.opacity = '1';
-
-  // After animation: clear inline styles, class takes over (position:absolute; inset:0)
-  setTimeout(function() {
-    overlay.style.cssText = 'display:block;';
-  }, 860);
+  window.location.href = 'recap.html';
 }
 
 function buildProgress() {
@@ -896,7 +870,7 @@ function prevSlide(e) {
 
 function closeWrap(e) {
   if (e) e.stopPropagation();
-  document.getElementById('wrap-overlay').style.cssText = 'display:none;';
+  document.getElementById('wrap-overlay').style.display = 'none';
   _wrapAnimating = false;
 }
 
