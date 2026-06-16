@@ -81,7 +81,6 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .slide {
   position: absolute; inset: 0;
   opacity: 0; pointer-events: none;
-  transition: opacity 380ms ease;
 }
 .slide.active { opacity: 1; pointer-events: all; }
 
@@ -446,8 +445,45 @@ function updateUI() {
   }
 }
 
-function goNext() { if (cur < TOTAL - 1) { cur++; updateUI(); } }
-function goPrev() { if (cur > 0) { cur--; updateUI(); } }
+var _recapAnimating = false;
+var SLIDE_DUR = 600;
+var SLIDE_BEZ = 'cubic-bezier(0.81,0,0.26,0.98)';
+
+function animateToSlide(fromIdx, toIdx) {
+  if (_recapAnimating) return;
+  _recapAnimating = true;
+
+  var fromEl = document.getElementById('slide-' + fromIdx);
+  var toEl   = document.getElementById('slide-' + toIdx);
+
+  // Place incoming slide below screen, make visible
+  toEl.style.transition = 'none';
+  toEl.style.transform  = 'translateY(100%)';
+  toEl.style.opacity    = '1';
+  toEl.offsetWidth; // force reflow
+
+  // Animate: old exits up, new enters from bottom
+  var t = 'transform ' + SLIDE_DUR + 'ms ' + SLIDE_BEZ;
+  fromEl.style.transition = t;
+  fromEl.style.transform  = 'translateY(-100%)';
+  toEl.style.transition   = t;
+  toEl.style.transform    = 'translateY(0)';
+
+  setTimeout(function() {
+    cur = toIdx;
+    updateUI();           // corrects .active classes
+    fromEl.style.cssText = '';
+    toEl.style.cssText   = '';
+    _recapAnimating = false;
+  }, SLIDE_DUR + 60);
+}
+
+function goNext() {
+  if (cur < TOTAL - 1) animateToSlide(cur, cur + 1);
+}
+function goPrev() {
+  if (cur > 0) animateToSlide(cur, cur - 1);
+}
 function goToday() { window.location.href = 'journey.html'; }
 
 updateUI();
