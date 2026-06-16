@@ -42,17 +42,6 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
   transition: width 400ms ease;
 }
 
-/* ─── Skip button ───────────────────────────────────────────── */
-.recap-skip {
-  position: absolute; top: 40px; right: 24px; z-index: 20;
-  background: none; border: none; cursor: pointer;
-  font-family: var(--font-body); font-size: 16px; font-weight: 500;
-  color: rgba(245,245,245,0.75); letter-spacing: -0.1px; padding: 4px 8px;
-  opacity: 0; pointer-events: none;
-  transition: opacity 500ms ease;
-}
-.recap-skip.visible { opacity: 1; pointer-events: all; }
-.recap-skip:active { opacity: 0.6; }
 
 /* ─── Navigation (back + next) ──────────────────────────────── */
 .recap-nav {
@@ -184,7 +173,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 }
 .stat-num-desc {
   font-family: var(--font-body); font-size: 16px; font-weight: 500;
-  color: #a4a59f; line-height: 20px; margin: 0; max-width: 110px;
+  color: #f2f3e5; line-height: 20px; margin: 0; max-width: 110px;
 }
 
 /* ── SLIDE 4: Sleep & mood ──────────────────────────────────── */
@@ -300,9 +289,6 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <div class="recap-progress-track"></div>
     <div class="recap-progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-
-  <!-- Skip -->
-  <button class="recap-skip" id="skipBtn" onclick="goToday()">Skip</button>
 
   <!-- ── Slide 1: Intro ──────────────────────────────────────── -->
   <div class="slide slide-intro active" id="slide-0">
@@ -432,7 +418,6 @@ function updateChrome(idx) {
   if (!isIntro) {
     document.getElementById('progressFill').style.width = (idx / (TOTAL - 1) * 100) + '%';
   }
-  document.getElementById('skipBtn').classList.toggle('visible', !isIntro && !isFinal);
   document.getElementById('recapNav').classList.toggle('visible', !isIntro);
   var nextBtn = document.getElementById('nextBtn');
   if (isFinal) {
