@@ -283,6 +283,7 @@ function saveNote() {
 
   try { sessionStorage.setItem('bp_write_text', val); } catch(e) {}
   try { localStorage.setItem('bp_write_text', val); } catch(e) {}
+  localStorage.setItem('bp_write_done', '1');
 
   goTo('s-done');
   setTimeout(function() {
