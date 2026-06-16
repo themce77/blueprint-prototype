@@ -733,6 +733,8 @@ function goToolkit() {
 }
 function goJournal() {
   sessionStorage.setItem('bp_scale', document.getElementById('device').style.getPropertyValue('--s'));
+  const note = localStorage.getItem('bp_write_text');
+  if (note) sessionStorage.setItem('bp_write_text', note);
   window.location.href = 'journal.html';
 }
 
