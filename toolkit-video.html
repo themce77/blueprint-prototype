@@ -208,14 +208,22 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 <!-- ═══ S-VIDEO ═══════════════════════════════════════════════ -->
 <div class="screen active" id="s-video">
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
-  <div class="vid-thumb"><img src="./components/video-thumbnail.jpg" alt=""></div>
-  <div class="vid-overlay"></div>
-  <button class="vid-play-btn" onclick="onPlay()">
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-      <path d="M10 6L26 16L10 26V6Z" fill="#f2f3e5"/>
-    </svg>
-  </button>
-  <p class="vid-hint">Tap to play (prototype)</p>
+
+  <!-- Actual video player (hidden until play pressed) -->
+  <video id="vid-player" style="display:none; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000;" playsinline></video>
+
+  <!-- Thumbnail + play button (shown first) -->
+  <div id="vid-poster">
+    <div class="vid-thumb"><img id="vid-thumb-img" src="./components/video-thumbnail.jpg" alt=""></div>
+    <div class="vid-overlay"></div>
+    <button class="vid-play-btn" onclick="onPlay()">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M10 6L26 16L10 26V6Z" fill="#f2f3e5"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Skip shown during video playback -->
   <button id="btn-skip-video" onclick="skipVideo()" style="display:none; position:absolute; bottom:28px; right:28px; background:rgba(255,255,255,0.14); border:none; border-radius:8px; padding:10px 20px; color:#fff; font-family:var(--font-body); font-size:14px; font-weight:500; cursor:pointer;">Skip</button>
 </div>
 
@@ -338,9 +346,25 @@ scale(); addEventListener('resize', scale);
 const urlParams = new URLSearchParams(location.search);
 const fromWrite = urlParams.get('from') === 'write';
 const destAfter = fromWrite ? 'today.html' : 'my-toolkit.html';
+const videoSlug = urlParams.get('video') || '';
 
-// Show skip button when coming from write-it-out
-if (fromWrite) document.getElementById('btn-skip-video').style.display = 'block';
+const VIDEO_CFG = {
+  'calming-breath': {
+    src:   './components/calming-breath.mov',
+    thumb: './components/calming-breath-cover.png',
+  },
+  'youve-done-hard-things': {
+    src:   './components/youve-done-hard-things.mov',
+    thumb: './components/youve-done-hard-things-cover.png',
+  },
+};
+
+const cfg = VIDEO_CFG[videoSlug] || null;
+
+// Set thumbnail
+if (cfg) {
+  document.getElementById('vid-thumb-img').src = cfg.thumb;
+}
 
 let cur = 's-video';
 let didTryNext = 's-thanks';
@@ -352,12 +376,36 @@ function goTo(id) {
 
 function onPlay() {
   localStorage.setItem('bp_video_watched', '1');
-  goTo('s-did-try');
+
+  if (cfg) {
+    // Show real video player
+    const player = document.getElementById('vid-player');
+    const poster = document.getElementById('vid-poster');
+    const skipBtn = document.getElementById('btn-skip-video');
+
+    player.src = cfg.src;
+    player.style.display = 'block';
+    poster.style.display = 'none';
+    skipBtn.style.display = 'block';
+    player.play();
+
+    player.addEventListener('ended', function() {
+      goTo('s-did-try');
+    }, { once: true });
+  } else {
+    goTo('s-did-try');
+  }
 }
 
 function skipVideo() {
-  if (fromWrite) sessionStorage.setItem('bp_enter_anim', '1');
-  window.location.href = destAfter;
+  const player = document.getElementById('vid-player');
+  player.pause();
+  if (fromWrite) {
+    sessionStorage.setItem('bp_enter_anim', '1');
+    window.location.href = destAfter;
+  } else {
+    goTo('s-did-try');
+  }
 }
 
 function selectBlock(btn, group) {
