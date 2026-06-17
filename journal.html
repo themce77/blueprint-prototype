@@ -487,7 +487,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <div id="qAnswerCards"></div>
 
       <!-- Purple CTA card — shown when no write-it-out entry -->
-      <div class="write-cta-card" id="writeCta" onclick="var o=document.getElementById('writeOverlay');o.style.display='block';document.getElementById('wovInput').value='';document.getElementById('wovSaveBtn').disabled=true;document.getElementById('wovDone').style.display='none';document.getElementById('wovInput').focus();">
+      <div class="write-cta-card" id="writeCta" style="display:none" onclick="var o=document.getElementById('writeOverlay');o.style.display='block';document.getElementById('wovInput').value='';document.getElementById('wovSaveBtn').disabled=true;document.getElementById('wovDone').style.display='none';document.getElementById('wovInput').focus();">
         <div class="write-cta-monster">
           <img src="./components/Property 1=M02, Type=Default.svg" alt="">
         </div>
@@ -768,17 +768,16 @@ function renderJournal() {
   } else if (demo === '3') {
     writeText = WRITE_TEXT; qAnswers = [null, 'Weekend trip.'];
   } else {
-    // Show note only if arriving fresh from write-it-out (URL param) or same session
+    // Read only from sessionStorage — today's notes only (same tab/session)
     var urlNote = new URLSearchParams(location.search).get('wt');
     if (urlNote) {
       try { sessionStorage.setItem('bp_write_text', urlNote); } catch(e) {}
       writeText = urlNote;
     } else {
       try { writeText = sessionStorage.getItem('bp_write_text') || null; } catch(e) {}
-      if (!writeText) { try { writeText = localStorage.getItem('bp_write_text') || null; } catch(e) {} }
     }
     qAnswers = QUESTIONS.map(function(q) {
-      try { return localStorage.getItem(q.key); } catch(e) { return null; }
+      try { return sessionStorage.getItem(q.key) || null; } catch(e) { return null; }
     });
   }
 
