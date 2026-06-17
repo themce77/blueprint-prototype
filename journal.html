@@ -530,16 +530,19 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
     <div class="col-right">
       <span class="section-label">Topics to write about</span>
       <div class="questions-list" id="questionsList">
-        <div class="question-circle question-circle-blue" id="qCircle1" onclick="openQOverlay(1)">
+        <div class="question-circle question-circle-blue" id="qCircle1" onclick="animateToOverlay(1)">
           <p class="question-text">What kinds of moments or things tend to lift your mood — even a little?</p>
         </div>
-        <div class="question-circle question-circle-coral" id="qCircle2" onclick="openQOverlay(2)">
+        <div class="question-circle question-circle-coral" id="qCircle2" onclick="animateToOverlay(2)">
           <p class="question-text">What's making you feel this excited?</p>
         </div>
       </div>
     </div>
 
   </div>
+
+  <!-- Write button that slides up during circle→overlay animation -->
+  <button id="jWriteAnimBtn" style="display:none; position:absolute; bottom:-80px; left:50%; transform:translateX(-50%); width:270px; height:48px; border-radius:8px; background:#f2f3e5; color:#1f1f25; font-family:var(--font-body); font-size:16px; font-weight:500; border:none; z-index:46; pointer-events:none;">Write</button>
 
 
   <!-- ── Write-it-out overlay ─────────────────────────────────── -->
@@ -849,6 +852,93 @@ function renderJournal() {
 
 document.addEventListener('DOMContentLoaded', renderJournal);
 window.addEventListener('pageshow', renderJournal);
+
+// ── Circle → overlay animation ──────────────────────────────────
+function animateToOverlay(qnum) {
+  var BEZIER = 'cubic-bezier(0.75, 0, 0.3, 0.99)';
+  var DUR = '800ms';
+  var T = DUR + ' ' + BEZIER;
+
+  var sidebar     = document.querySelector('.today-sidebar');
+  var titleEl     = document.querySelector('.page-title');
+  var descEl      = document.querySelector('.page-desc');
+  var colLeft     = document.querySelector('.col-left');
+  var qLabel      = document.querySelector('.col-right .section-label');
+  var otherNum    = qnum === 1 ? 2 : 1;
+  var circle      = document.getElementById('qCircle' + qnum);
+  var otherCircle = document.getElementById('qCircle' + otherNum);
+  var writeBtn    = document.getElementById('jWriteAnimBtn');
+
+  // Pre-calculated: device center (597,417), circle center x=983
+  // circle1 center y≈356, circle2 center y≈588
+  var ANIM = { 1: { dx: -386, dy:  61 }, 2: { dx: -386, dy: -171 } };
+  var scale = 1026 / 220; // 4.664
+  var pos = ANIM[qnum];
+
+  // Lock clicks during animation
+  circle.style.pointerEvents = 'none';
+  otherCircle.style.pointerEvents = 'none';
+
+  // Set transitions
+  var exitT = 'transform ' + T + ', opacity 600ms ' + BEZIER;
+  [sidebar, titleEl, descEl, colLeft, qLabel, otherCircle].forEach(function(el) {
+    el.style.transition = exitT;
+  });
+  circle.style.transition = 'transform ' + T;
+  circle.style.position   = 'relative';
+  circle.style.zIndex     = '45';
+
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      // Sidebar → left
+      sidebar.style.transform = 'translateX(-220px)';
+      sidebar.style.opacity   = '0';
+      // Title + desc + left column → up
+      titleEl.style.transform  = 'translateY(-260px)';  titleEl.style.opacity = '0';
+      descEl.style.transform   = 'translateY(-260px)';  descEl.style.opacity  = '0';
+      colLeft.style.transform  = 'translateY(-300px)';  colLeft.style.opacity = '0';
+      // Right label + other circle → right
+      qLabel.style.transform      = 'translateX(380px)'; qLabel.style.opacity      = '0';
+      otherCircle.style.transform = 'translateX(380px)'; otherCircle.style.opacity = '0';
+      // Clicked circle → expands to center
+      circle.style.transform = 'translate(' + pos.dx + 'px,' + pos.dy + 'px) scale(' + scale + ')';
+      // Write button slides up from bottom
+      writeBtn.style.display    = 'block';
+      writeBtn.style.transition = 'bottom ' + DUR + ' ' + BEZIER + ' 120ms';
+      writeBtn.style.bottom     = '36px';
+    });
+  });
+
+  // Switch to overlay after animation
+  setTimeout(function() {
+    // Hide animation button
+    writeBtn.style.transition = 'none';
+    writeBtn.style.bottom     = '-80px';
+    writeBtn.style.display    = 'none';
+
+    // Reset all elements instantly (overlay covers them)
+    [sidebar, titleEl, descEl, colLeft, qLabel, otherCircle].forEach(function(el) {
+      el.style.transition = 'none';
+      el.style.transform  = '';
+      el.style.opacity    = '';
+    });
+    circle.style.transition    = 'none';
+    circle.style.transform     = '';
+    circle.style.position      = '';
+    circle.style.zIndex        = '';
+    circle.style.pointerEvents = '';
+    otherCircle.style.pointerEvents = '';
+
+    // Restore normal transitions after a tick
+    setTimeout(function() {
+      [sidebar, titleEl, descEl, colLeft, qLabel, otherCircle].forEach(function(el) {
+        el.style.transition = '';
+      });
+    }, 50);
+
+    openQOverlay(qnum);
+  }, 800);
+}
 
 // Load avatar
 (function(){
