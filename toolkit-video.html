@@ -203,28 +203,27 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 <body>
 
 <div class="bp-stage">
+
+<!-- Video overlay lives OUTSIDE bp-device to avoid transform: scale() rendering bug -->
+<div id="vid-overlay" style="display:none; position:fixed; inset:0; background:#000; z-index:999;">
+  <video id="vid-player" style="width:100%; height:100%; object-fit:contain; display:block;" playsinline></video>
+  <button onclick="skipVideo()" style="position:absolute; bottom:32px; right:32px; background:rgba(255,255,255,0.18); border:none; border-radius:8px; padding:12px 24px; color:#fff; font-family:var(--font-body); font-size:16px; font-weight:500; cursor:pointer; letter-spacing:-0.1px;">Skip</button>
+</div>
+
 <div class="bp-device" id="device">
 
 <!-- ═══ S-VIDEO ═══════════════════════════════════════════════ -->
 <div class="screen active" id="s-video">
   <div class="sb"><span>9:41 Mon Jun 6</span><span>100% 🔋</span></div>
 
-  <!-- Actual video player (hidden until play pressed) -->
-  <video id="vid-player" style="display:none; position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; transform:translateZ(0); will-change:transform;" playsinline webkit-playsinline></video>
-
-  <!-- Thumbnail + play button (shown first) -->
-  <div id="vid-poster">
-    <div class="vid-thumb"><img id="vid-thumb-img" src="./components/video-thumbnail.jpg" alt=""></div>
-    <div class="vid-overlay"></div>
-    <button class="vid-play-btn" onclick="onPlay()">
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-        <path d="M10 6L26 16L10 26V6Z" fill="#f2f3e5"/>
-      </svg>
-    </button>
-  </div>
-
-  <!-- Skip shown during video playback -->
-  <button id="btn-skip-video" onclick="skipVideo()" style="display:none; position:absolute; bottom:28px; right:28px; background:rgba(255,255,255,0.14); border:none; border-radius:8px; padding:10px 20px; color:#fff; font-family:var(--font-body); font-size:14px; font-weight:500; cursor:pointer;">Skip</button>
+  <!-- Thumbnail + play button -->
+  <div class="vid-thumb"><img id="vid-thumb-img" src="./components/video-thumbnail.jpg" alt=""></div>
+  <div class="vid-overlay"></div>
+  <button class="vid-play-btn" onclick="onPlay()">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+      <path d="M10 6L26 16L10 26V6Z" fill="#f2f3e5"/>
+    </svg>
+  </button>
 </div>
 
 <!-- ═══ S-DID-TRY ════════════════════════════════════════════ -->
@@ -378,18 +377,14 @@ function onPlay() {
   localStorage.setItem('bp_video_watched', '1');
 
   if (cfg) {
-    // Show real video player
-    const player = document.getElementById('vid-player');
-    const poster = document.getElementById('vid-poster');
-    const skipBtn = document.getElementById('btn-skip-video');
-
+    const overlay = document.getElementById('vid-overlay');
+    const player  = document.getElementById('vid-player');
     player.src = cfg.src;
-    player.style.display = 'block';
-    poster.style.display = 'none';
-    skipBtn.style.display = 'block';
+    overlay.style.display = 'block';
     player.play();
-
     player.addEventListener('ended', function() {
+      overlay.style.display = 'none';
+      player.pause();
       goTo('s-did-try');
     }, { once: true });
   } else {
@@ -398,14 +393,11 @@ function onPlay() {
 }
 
 function skipVideo() {
-  const player = document.getElementById('vid-player');
+  const overlay = document.getElementById('vid-overlay');
+  const player  = document.getElementById('vid-player');
+  overlay.style.display = 'none';
   player.pause();
-  if (fromWrite) {
-    sessionStorage.setItem('bp_enter_anim', '1');
-    window.location.href = destAfter;
-  } else {
-    goTo('s-did-try');
-  }
+  goTo('s-did-try');
 }
 
 function selectBlock(btn, group) {
