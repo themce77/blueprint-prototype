@@ -888,6 +888,11 @@ function animateToOverlay(qnum) {
   circle.style.position   = 'relative';
   circle.style.zIndex     = '45';
 
+  // Text inside circle: counter-scale so net visual size = 48px (not 94px)
+  // net = 20px * circleScale * textScale → textScale = 48/(20*4.664) = 0.515
+  var circleText = circle.querySelector('.question-text');
+  circleText.style.transition = 'transform ' + T;
+
   requestAnimationFrame(function() {
     requestAnimationFrame(function() {
       // Sidebar → left
@@ -902,6 +907,8 @@ function animateToOverlay(qnum) {
       otherCircle.style.transform = 'translateX(380px)'; otherCircle.style.opacity = '0';
       // Clicked circle → expands to center
       circle.style.transform = 'translate(' + pos.dx + 'px,' + pos.dy + 'px) scale(' + scale + ')';
+      // Text counter-scales to land at 48px visual size
+      circleText.style.transform = 'scale(0.515)';
       // Write button slides up from bottom
       writeBtn.style.display    = 'block';
       writeBtn.style.transition = 'bottom ' + DUR + ' ' + BEZIER + ' 120ms';
@@ -928,6 +935,8 @@ function animateToOverlay(qnum) {
     circle.style.zIndex        = '';
     circle.style.pointerEvents = '';
     otherCircle.style.pointerEvents = '';
+    circleText.style.transition = 'none';
+    circleText.style.transform  = '';
 
     // Restore normal transitions after a tick
     setTimeout(function() {
