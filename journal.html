@@ -418,7 +418,7 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 .qov-prompt-text {
   font-family: var(--font-body); font-weight: 500; font-size: 48px;
   line-height: 1.14; color: #f2f3e5; text-align: center;
-  width: 449px; position: relative; z-index: 1; margin: 0;
+  width: 355px; position: relative; z-index: 1; margin: 0;
 }
 .qov-prompt-write {
   position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
@@ -890,9 +890,9 @@ function animateToOverlay(qnum) {
 
   // Text inside circle: counter-scale so net visual size = 48px (not 94px)
   // net = 20px * circleScale * textScale → textScale = 48/(20*4.664) = 0.515
-  // Width set to 187px so text wraps identically to overlay (449px / net_scale 2.4)
+  // Width 148px = small circle content width; × net_scale 2.4 = 355px = overlay width
   var circleText = circle.querySelector('.question-text');
-  circleText.style.width = '187px';
+  circleText.style.width = '148px';
   circleText.style.transition = 'transform ' + T;
 
   requestAnimationFrame(function() {
