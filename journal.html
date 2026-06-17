@@ -512,10 +512,10 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
       <div class="past-notes-card" onclick="window.location.href='journal-past-notes.html'" style="cursor:pointer;">
         <div class="past-notes-info">
           <span class="past-notes-title">Past notes</span>
-          <div class="past-notes-meta" id="pastNotesMeta">
-            <span id="pastNotesMonth">5 entries this month</span>
+          <div class="past-notes-meta" id="pastNotesMeta" style="display:none">
+            <span id="pastNotesMonth"></span>
             <div class="past-notes-dot"></div>
-            <span id="pastNotesAll">35 all entries</span>
+            <span id="pastNotesAll"></span>
           </div>
         </div>
         <div class="past-notes-arrow">
@@ -820,6 +820,7 @@ function renderJournal() {
   // Past notes counts from bp_journal_notes array
   (function() {
     var notes = JSON.parse(localStorage.getItem('bp_journal_notes') || '[]');
+    var metaEl = document.getElementById('pastNotesMeta');
     if (notes.length > 0) {
       var now = new Date();
       var monthCount = notes.filter(function(n) {
@@ -831,6 +832,9 @@ function renderJournal() {
       var allEl   = document.getElementById('pastNotesAll');
       if (monthEl) monthEl.textContent = monthCount + (monthCount === 1 ? ' entry this month' : ' entries this month');
       if (allEl)   allEl.textContent   = allCount   + (allCount   === 1 ? ' entry total'      : ' entries total');
+      if (metaEl)  metaEl.style.display = 'flex';
+    } else {
+      if (metaEl) metaEl.style.display = 'none';
     }
   })();
 
@@ -845,7 +849,7 @@ function renderJournal() {
 }
 
 document.addEventListener('DOMContentLoaded', renderJournal);
-window.addEventListener('pageshow', function(e) { if (e.persisted) renderJournal(); });
+window.addEventListener('pageshow', renderJournal);
 
 // Load avatar
 (function(){
