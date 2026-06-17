@@ -405,6 +405,36 @@ body { background: #0a0a0f; overflow: hidden; margin: 0; }
 /* reset margin so qov-done gap handles spacing */
 .qov-done .wov-done-row { margin-bottom: 0; }
 
+/* ─── qovDone entry animation (same pattern as onboarding S7) ── */
+#qovDone .wov-done-row,
+#qovDone .wov-done-title {
+  transform: translateY(400px); opacity: 0;
+}
+#qovDone .qov-done-bubble {
+  transform: translateX(500px); opacity: 0;
+}
+#qovDone .qov-btn-row {
+  transform: translateX(-50%) translateY(200px); opacity: 0;
+}
+/* Phase 1: reward row + title slide up from bottom */
+#qovDone.qov-entered .wov-done-row,
+#qovDone.qov-entered .wov-done-title {
+  transform: translateY(0); opacity: 1;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99),
+              opacity 400ms ease;
+}
+/* Phase 2: bubble from right, buttons from bottom */
+#qovDone.qov-phase2 .qov-done-bubble {
+  transform: translateX(0); opacity: 1;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99),
+              opacity 400ms ease;
+}
+#qovDone.qov-phase2 .qov-btn-row {
+  transform: translateX(-50%) translateY(0); opacity: 1;
+  transition: transform 800ms cubic-bezier(0.75, 0, 0.3, 0.99),
+              opacity 400ms ease;
+}
+
 /* ─── Step 1: Question prompt screen ──────────────────────────── */
 #qovPrompt {
   position: absolute; inset: 0; z-index: 5;
@@ -1089,6 +1119,8 @@ function qovBack() {
 
 function closeQOverlay() {
   document.getElementById('questionOverlay').style.display = 'none';
+  var doneEl = document.getElementById('qovDone');
+  doneEl.classList.remove('qov-entered', 'qov-phase2');
 }
 
 function saveQAnswer() {
@@ -1101,11 +1133,19 @@ function saveQAnswer() {
   try { sessionStorage.setItem(key, val); } catch(e) {}
   try { localStorage.setItem(key, val); } catch(e) {}
 
-  // Show done step
+  // Show done step with S7-style entry animation
   document.getElementById('qovBody').style.display = 'none';
   document.getElementById('qovSaveWrap').style.display = 'none';
-  document.getElementById('qovDone').style.display = 'flex';
+  var doneEl = document.getElementById('qovDone');
+  doneEl.classList.remove('qov-entered', 'qov-phase2');
+  doneEl.style.display = 'flex';
   _qovStep = 'done';
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      doneEl.classList.add('qov-entered');
+      setTimeout(function() { doneEl.classList.add('qov-phase2'); }, 300);
+    });
+  });
 
   // Update answer card in background
   var container = document.getElementById('qAnswerCards');
