@@ -7,44 +7,53 @@ pre{background:#2b2b32;padding:12px;border-radius:8px;white-space:pre-wrap;word-
 </style></head>
 <body>
 <h2>LocalStorage Debug</h2>
-<button onclick="testWrite()">1. Zapisz testową notatkę</button>
-<button onclick="testRead()">2. Odczytaj z localStorage</button>
-<button onclick="clearAll()">3. Wyczyść wszystko</button>
-<button onclick="resetVideo()" style="background:#e65800;">🎬 Reset "video watched"</button>
+<button onclick="clearNotes()" style="background:#e65800;font-size:16px;padding:12px 24px;">Wyczysc notatki</button>
+<button onclick="testRead()" style="margin-top:16px;background:#555;">Pokaz co jest zapisane</button>
+<button onclick="resetVideo()" style="background:#555;">Reset "video watched"</button>
 <pre id="out">Kliknij przycisk...</pre>
 <script>
-function testWrite() {
+var NOTE_KEYS = ['bp_write_text','bp_journal_q1','bp_journal_q2','bp_journal_notes','bp_today_sections'];
+
+function clearNotes() {
   try {
-    localStorage.setItem('bp_write_text', 'Testowa notatka z debug — działa!');
-    document.getElementById('out').textContent = '✅ Zapisano!\nbp_write_text = ' + localStorage.getItem('bp_write_text');
+    NOTE_KEYS.forEach(function(k) {
+      localStorage.removeItem(k);
+      sessionStorage.removeItem(k);
+    });
+    // also clear any bp_ keys that might exist
+    var lsKeys = [];
+    for (var i = 0; i < localStorage.length; i++) lsKeys.push(localStorage.key(i));
+    lsKeys.filter(function(k){ return k.startsWith('bp_'); }).forEach(function(k){ localStorage.removeItem(k); });
+    var ssKeys = [];
+    for (var i = 0; i < sessionStorage.length; i++) ssKeys.push(sessionStorage.key(i));
+    ssKeys.filter(function(k){ return k.startsWith('bp_'); }).forEach(function(k){ sessionStorage.removeItem(k); });
+    document.getElementById('out').textContent = 'Notatki wyczyszczone. Mozesz wrocic do apki.';
   } catch(e) {
-    document.getElementById('out').textContent = '❌ Błąd localStorage:\n' + e.message;
+    document.getElementById('out').textContent = 'Blad:\n' + e.message;
   }
 }
 function testRead() {
   try {
-    var all = '';
+    var all = 'localStorage:\n';
     for (var i = 0; i < localStorage.length; i++) {
       var k = localStorage.key(i);
-      all += k + ' = ' + localStorage.getItem(k).substring(0,100) + '\n';
+      all += '  ' + k + ' = ' + localStorage.getItem(k).substring(0, 120) + '\n';
     }
-    document.getElementById('out').textContent = all || '(localStorage jest pusty)';
+    all += '\nsessionStorage:\n';
+    for (var i = 0; i < sessionStorage.length; i++) {
+      var k = sessionStorage.key(i);
+      all += '  ' + k + ' = ' + sessionStorage.getItem(k).substring(0, 120) + '\n';
+    }
+    document.getElementById('out').textContent = all || '(pusto)';
   } catch(e) {
-    document.getElementById('out').textContent = '❌ Błąd:\n' + e.message;
+    document.getElementById('out').textContent = 'Blad:\n' + e.message;
   }
 }
 function resetVideo() {
   localStorage.removeItem('bp_video_watched');
-  document.getElementById('out').textContent = '✅ bp_video_watched usunięty — możesz teraz otworzyć My Toolkit';
+  sessionStorage.removeItem('bp_video_watched');
+  document.getElementById('out').textContent = 'bp_video_watched usuniety';
   testRead();
-}
-function clearAll() {
-  try {
-    localStorage.clear();
-    document.getElementById('out').textContent = '✅ localStorage wyczyszczony';
-  } catch(e) {
-    document.getElementById('out').textContent = '❌ Błąd:\n' + e.message;
-  }
 }
 testRead();
 </script>
