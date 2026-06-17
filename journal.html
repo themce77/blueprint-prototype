@@ -890,7 +890,9 @@ function animateToOverlay(qnum) {
 
   // Text inside circle: counter-scale so net visual size = 48px (not 94px)
   // net = 20px * circleScale * textScale → textScale = 48/(20*4.664) = 0.515
+  // Width set to 187px so text wraps identically to overlay (449px / net_scale 2.4)
   var circleText = circle.querySelector('.question-text');
+  circleText.style.width = '187px';
   circleText.style.transition = 'transform ' + T;
 
   requestAnimationFrame(function() {
@@ -937,6 +939,7 @@ function animateToOverlay(qnum) {
     otherCircle.style.pointerEvents = '';
     circleText.style.transition = 'none';
     circleText.style.transform  = '';
+    circleText.style.width      = '';
 
     // Restore normal transitions after a tick
     setTimeout(function() {
